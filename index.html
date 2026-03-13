@@ -362,7 +362,7 @@ function renderDash(d){
 
 function renderPayment(d){
   const skema=d.skema||'';
-  const is3=skema.split('+').length>=3;
+  const is3=skema.includes('3');
   let steps=[{lbl:'DP',done:d.dp_masuk,ic:'💳'}];
   if(is3)steps.push({lbl:'Tahap 2',done:d.tahap2_masuk,ic:'💳'});
   steps.push({lbl:'Pelunasan',done:d.pelunasan_masuk,ic:'✅'});

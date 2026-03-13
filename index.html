@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMKOBAR — Portal Client</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d2144;
+    --blue: #1a6bbd;
+    --blue-light: #e8f1fa;
+    --blue-mid: #b8d4f0;
+    --text: #0d2144;
+    --text-muted: #5a6e8a;
+    --text-hint: #8fa3bc;
+    --border: #dce6f0;
+    --bg: #f4f7fb;
+    --white: #ffffff;
+    --success: #1a7a4a;
+    --success-bg: #e8f5ee;
+    --warning: #8a5500;
+    --warning-bg: #fff4e0;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-logo {
+    width: 32px; height: 32px;
+    background: var(--blue);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #fff;
+  }
+  .brand-name { color: #fff; font-size: 15px; font-weight: 600; }
+  .brand-sub { color: #7aa8d8; font-size: 11px; }
+  .header-right { color: #7aa8d8; font-size: 12px; }
+
+  /* MAIN */
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    flex: 1; padding: 8px 4px;
+    text-align: center;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none; background: none;
+  }
+  .tab.active {
+    background: var(--navy);
+    color: #fff;
+  }
+  .tab:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .card-header {
+    background: var(--navy);
+    padding: 16px 20px;
+  }
+  .card-header h2 { color: #fff; font-size: 15px; font-weight: 600; }
+  .card-header p { color: #7aa8d8; font-size: 12px; margin-top: 2px; }
+  .card-body { padding: 20px; }
+
+  /* SEARCH */
+  .search-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .search-wrap h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .search-wrap p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+  .input-group { display: flex; gap: 8px; }
+  .input-group input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .input-group input:focus { border-color: var(--blue); background: var(--white); }
+  .btn-cek {
+    padding: 10px 20px;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-cek:hover { background: #155a9e; }
+  .btn-cek:disabled { background: var(--text-hint); cursor: not-allowed; }
+
+  /* RESULT */
+  .result-header {
+    background: var(--navy);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: #fff;
+    flex-shrink: 0;
+  }
+  .result-name { color: #fff; font-size: 15px; font-weight: 600; }
+  .result-sub { color: #7aa8d8; font-size: 12px; margin-top: 1px; }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .info-full { grid-column: 1 / -1; }
+  .info-item label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .info-item span { font-size: 13px; color: var(--text); font-weight: 500; }
+
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* STATUS BADGE */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .badge-review { background: var(--warning-bg); color: var(--warning); }
+  .badge-review .badge-dot { background: #e07800; }
+  .badge-antrian { background: #f0eaff; color: #5b21b6; }
+  .badge-antrian .badge-dot { background: #7c3aed; }
+  .badge-proses { background: var(--blue-light); color: #1a4a8a; }
+  .badge-proses .badge-dot { background: var(--blue); }
+  .badge-pelunasan { background: #fff0f5; color: #9a1a4a; }
+  .badge-pelunasan .badge-dot { background: #e91e7a; }
+  .badge-pendampingan { background: #e8f5ee; color: #1a5a3a; }
+  .badge-pendampingan .badge-dot { background: #1a7a4a; }
+  .badge-selesai { background: var(--success-bg); color: var(--success); }
+  .badge-selesai .badge-dot { background: #1a7a4a; }
+
+  /* PEMBAYARAN */
+  .pay-section-title {
+    font-size: 12px; font-weight: 600;
+    color: var(--text-hint);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .pay-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pay-row:last-of-type { border-bottom: none; }
+  .pay-label { font-size: 13px; color: var(--text-muted); }
+  .pay-status { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+  .pay-done { color: var(--success); }
+  .pay-pending { color: var(--text-hint); }
+  .check-icon { font-size: 14px; }
+
+  .sisa-box {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px;
+  }
+  .sisa-label { font-size: 13px; font-weight: 600; color: #1a4a8a; }
+  .sisa-value { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .sisa-lunas { font-size: 15px; font-weight: 700; color: var(--success); }
+
+  .drive-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--blue);
+    font-size: 13px; font-weight: 500;
+    text-decoration: none;
+    margin-top: 14px;
+    transition: all 0.15s;
+  }
+  .drive-btn:hover { background: var(--blue-light); border-color: var(--blue-mid); }
+
+  /* LOADING & ERROR */
+  .loading {
+    text-align: center; padding: 32px;
+    color: var(--text-muted); font-size: 13px;
+  }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-box {
+    background: #fff0f0; border: 1px solid #ffc0c0;
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-size: 13px; color: #8a1a1a;
+  }
+  .empty-state {
+    text-align: center; padding: 32px 20px;
+    color: var(--text-muted); font-size: 13px;
+  }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 13px 16px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text);
+    background: var(--white);
+    transition: background 0.1s;
+    user-select: none;
+  }
+  .faq-q:hover { background: var(--bg); }
+  .faq-icon { font-size: 16px; color: var(--text-hint); font-weight: 400; flex-shrink: 0; margin-left: 12px; }
+  .faq-a {
+    padding: 0 16px;
+    font-size: 13px; color: var(--text-muted);
+    line-height: 1.7;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+  }
+  .faq-a.open { max-height: 200px; padding: 0 16px 14px; }
+
+  /* GUIDE */
+  .app-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .tag-spss { background: var(--blue-light); color: #1a4a8a; }
+  .tag-smart { background: var(--success-bg); color: var(--success); }
+  .tag-lisrel { background: var(--warning-bg); color: var(--warning); }
+  .guide-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .guide-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .guide-card p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .guide-card ul { padding-left: 16px; }
+  .guide-card ul li { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+
+  /* ALUR */
+  .alur-step {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .alur-step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 28px; height: 28px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 600;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content h5 { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .step-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--text-hint);
+    font-size: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .info-full { grid-column: 1; }
+    .tab { font-size: 11px; padding: 8px 2px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">AK</div>
+    <div>
+      <div class="brand-name">AMKOBAR</div>
+      <div class="brand-sub">Portal Client</div>
+    </div>
+  </div>
+  <div class="header-right">Konsultasi Akademik & Statistik</div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('status', this)">Cek Status</button>
+    <button class="tab" onclick="switchTab('cara', this)">Cara Baca Hasil</button>
+    <button class="tab" onclick="switchTab('faq', this)">FAQ</button>
+    <button class="tab" onclick="switchTab('alur', this)">Alur Layanan</button>
+  </div>
+
+  <!-- CEK STATUS -->
+  <div class="section active" id="status">
+    <div class="search-wrap">
+      <h3>Cek Status Pengerjaan</h3>
+      <p>Masukkan NIM/NPM kamu untuk melihat status dan info pembayaran</p>
+      <div class="input-group">
+        <input type="text" id="nim-input" placeholder="Masukkan NIM/NPM..." autocomplete="off" />
+        <button class="btn-cek" id="btn-cek" onclick="cekStatus()">Cek</button>
+      </div>
+    </div>
+    <div id="result-area"></div>
+  </div>
+
+  <!-- CARA BACA HASIL -->
+  <div class="section" id="cara">
+    <div class="guide-card">
+      <div class="app-tag tag-spss">SPSS</div>
+      <h4>Membaca Output SPSS</h4>
+      <p>Panduan membaca hasil analisis regresi dan uji hipotesis menggunakan SPSS:</p>
+      <ul>
+        <li>Perhatikan nilai <strong>Sig.</strong> pada tabel Coefficients — jika Sig. &lt; 0,05 maka hipotesis <strong>diterima</strong></li>
+        <li>Nilai <strong>Beta</strong> menunjukkan arah dan kekuatan pengaruh variabel independen terhadap dependen</li>
+        <li>Nilai <strong>R Square</strong> menunjukkan seberapa besar variabel independen menjelaskan variabel dependen (dalam persen)</li>
+        <li>Uji F (ANOVA) dengan Sig. &lt; 0,05 berarti model regresi secara keseluruhan signifikan</li>
+      </ul>
+    </div>
+    <div class="guide-card">
+      <div class="app-tag tag-smart">SmartPLS</div>
+      <h4>Membaca Output SmartPLS</h4>
+      <p>Panduan membaca hasil analisis Structural Equation Modeling (SEM) berbasis PLS:</p>
+      <ul>
+        <li>Cek nilai <strong>P-Values</strong> pada path coefficients — P-value &lt; 0,05 berarti hubungan <strong>signifikan</strong></li>
+        <li>Nilai <strong>T-Statistics</strong> &gt; 1,96 juga menunjukkan signifikansi pada taraf 5%</li>
+        <li>Nilai <strong>R-Square</strong> menunjukkan kemampuan model menjelaskan variabel endogen</li>
+        <li>Nilai <strong>AVE</strong> &gt; 0,5 dan <strong>Composite Reliability</strong> &gt; 0,7 menunjukkan validitas dan reliabilitas konstruk yang baik</li>
+      </ul>
+    </div>
+    <div class="guide-card">
+      <div class="app-tag tag-lisrel">Lisrel</div>
+      <h4>Membaca Output Lisrel</h4>
+      <p>Panduan membaca hasil analisis SEM menggunakan Lisrel:</p>
+      <ul>
+        <li>Nilai <strong>t-value</strong> &gt; 1,96 berarti hipotesis diterima pada taraf signifikansi 5%</li>
+        <li>Nilai <strong>CFI</strong> &gt; 0,90 dan <strong>RMSEA</strong> &lt; 0,08 menunjukkan model fit yang baik</li>
+        <li>Nilai <strong>GFI</strong> dan <strong>AGFI</strong> &gt; 0,90 juga indikator model fit</li>
+        <li>Standardized Loading Factor &gt; 0,5 menunjukkan indikator valid mengukur konstruknya</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="card">
+      <div class="card-body" style="padding: 12px;">
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Berapa lama waktu pengerjaan?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Waktu pengerjaan tergantung jenis layanan yang dipilih. BAB IV biasanya 2–3 hari kerja, BAB IV–V sekitar 3–5 hari kerja, dan FULL BAB I–V membutuhkan waktu 7–14 hari kerja. Olahdata Only biasanya 1–2 hari kerja.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Bagaimana cara mengirim data penelitian?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Setelah registrasi dan pembayaran DP dikonfirmasi, kamu akan mendapatkan link Google Drive pribadi. Upload semua file data (kuesioner, data mentah Excel/SPSS) ke folder tersebut. Pastikan data lengkap sebelum pengerjaan dimulai.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Apakah tersedia revisi?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Ya, tersedia 1x revisi gratis setelah hasil dikirimkan. Revisi mencakup perbaikan interpretasi dan output sesuai masukan dosen. Revisi tambahan di luar ketentuan dapat didiskusikan lebih lanjut.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Bagaimana skema pembayaran?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Terdapat dua skema: (1) 2 tahap untuk BAB IV dan BAB IV–V — DP di awal, pelunasan setelah selesai. (2) 3 tahap untuk FULL BAB I–V dan Olahdata Only — DP di awal, Tahap 2 di tengah pengerjaan, pelunasan setelah selesai. Pembayaran via QRIS DANA atau QRIS GOPAY.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Kapan hasil dikirimkan ke saya?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Hasil dikirimkan ke Google Drive kamu sesuai deadline yang disepakati saat registrasi. Kamu akan dihubungi via WhatsApp ketika hasil sudah siap untuk diunduh.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Apa itu sesi pendampingan?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Sesi pendampingan adalah sesi tanya jawab via Google Meet atau Zoom setelah pelunasan. Di sesi ini kamu bisa bertanya tentang hasil pengerjaan, cara membaca output, dan persiapan sidang. Durasi sekitar 30–60 menit.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Bagaimana jika data saya masih kurang?
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">Jika data yang diupload kurang lengkap atau ada masalah, tim AMKOBAR akan menghubungi kamu via WhatsApp untuk konfirmasi sebelum pengerjaan dimulai. Status project akan tetap di "Menunggu Review" sampai data lengkap.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ALUR LAYANAN -->
+  <div class="section" id="alur">
+    <div class="card">
+      <div class="card-header">
+        <h2>Alur Layanan AMKOBAR</h2>
+        <p>Proses dari pendaftaran hingga selesai</p>
+      </div>
+      <div class="card-body">
+        <div class="alur-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Registrasi & Deal Harga</h5>
+            <p>Hubungi admin AMKOBAR untuk diskusi kebutuhan dan deal harga. Setelah deal, kamu akan mendapatkan link form registrasi.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Isi Form Registrasi</h5>
+            <p>Isi form registrasi dengan data lengkap: nama, NIM/NPM, judul penelitian, pilihan aplikasi, dan jenis layanan.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Pembayaran DP</h5>
+            <p>Lakukan pembayaran DP via QRIS DANA atau QRIS GOPAY. Konfirmasi pembayaran ke admin via WhatsApp.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Upload Data Penelitian</h5>
+            <p>Upload file data (kuesioner, data mentah) ke Google Drive pribadi yang sudah disiapkan. Pastikan semua file lengkap.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Proses Pengerjaan</h5>
+            <p>Tim AMKOBAR mulai mengerjakan sesuai layanan yang dipilih. Pantau status di tab "Cek Status" menggunakan NIM/NPM kamu.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <h5>Pelunasan</h5>
+            <p>Setelah pengerjaan selesai, lakukan pelunasan sesuai skema pembayaran. Konfirmasi ke admin via WhatsApp.</p>
+          </div>
+        </div>
+        <div class="alur-step">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <h5>Terima Hasil & Pendampingan</h5>
+            <p>Hasil final dikirim ke Google Drive kamu. Dilanjutkan sesi pendampingan via Google Meet atau Zoom untuk penjelasan hasil.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 AMKOBAR — Konsultasi Akademik & Statistik
+</footer>
+
+<script>
+const NOTION_DB_ID = 'NOTION_DB_ID_PLACEHOLDER';
+
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  const icon = el.querySelector('.faq-icon');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(a => {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.faq-icon').textContent = '+';
+  });
+  if (!isOpen) {
+    ans.classList.add('open');
+    icon.textContent = '−';
+  }
+}
+
+function getStatusBadge(status) {
+  const map = {
+    'Menunggu Review': 'badge-review',
+    'Antrian': 'badge-antrian',
+    'Diproses': 'badge-proses',
+    'Menunggu Pelunasan': 'badge-pelunasan',
+    'Pendampingan': 'badge-pendampingan',
+    'Selesai': 'badge-selesai',
+  };
+  const cls = map[status] || 'badge-review';
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${status || 'Menunggu Review'}</span>`;
+}
+
+function formatRupiah(num) {
+  if (!num && num !== 0) return '—';
+  return 'Rp ' + Number(num).toLocaleString('id-ID');
+}
+
+function getInitials(name) {
+  if (!name) return 'CL';
+  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+async function cekStatus() {
+  const nim = document.getElementById('nim-input').value.trim();
+  const area = document.getElementById('result-area');
+  const btn = document.getElementById('btn-cek');
+
+  if (!nim) {
+    area.innerHTML = '<div class="error-box">Masukkan NIM/NPM terlebih dahulu.</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '...';
+  area.innerHTML = '<div class="loading"><div class="spinner"></div>Mencari data...</div>';
+
+  try {
+    const res = await fetch('/api/cek-status?nim=' + encodeURIComponent(nim));
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      area.innerHTML = `<div class="error-box">${data.error || 'Terjadi kesalahan. Coba lagi.'}</div>`;
+      return;
+    }
+
+    if (!data.found) {
+      area.innerHTML = '<div class="empty-state">Data tidak ditemukan.<br>Pastikan NIM/NPM yang dimasukkan sesuai dengan data pendaftaran.</div>';
+      return;
+    }
+
+    const d = data;
+    const is3Tahap = d.skema && d.skema.includes('30%+30%');
+    const sisaNum = d.sisa_pembayaran;
+    const sisaDisplay = sisaNum === 0
+      ? `<span class="sisa-lunas">Lunas</span>`
+      : `<span class="sisa-value">${formatRupiah(sisaNum)}</span>`;
+
+    const tahap2Row = is3Tahap ? `
+      <div class="pay-row">
+        <span class="pay-label">Tahap 2</span>
+        <span class="pay-status ${d.tahap2_masuk ? 'pay-done' : 'pay-pending'}">
+          <span class="check-icon">${d.tahap2_masuk ? '✓' : '○'}</span>
+          ${d.tahap2_masuk ? 'Sudah diterima' : 'Belum'}
+        </span>
+      </div>` : '';
+
+    const driveBtn = d.link_drive
+      ? `<a href="${d.link_drive}" target="_blank" class="drive-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Buka Google Drive
+        </a>` : '';
+
+    area.innerHTML = `
+      <div class="card">
+        <div class="result-header">
+          <div class="avatar">${getInitials(d.nama)}</div>
+          <div>
+            <div class="result-name">${d.nama || '—'}</div>
+            <div class="result-sub">${d.nim || ''} &nbsp;·&nbsp; ${d.universitas || ''}</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-item info-full">
+              <label>Judul Penelitian</label>
+              <span>${d.judul || '—'}</span>
+            </div>
+            <div class="info-item">
+              <label>Jenis Layanan</label>
+              <span>${d.jenis_layanan || '—'}</span>
+            </div>
+            <div class="info-item">
+              <label>Aplikasi</label>
+              <span>${d.aplikasi || '—'}</span>
+            </div>
+            <div class="info-item">
+              <label>Status</label>
+              <span>${getStatusBadge(d.status_project)}</span>
+            </div>
+            <div class="info-item">
+              <label>Deadline</label>
+              <span>${d.deadline || '—'}</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="pay-section-title">Info Pembayaran · Skema ${d.skema || '—'}</div>
+          <div class="pay-row">
+            <span class="pay-label">DP</span>
+            <span class="pay-status ${d.dp_masuk ? 'pay-done' : 'pay-pending'}">
+              <span class="check-icon">${d.dp_masuk ? '✓' : '○'}</span>
+              ${d.dp_masuk ? 'Sudah diterima' : 'Belum'}
+            </span>
+          </div>
+          ${tahap2Row}
+          <div class="pay-row">
+            <span class="pay-label">Pelunasan</span>
+            <span class="pay-status ${d.pelunasan_masuk ? 'pay-done' : 'pay-pending'}">
+              <span class="check-icon">${d.pelunasan_masuk ? '✓' : '○'}</span>
+              ${d.pelunasan_masuk ? 'Sudah diterima' : 'Belum'}
+            </span>
+          </div>
+
+          <div class="sisa-box">
+            <span class="sisa-label">Sisa Pembayaran</span>
+            ${sisaDisplay}
+          </div>
+
+          ${driveBtn}
+        </div>
+      </div>`;
+
+  } catch(e) {
+    area.innerHTML = '<div class="error-box">Gagal menghubungi server. Periksa koneksi internet kamu.</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Cek';
+  }
+}
+
+document.getElementById('nim-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') cekStatus();
+});
+</script>
+</body>
+</html>

@@ -214,7 +214,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
               <div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">—</div></div>
               <div class="sisa-ic">💰</div>
             </div>
-            <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">📁 Buka Folder Google Drive</a>
+            <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">📂 Kirim File & Data Disini</a>
           </div>
         </div>
       </div>
@@ -363,12 +363,22 @@ function renderDash(d){
 function renderPayment(d){
   const skema=d.skema||'';
   const is3=skema.includes('3');
-  let steps=[{lbl:'DP',done:d.dp_masuk,ic:'💳'}];
-  if(is3)steps.push({lbl:'Tahap 2',done:d.tahap2_masuk,ic:'💳'});
-  steps.push({lbl:'Pelunasan',done:d.pelunasan_masuk,ic:'✅'});
+  const kat=(d.kategori_harga||'').toLowerCase();
+  const harga=kat==='kerjasama'?(d.harga_kerjasama||0):(d.harga_umum||0);
+  const dp=kat==='kerjasama'?(d.dp_kerjasama||0):(d.dp_umum||0);
+  let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'💳'}];
+  if(is3){
+    const t2=Math.round(harga*0.3);
+    const lun=harga-dp-t2;
+    steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});
+    steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});
+  } else {
+    const lun=harga-dp;
+    steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});
+  }
   document.getElementById('psteps').innerHTML=
     `<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+
-    steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div>${s.lbl}</div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('');
+    steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('');
 }
 
 function renderReferral(d){

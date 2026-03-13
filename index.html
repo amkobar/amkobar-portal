@@ -200,6 +200,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
             <div class="irow"><div class="ilabel">Judul Penelitian</div><div class="ival judul" id="i-judul">—</div></div>
             <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
             <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
+            <div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">—</div></div>
             <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
             <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
           </div>
@@ -349,6 +350,7 @@ function renderDash(d){
   document.getElementById('i-judul').textContent=d.judul||'—';
   document.getElementById('i-layanan').textContent=d.jenis_layanan||'—';
   document.getElementById('i-app').textContent=d.aplikasi||'—';
+  document.getElementById('i-variabel').textContent=d.jumlah_variabel||'—';
   document.getElementById('i-univ').textContent=d.universitas||'—';
   document.getElementById('i-ddl').textContent=d.deadline?fmtDate(d.deadline):'Belum ditentukan';
   renderPayment(d);

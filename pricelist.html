@@ -265,6 +265,11 @@ const PAKET=[
 
 let currentFormUrl='';
 
+document.addEventListener('click',function(e){
+  const card=e.target.closest('.pkg-card');
+  if(card) openModal(card);
+});
+
 function checkPw(){
   const pw=document.getElementById('pw-inp').value.trim().toLowerCase();
   const al=document.getElementById('pw-al');
@@ -320,7 +325,7 @@ function buildCard(p,isK,lay){
   const dataAttr=`data-lay="${lay}" data-app="${p.app}" data-v="${p.v}" data-h="${h}" data-dp="${dp}" data-sub="${sub}" data-is3="${is3}"`;
   let badgeHtml='';
   if(p.st) badgeHtml=`<div class="pkg-st">${p.st}</div>`;
-  return `<div class="pkg-card" onclick="openModal(this)" ${dataAttr}>
+  return `<div class="pkg-card" ${dataAttr}>
     <div class="pkg-app">${p.app}</div>
     <div class="pkg-var">${p.v}</div>
     ${badgeHtml}

@@ -8,11 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--navy:#0d2144;--navy-2:#1a3560;--blue:#1a6bbd;--blue-pale:#e8f2fc;--accent:#f0a500;--g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;--g400:#94a3b8;--g600:#475569;--g800:#1e293b;--err:#dc2626;--err-bg:#fef2f2;--r:16px;--rs:10px;--sh:0 2px 16px rgba(13,33,68,.07);--sh2:0 8px 40px rgba(13,33,68,.13);}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);min-height:100vh}
 .nav{background:var(--navy);height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between}
 .nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none}
 .nav-logo{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff}
-.nav-name{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff}.nav-sub{font-size:11px;color:rgba(255,255,255,.45)}
+.nav-name{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff}
+.nav-sub{font-size:11px;color:rgba(255,255,255,.45)}
 .back-btn{color:rgba(255,255,255,.7);text-decoration:none;font-size:13.5px;padding:7px 15px;border-radius:7px;border:1px solid rgba(255,255,255,.2);transition:all .18s}
 .back-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
 .gate{min-height:calc(100vh - 62px);display:flex;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(140deg,var(--navy) 0%,var(--navy-2) 55%,#1e4a8a 100%)}
@@ -21,7 +23,8 @@
 .gate-card h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px}
 .gate-card p{font-size:13.5px;color:var(--g600);margin-bottom:28px;line-height:1.55}
 .inp{width:100%;padding:13px 18px;border:2px solid var(--g200);border-radius:var(--rs);font-size:14.5px;font-family:'DM Sans',sans-serif;color:var(--g800);transition:all .2s;outline:none;background:var(--g50);text-align:center;letter-spacing:2px}
-.inp:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(26,107,189,.09)}.inp::placeholder{letter-spacing:0;color:var(--g400)}
+.inp:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(26,107,189,.09)}
+.inp::placeholder{letter-spacing:0;color:var(--g400)}
 .btn{width:100%;padding:13px;background:var(--navy);color:#fff;border:none;border-radius:var(--rs);font-size:14.5px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;margin-top:12px}
 .btn:hover{background:var(--navy-2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,33,68,.22)}
 .al{padding:11px 15px;border-radius:var(--rs);font-size:13.5px;margin-top:13px;display:none}
@@ -35,24 +38,51 @@
 .price-body{padding:40px 48px;max-width:1200px;margin:0 auto}
 .sec-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--g200)}
 .sec-ttl:first-child{margin-top:0}
-.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.pkg-card{background:#fff;border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);border:1px solid var(--g100);transition:all .2s;position:relative;overflow:hidden}
+.sub-group-ttl{font-size:12px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px}
+.sub-group-ttl:first-child{margin-top:0}
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.pkg-card{background:#fff;border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);border:1px solid var(--g100);transition:all .2s;position:relative;overflow:hidden;cursor:pointer}
 .pkg-card:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
 .pkg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue)}
 .pkg-app{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .pkg-var{font-size:12px;color:var(--g400);margin-bottom:4px}
 .pkg-st{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:4px;margin-bottom:10px;background:#fef3c7;color:#92400e}
-.pkg-price{font-family:'Sora',sans-serif;font-size:21px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.pkg-price{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:3px}
 .pkg-dp{font-size:12px;color:var(--g600);margin-bottom:10px}
 .pkg-skema{display:inline-flex;align-items:center;gap:4px;background:var(--blue-pale);color:var(--blue);padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600}
-.sub-group-ttl{font-size:12px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px}
-.sub-group-ttl:first-child{margin-top:0}
+.pkg-hint{font-size:11px;color:var(--g400);margin-top:8px}
 .cta-box{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r);padding:32px 36px;margin-top:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .cta-text h3{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
 .cta-text p{font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.5}
 .cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--navy);padding:13px 28px;border-radius:var(--rs);font-size:14.5px;font-weight:700;font-family:'Sora',sans-serif;text-decoration:none;transition:all .2s;white-space:nowrap}
 .cta-btn:hover{background:#e09500;transform:translateY(-1px)}
 footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-top:1px solid var(--g200)}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998}
+.modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;padding:28px;width:92%;max-width:420px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.modal-tag{font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.modal-title{font-family:'Sora',sans-serif;font-size:19px;font-weight:700;color:var(--navy)}
+.modal-badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;margin-top:5px}
+.badge-judul{background:#fef3c7;color:#92400e}
+.badge-data{background:#dcfce7;color:#166534}
+.modal-close{background:none;border:1px solid var(--g200);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--g600);font-size:15px;flex-shrink:0}
+.modal-prices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.modal-price-box{background:var(--g50);border-radius:10px;padding:11px 13px}
+.modal-price-lbl{font-size:11px;color:var(--g400);margin-bottom:3px}
+.modal-price-val{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;color:var(--navy)}
+.modal-section-lbl{font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.modal-items{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.modal-item{display:flex;gap:9px;align-items:flex-start}
+.modal-check{width:17px;height:17px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:9px;color:#166534;font-weight:700}
+.modal-item-txt{font-size:13px;color:var(--g800);line-height:1.45}
+.modal-skema-box{background:var(--g50);border-radius:10px;padding:11px 13px;margin-bottom:18px}
+.modal-skema-lbl{font-size:11px;color:var(--g400);margin-bottom:7px}
+.modal-skema-steps{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.modal-step{background:var(--blue-pale);color:var(--blue);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.modal-arrow{color:var(--g400);font-size:12px}
+.modal-cta{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s}
+.modal-cta:hover{background:var(--navy-2)}
 @media(max-width:768px){.nav{padding:0 20px}.price-hero{padding:40px 20px 48px}.price-hero h1{font-size:26px}.price-body{padding:24px 20px}.cta-box{padding:24px}.pkg-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.pkg-grid{grid-template-columns:1fr}}
 </style>
@@ -97,11 +127,83 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
 
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <div class="modal-header">
+    <div>
+      <div class="modal-tag" id="m-tag"></div>
+      <div class="modal-title" id="m-title"></div>
+      <div id="m-badge"></div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-prices">
+    <div class="modal-price-box"><div class="modal-price-lbl">Harga</div><div class="modal-price-val" id="m-harga"></div></div>
+    <div class="modal-price-box"><div class="modal-price-lbl">DP Awal</div><div class="modal-price-val" id="m-dp"></div></div>
+  </div>
+  <div class="modal-section-lbl">Yang kamu dapat</div>
+  <div class="modal-items" id="m-items"></div>
+  <div class="modal-skema-box">
+    <div class="modal-skema-lbl">Skema pembayaran</div>
+    <div class="modal-skema-steps" id="m-steps"></div>
+  </div>
+  <button class="modal-cta" id="m-cta">Daftar Sekarang →</button>
+</div>
+
 <script>
 const PW={'4mkob4r':'kerjasama','4dmin':'umum'};
 const FORM={
-  kerjasama:'https://tally.so/r/jaBkzY?kategori_harga=Kerjasama',
-  umum:'https://tally.so/r/MeOabY?kategori_harga=Umum'
+  kerjasama:'https://tally.so/r/jaBkzY?kh=khk',
+  umum:'https://tally.so/r/MeOabY?kh=khu'
+};
+
+const DESC={
+  'BAB IV':[
+    'File output (hasil olah data)',
+    'Interpretasi hasil di BAB IV',
+    'Revisi interpretasi diarahkan',
+    'Garansi 100% hasil olahdata',
+    'Pendampingan konsultasi / pembelajaran sampai paham'
+  ],
+  'BAB IV\u2013V':[
+    'File output (hasil olah data)',
+    'Interpretasi hasil di BAB IV dan BAB V',
+    'Revisi interpretasi diarahkan',
+    'Garansi 100% hasil olahdata',
+    'Pendampingan konsultasi / pembelajaran sampai paham'
+  ],
+  'FULL_Belum Ada Judul':[
+    'Pencarian judul sampai ACC',
+    'Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI',
+    'File output (hasil olah data)',
+    'Interpretasi & analisis hasil di BAB IV',
+    'Garansi 100%',
+    'Pendampingan konsultasi / pembelajaran sampai paham',
+    'Pendampingan sampai ACC sidang akhir'
+  ],
+  'FULL_Sudah Ada Judul':[
+    'Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI',
+    'File output (hasil olah data)',
+    'Interpretasi & analisis hasil di BAB IV',
+    'Garansi 100%',
+    'Pendampingan konsultasi / pembelajaran sampai paham',
+    'Pendampingan sampai ACC sidang akhir'
+  ],
+  'D0_Data Sendiri':[
+    'Menggunakan data dari Anda',
+    'File output (hasil olah data)',
+    'Tanpa penulisan BAB \u2014 hanya olah data',
+    'Garansi 100% hasil olahdata',
+    'Pendampingan konsultasi'
+  ],
+  'D0_Data Pengelola':[
+    'Data dibuatkan',
+    'File output (hasil olah data)',
+    'Tanpa penulisan BAB \u2014 hanya olah data',
+    'Garansi 100% hasil olahdata',
+    'Pendampingan konsultasi'
+  ]
 };
 
 const PAKET=[
@@ -161,6 +263,8 @@ const PAKET=[
   {layanan:'Olahdata Only',app:'Lisrel',v:'4 Variabel',hK:330000,dpK:100000,hU:null,dpU:null,sd:'Data Pengelola'}
 ];
 
+let currentFormUrl='';
+
 function checkPw(){
   const pw=document.getElementById('pw-inp').value.trim().toLowerCase();
   const al=document.getElementById('pw-al');
@@ -168,6 +272,7 @@ function checkPw(){
   if(!pw){al.className='al err';al.textContent='Kode tidak boleh kosong.';return;}
   const kat=PW[pw];
   if(!kat){al.className='al err';al.textContent='Kode tidak valid. Hubungi tim AMKOBAR.';return;}
+  currentFormUrl=FORM[kat];
   document.getElementById('gate').style.display='none';
   buildPricelist(kat);
   document.getElementById('pl-'+kat).classList.add('on');
@@ -177,25 +282,21 @@ document.getElementById('pw-inp').addEventListener('keypress',e=>{if(e.key==='En
 function buildPricelist(kat){
   const isK=kat==='kerjasama';
   const el=document.getElementById('body-'+kat.charAt(0));
-  const formUrl=FORM[kat];
   const layananList=['BAB IV','BAB IV\u2013V','FULL BAB I\u2013V','Olahdata Only'];
   let html='';
-
   for(const lay of layananList){
     const allItems=PAKET.filter(p=>p.layanan===lay&&(isK||p.hU!=null));
     if(!allItems.length)continue;
     html+=`<div class="sec-ttl">${lay}</div>`;
-
-    // Group by sub-category (st for FULL BAB, sd for Olahdata)
-    const hasSubGroup = allItems[0].st || allItems[0].sd;
+    const hasSubGroup=allItems[0].st||allItems[0].sd;
     if(hasSubGroup){
       const subGroups=[...new Set(allItems.map(p=>p.st||p.sd))];
       for(const sg of subGroups){
         const items=allItems.filter(p=>(p.st||p.sd)===sg);
-        const sgLabel = sg==='Belum Ada Judul' ? '📝 Belum Ada Judul (termasuk pembuatan judul)' :
-                        sg==='Sudah Ada Judul' ? '✅ Sudah Ada Judul' :
-                        sg==='Data Sendiri'    ? '📂 Data Sendiri' :
-                        sg==='Data Pengelola'  ? '🗃️ Data Pengelola' : sg;
+        const sgLabel=sg==='Belum Ada Judul'?'📝 Belum Ada Judul (termasuk pembuatan judul)':
+                      sg==='Sudah Ada Judul'?'✅ Sudah Ada Judul':
+                      sg==='Data Sendiri'?'📂 Data Sendiri':
+                      sg==='Data Pengelola'?'🗃️ Data Pengelola':sg;
         html+=`<div class="sub-group-ttl">${sgLabel}</div><div class="pkg-grid">`;
         for(const p of items) html+=buildCard(p,isK,lay);
         html+='</div>';
@@ -206,27 +307,85 @@ function buildPricelist(kat){
       html+='</div>';
     }
   }
-
-  html+=`<div class="cta-box"><div class="cta-text"><h3>Siap Mulai Skripsimu?</h3><p>Daftar sekarang dan tim AMKOBAR akan segera menghubungi kamu untuk konfirmasi.</p></div><a class="cta-btn" href="${formUrl}" target="_blank">Daftar Sekarang →</a></div>`;
+  html+=`<div class="cta-box"><div class="cta-text"><h3>Siap Mulai Skripsimu?</h3><p>Daftar sekarang dan tim AMKOBAR akan segera menghubungi kamu untuk konfirmasi.</p></div><a class="cta-btn" href="${currentFormUrl}" target="_blank">Daftar Sekarang →</a></div>`;
   el.innerHTML=html;
 }
 
 function buildCard(p,isK,lay){
   const h=isK?p.hK:p.hU;
   const dp=isK?p.dpK:p.dpU;
-  const is3Tahap=lay==='FULL BAB I\u2013V'||lay==='Olahdata Only'&&false; // Olahdata 2 tahap
-  const skemaLabel = is3Tahap?(isK?'20%+30%+50%':'30%+30%+40%'):(isK?'DP+Pelunasan':'DP+Pelunasan');
-  const tahapLabel = is3Tahap?'3 Tahap':'2 Tahap';
-  return `<div class="pkg-card">
+  const is3=lay==='FULL BAB I\u2013V';
+  const tahap=is3?'3 Tahap':'2 Tahap';
+  const sub=p.st||p.sd||'';
+  const dataAttr=`data-lay="${lay}" data-app="${p.app}" data-v="${p.v}" data-h="${h}" data-dp="${dp}" data-sub="${sub}" data-is3="${is3}"`;
+  let badgeHtml='';
+  if(p.st) badgeHtml=`<div class="pkg-st">${p.st}</div>`;
+  return `<div class="pkg-card" onclick="openModal(this)" ${dataAttr}>
     <div class="pkg-app">${p.app}</div>
     <div class="pkg-var">${p.v}</div>
+    ${badgeHtml}
     <div class="pkg-price">${fmtRp(h)}</div>
     <div class="pkg-dp">DP: ${fmtRp(dp)}</div>
-    <div class="pkg-skema">📋 ${tahapLabel} — ${skemaLabel}</div>
+    <div class="pkg-skema">📋 ${tahap}</div>
+    <div class="pkg-hint">Klik untuk detail →</div>
   </div>`;
 }
 
-function fmtRp(n){if(n==null||n===0)return'—';return'Rp '+Math.round(n).toLocaleString('id-ID');}
+function openModal(el){
+  const lay=el.dataset.lay;
+  const app=el.dataset.app;
+  const v=el.dataset.v;
+  const h=parseInt(el.dataset.h);
+  const dp=parseInt(el.dataset.dp);
+  const sub=el.dataset.sub;
+  const is3=el.dataset.is3==='true';
+
+  document.getElementById('m-tag').textContent=lay;
+  document.getElementById('m-title').textContent=app+' \u2014 '+v;
+  document.getElementById('m-harga').textContent=fmtRp(h);
+  document.getElementById('m-dp').textContent=fmtRp(dp);
+
+  // badge
+  const badgeEl=document.getElementById('m-badge');
+  if(sub){
+    const cls=sub.includes('Judul')?'badge-judul':'badge-data';
+    badgeEl.innerHTML=`<span class="modal-badge ${cls}">${sub}</span>`;
+  } else {
+    badgeEl.innerHTML='';
+  }
+
+  // desc key
+  let descKey=lay;
+  if(lay==='FULL BAB I\u2013V') descKey='FULL_'+sub;
+  else if(lay==='Olahdata Only') descKey='D0_'+sub;
+  const items=DESC[descKey]||[];
+  document.getElementById('m-items').innerHTML=items.map(i=>
+    `<div class="modal-item"><div class="modal-check">✓</div><span class="modal-item-txt">${i}</span></div>`
+  ).join('');
+
+  // skema steps
+  const pelunasan=h-dp;
+  let stepsHtml='';
+  if(is3){
+    const tahap2=Math.round(h*0.3);
+    const lun=h-dp-tahap2;
+    stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Tahap 2 ${fmtRp(tahap2)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(lun)}</span>`;
+  } else {
+    stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(pelunasan)}</span>`;
+  }
+  document.getElementById('m-steps').innerHTML=stepsHtml;
+
+  document.getElementById('m-cta').onclick=()=>window.open(currentFormUrl,'_blank');
+  document.getElementById('overlay').style.display='block';
+  document.getElementById('modal').style.display='block';
+}
+
+function closeModal(){
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('modal').style.display='none';
+}
+
+function fmtRp(n){if(n==null||isNaN(n))return'\u2014';return'Rp '+Math.round(n).toLocaleString('id-ID');}
 </script>
 </body>
 </html>

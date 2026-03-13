@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ error: 'Gagal mengambil data dari server.' });
+      return res.status(500).json({ error: `Notion error: ${response.status} - ${JSON.stringify(data)}` });
     }
 
     if (!data.results || data.results.length === 0) {

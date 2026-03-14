@@ -85,6 +85,7 @@ export default async function handler(req, res) {
       tahap2_masuk: getCheckbox(props['Tahap 2 Masuk']),
       pelunasan_masuk: getCheckbox(props['Pelunasan Masuk']),
       sisa_pembayaran: getFormula(props['Sisa Pembayaran']),
+      total_addon: getRollup(props['Total Add-On']) || getFormula(props['Total Add-On']) || 0,
       link_drive: getUrl(props['Link Drive']),
       jumlah_referral: getRollup(props['Jumlah Referral']) || 0,
       diskon_referral: getFormula(props['Diskon Referral']) || 0,

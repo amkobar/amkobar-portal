@@ -390,7 +390,7 @@ function openRatingModal(){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{
       layout:'modal',
       width:500,
-      hiddenFields:{'NIM/NPM':window._clientNim||''},
+      hiddenFields:{'nim':window._clientNim||''},
       onSubmit:function(){
         window.Tally.closePopup(TALLY_RATING_FORM_ID);
         setTimeout(verifyRatingSubmit,5000);

@@ -446,9 +446,8 @@ function renderDash(d){
       ab.className='akses-box non-permanen';
       ab.innerHTML=`<div class="akses-ttl">🔴 Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
       ab.style.display='block';
-      // Set data-tally-src dengan NIM otomatis lalu trigger Tally embed
-      const iframeEl=document.getElementById('rating-iframe');
-      iframeEl.setAttribute('data-tally-src',`https://tally.so/r/${TALLY_RATING_FORM_ID}?nim=${encodeURIComponent(d.nim)}&transparentBackground=1`);
+      // Simpan NIM ke variable global untuk dipakai Tally.openPopup
+      window._clientNim=d.nim;
       rb.style.display='flex';
     }
   } else {
@@ -504,54 +503,22 @@ function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
 
 // ===== MODAL RATING =====
-function iframeLoaded(){
-  document.getElementById('rating-loading').style.display='none';
-}
 function openRatingModal(){
-  document.getElementById('modal-rating').classList.add('on');
-  document.body.style.overflow='hidden';
-  document.getElementById('rating-loading').style.display='flex';
-  // Set src langsung ke iframe saat modal dibuka
-  const iframeEl=document.getElementById('rating-iframe');
-  const tallySrc=iframeEl.getAttribute('data-tally-src');
-  if(tallySrc && iframeEl.src!==tallySrc){
-    iframeEl.src=tallySrc;
+  if(window.Tally){
+    window.Tally.openPopup(TALLY_RATING_FORM_ID,{
+      layout:'modal',
+      width:500,
+      hideTitle:false,
+      hiddenFields:{nim:window._clientNim||''},
+      onSubmit:function(){
+        window.Tally.closePopup(TALLY_RATING_FORM_ID);
+      }
+    });
   }
 }
-function closeRatingModal(){
-  document.getElementById('modal-rating').classList.remove('on');
-  document.body.style.overflow='';
-}
-// Tutup modal kalau klik overlay
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('modal-rating').addEventListener('click',function(e){
-    if(e.target===this) closeRatingModal();
-  });
-});
 // ===== END MODAL RATING =====
 </script>
-
-<!-- MODAL RATING -->
-<div id="modal-rating" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div>
-        <div class="modal-ttl">⭐ Beri Rating & Testimoni</div>
-        <div class="modal-sub">Isi form berikut untuk mengaktifkan Akses Permanen</div>
-      </div>
-      <button class="modal-close" onclick="closeRatingModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="rating-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px;color:var(--g400);font-size:13.5px">
-        <div style="width:28px;height:28px;border:3px solid var(--g200);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
-        Memuat form...
-      </div>
-      <iframe id="rating-iframe" class="modal-iframe" data-tally-src="" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" title="Rating Layanan"></iframe>
-    </div>
-  </div>
-</div>
 <script async src="https://tally.so/widgets/embed.js"></script>
-<!-- END MODAL RATING -->
 
 </body>
 </html>

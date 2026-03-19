@@ -504,6 +504,7 @@ function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
 
 // ===== MODAL RATING =====
+function iframeLoaded(){}
 function openRatingModal(){
   if(window.Tally){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{

@@ -6,6 +6,7 @@
 <title>AMKOBAR — Portal Client</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<script async src="https://tally.so/widgets/embed.js"></script>
 <style>
 :root{
   --navy:#0d2144;--navy-2:#1a3560;--blue:#1a6bbd;--blue-2:#2d84e0;
@@ -23,7 +24,6 @@
 body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);min-height:100vh}
 .nav{background:var(--navy);height:62px;padding:0 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.18)}
 .nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none;cursor:pointer}
-.nav-logo{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff}
 .nav-name{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:-.3px}
 .nav-sub{font-size:11px;color:rgba(255,255,255,.45);font-weight:300}
 .nav-links{display:flex;gap:2px}
@@ -102,48 +102,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .sisa-ic{width:40px;height:40px;background:rgba(255,255,255,.13);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .drive-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;background:var(--blue-pale);color:var(--blue);border:1px solid #bfdbfe;border-radius:var(--rs);font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s;margin-top:11px}
 .drive-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
-/* ===== RATING BUTTON ===== */
 .rating-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;background:linear-gradient(135deg,#f59e0b 0%,#f0a500 100%);color:#fff;border:none;border-radius:var(--rs);font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s;margin-top:11px;box-shadow:0 4px 14px rgba(240,165,0,.35)}
 .rating-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(240,165,0,.45);color:#fff}
-/* ===== END RATING BUTTON ===== */
-/* ===== AKSES BOX ===== */
 .akses-box{border-radius:var(--rs);padding:14px 16px;margin-top:11px;font-size:13px;line-height:1.6;border:1px solid}
 .akses-box.non-permanen{background:#fffbeb;border-color:#fde68a;color:#92400e}
 .akses-box.permanen{background:var(--ok-bg);border-color:var(--ok-border);color:#065f46}
 .akses-box .akses-ttl{font-weight:700;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
 .akses-box .akses-desc{font-size:12.5px;line-height:1.6;opacity:.9}
-/* ===== END AKSES BOX ===== */
-/* ===== MODAL RATING ===== */
-.modal-overlay{position:fixed;inset:0;background:rgba(13,33,68,.55);backdrop-filter:blur(4px);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.on{display:flex}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;box-shadow:0 24px 80px rgba(13,33,68,.22);display:flex;flex-direction:column;animation:modalIn .25s ease}
-@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.modal-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.modal-ttl{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--navy)}
-.modal-sub{font-size:12.5px;color:var(--g400);margin-top:2px}
-.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--g100);color:var(--g600);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
-.modal-close:hover{background:var(--g200);color:var(--g800)}
-.modal-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.modal-iframe{width:100%;flex:1;border:none;min-height:460px}
-/* ===== END MODAL RATING ===== */
-/* ===== MODAL RATING ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.modal-overlay.on{display:flex}
-.modal-box{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;animation:modalIn .25s ease}
-@keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
-.modal-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.modal-ttl{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy)}
-.modal-sub{font-size:12.5px;color:var(--g400);margin-top:2px}
-.modal-close{width:32px;height:32px;border-radius:8px;background:var(--g100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--g600);transition:all .18s;flex-shrink:0}
-.modal-close:hover{background:var(--g200);color:var(--g800)}
-.modal-body{flex:1;overflow:hidden;position:relative;min-height:480px}
-.modal-iframe{width:100%;height:100%;border:none;position:absolute;inset:0}
-.modal-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#fff;z-index:1}
-.modal-loading .spin{width:36px;height:36px;border:3px solid var(--g200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.modal-loading p{font-size:13px;color:var(--g400)}
-/* ===== END MODAL RATING ===== */
 .ref-card{border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;border:1px solid var(--warn-border);background:var(--warn-bg)}
 .ref-card.ok{background:var(--ok-bg);border-color:var(--ok-border)}
 .ref-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--accent);flex-shrink:0}
@@ -178,7 +143,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 
 <nav class="nav">
   <div class="nav-brand" onclick="goHome()">
-    <img src="data:image/png;base64,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" style="width:34px;height:34px;border-radius:9px;object-fit:cover;" />
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCAIAAgADASIAAhEBAxEB/8QAHAABAAIBBQEAAAAAAAAAAAAAAAECAwQFBgcI/8QAUhAAAQMDAgMEBQQJCQcEAwAAAQACAwQREiExBQYTQVFhcYEUIjJCkbEHFSNSYnKhwdHwFiQzU2OCkqLhJTRDRFRVs8LSCCZFhKMXJlZj/9oADAMBAAIRAxEAPwDxCiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIA//2Q==" style="width:34px;height:34px;border-radius:9px;object-fit:cover;" />
     <div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik & Statistik</div></div>
   </div>
   <div class="nav-links">
@@ -188,7 +153,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   </div>
 </nav>
 
-<!-- LOGIN PAGE -->
 <div id="pg-home" class="pg on">
   <div class="hero">
     <div class="hero-badge">✦ Portal Khusus Client AMKOBAR</div>
@@ -205,7 +169,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
 
-<!-- FAQ PAGE -->
 <div id="pg-faq" class="pg">
   <div class="pub">
     <h2>Pertanyaan Umum</h2>
@@ -215,7 +178,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dash" class="dash">
   <div class="dash-hdr">
     <div class="cli-info">
@@ -233,7 +195,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
     <button class="tab-btn" onclick="switchTab('faq-in',this)">💬 FAQ Sidang</button>
   </div>
   <div class="dash-body">
-
     <div id="tc-status" class="tc on">
       <div class="sg">
         <div>
@@ -261,16 +222,13 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
               <div class="sisa-ic">💰</div>
             </div>
             <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">📂 Kirim File & Data Disini</a>
-            <!-- INFO AKSES + TOMBOL RATING — muncul otomatis saat status Selesai -->
             <div id="akses-box" style="display:none"></div>
-            <button id="rating-btn" onclick="openRatingModal()" class="rating-btn" style="display:none">⭐ Beri Rating & Testimoni</button>
+            <button id="rating-btn" class="rating-btn" style="display:none" onclick="openRatingModal()">⭐ Beri Rating & Testimoni</button>
           </div>
         </div>
       </div>
     </div>
-
     <div id="tc-cbh" class="tc"><div id="cbh-content"></div></div>
-
     <div id="tc-faq-in" class="tc">
       <div style="max-width:720px">
         <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">FAQ Pertanyaan Sidang</h2>
@@ -278,33 +236,13 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
         <div class="faq-list" id="faq-in"></div>
       </div>
     </div>
-
   </div>
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
 
-<!-- MODAL RATING -->
-<div id="modal-rating" class="modal-overlay" onclick="closeModalOutside(event)">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div>
-        <div class="modal-ttl">⭐ Beri Rating & Testimoni</div>
-        <div class="modal-sub">Isi form berikut untuk mengaktifkan Akses Permanen</div>
-      </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-loading" id="modal-loading">
-        <div class="spin"></div>
-        <p>Memuat form...</p>
-      </div>
-      <iframe id="modal-iframe" class="modal-iframe" src="" onload="iframeLoaded()" allowfullscreen></iframe>
-    </div>
-  </div>
-</div>
-<!-- END MODAL RATING -->
-
 <script>
+const TALLY_RATING_FORM_ID='yPD7rg';
+
 const FAQ_PUB=[
   {q:"Berapa lama proses pengerjaan?",a:"Tergantung jenis layanan. BAB IV dan BAB IV–V Kisaran 2–3 hari kerja dan FULL BAB I–V bisa 5–10 hari kerja. Waktu bisa bervariasi sesuai antrian dan kompleksitas penelitian."},
   {q:"File atau data apa yang perlu dikirim?",a:"Kirim File Panduan Penulisan dari kampus anda (jika ada) data data penelitian pendukung lainya"},
@@ -329,38 +267,19 @@ const CBH={
   lisrel:{title:"📐 Tutorial Lisrel",items:[]},
 };
 
-// Form ID Tally rating
-const TALLY_RATING_FORM_ID = 'yPD7rg';
-
 buildFaq('faq-pub',FAQ_PUB);
 buildFaq('faq-in',FAQ_IN);
 buildCBH();
 
 function buildFaq(id,data){
-  document.getElementById(id).innerHTML=data.map(f=>`
-    <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">${f.q}<div class="faq-arr">▼</div></div>
-      <div class="faq-a">${f.a}</div>
-    </div>`).join('');
+  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">${f.q}<div class="faq-arr">▼</div></div><div class="faq-a">${f.a}</div></div>`).join('');
 }
-
 function buildCBH(){
-  const el=document.getElementById('cbh-content');
-  let html='';
-  for(const k of['spss','smartpls','lisrel']){
-    const s=CBH[k];
-    if(!s.items.length)continue;
-    html+=`<div class="cbh-stitle">${s.title}</div><div class="cbh-grid">`;
-    for(const item of s.items){
-      if(item.type==='youtube')html+=`<div class="cbh-card"><iframe class="cbh-embed" src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div></div></div>`;
-      else html+=`<div class="cbh-card"><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div><a class="cbh-lnk" href="${item.url}" target="_blank">📄 Buka File →</a></div></div>`;
-    }
-    html+='</div>';
-  }
+  const el=document.getElementById('cbh-content');let html='';
+  for(const k of['spss','smartpls','lisrel']){const s=CBH[k];if(!s.items.length)continue;html+=`<div class="cbh-stitle">${s.title}</div><div class="cbh-grid">`;for(const item of s.items){if(item.type==='youtube')html+=`<div class="cbh-card"><iframe class="cbh-embed" src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div></div></div>`;else html+=`<div class="cbh-card"><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div><a class="cbh-lnk" href="${item.url}" target="_blank">📄 Buka File →</a></div></div>`;}html+='</div>';}
   if(!html)html=`<div class="empty-state"><div class="ei">📚</div><div class="et">Konten sedang dipersiapkan</div><div style="font-size:13.5px">Tutorial cara baca hasil akan segera tersedia.</div></div>`;
   el.innerHTML=html;
 }
-
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.getElementById('dash').classList.remove('on');
@@ -372,14 +291,11 @@ function goHome(){showPg('home');}
 function switchTab(id,btn){
   document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
-  document.getElementById('tc-'+id).classList.add('on');
-  btn.classList.add('on');
+  document.getElementById('tc-'+id).classList.add('on');btn.classList.add('on');
 }
-
 async function doLogin(){
   const kode=document.getElementById('kode-inp').value.trim().toUpperCase();
-  const al=document.getElementById('login-al');
-  const btn=document.getElementById('login-btn');
+  const al=document.getElementById('login-al');const btn=document.getElementById('login-btn');
   al.className='al';al.textContent='';
   if(!kode){al.className='al err';al.textContent='Kode akses tidak boleh kosong.';return;}
   btn.disabled=true;btn.textContent='Memuat...';
@@ -388,7 +304,7 @@ async function doLogin(){
     const data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||'Terjadi kesalahan server.');
     if(!data.found){al.className='al err';al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';return;}
-    window._lastKode=kode; // simpan kode untuk verifikasi rating
+    window._lastKode=kode;
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
@@ -396,7 +312,6 @@ async function doLogin(){
   finally{btn.disabled=false;btn.textContent='Masuk →';}
 }
 document.getElementById('kode-inp').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
-
 function doLogout(){
   document.getElementById('dash').classList.remove('on');
   document.getElementById('pg-home').classList.add('on');
@@ -405,15 +320,12 @@ function doLogout(){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',i===0);});
   document.querySelectorAll('.tc').forEach((t,i)=>{t.classList.toggle('on',i===0);});
 }
-
 function renderDash(d){
   const nama=d.nama||'?';
   document.getElementById('d-av').textContent=nama.charAt(0).toUpperCase();
   document.getElementById('d-nama').textContent=nama;
   document.getElementById('d-meta').textContent=[d.nim,d.universitas].filter(Boolean).join(' · ');
-  const sb=document.getElementById('d-sbadge');
-  sb.textContent=d.status_project||'—';
-  sb.className='sbadge '+statusClass(d.status_project);
+  const sb=document.getElementById('d-sbadge');sb.textContent=d.status_project||'—';sb.className='sbadge '+statusClass(d.status_project);
   document.getElementById('i-judul').textContent=d.judul||'—';
   document.getElementById('i-layanan').textContent=d.jenis_layanan||'—';
   document.getElementById('i-app').textContent=d.aplikasi||'—';
@@ -422,74 +334,44 @@ function renderDash(d){
   document.getElementById('i-ddl').textContent=d.deadline?fmtDate(d.deadline):'Belum ditentukan';
   renderPayment(d);
   document.getElementById('sisa-amt').textContent=d.sisa_pembayaran!=null?fmtRp(d.sisa_pembayaran):'—';
-  if(d.total_addon&&d.total_addon>0){
-    document.getElementById('addon-row').style.display='flex';
-    document.getElementById('addon-amt').textContent=fmtRp(d.total_addon);
-  } else {
-    document.getElementById('addon-row').style.display='none';
-  }
+  if(d.total_addon&&d.total_addon>0){document.getElementById('addon-row').style.display='flex';document.getElementById('addon-amt').textContent=fmtRp(d.total_addon);}
+  else document.getElementById('addon-row').style.display='none';
   const db=document.getElementById('drive-btn');
   if(d.link_drive){db.href=d.link_drive;db.style.display='flex';}else db.style.display='none';
-
-  // ===== TOMBOL RATING + INFO AKSES — muncul hanya kalau status Selesai =====
-  const rb=document.getElementById('rating-btn');
-  const ab=document.getElementById('akses-box');
+  const rb=document.getElementById('rating-btn');const ab=document.getElementById('akses-box');
   const status=(d.status_project||'').toLowerCase();
-  if(status.includes('selesai') && d.nim){
+  if(status.includes('selesai')&&d.nim){
     if(d.testimoni_selesai){
-      // Sudah isi rating → Akses Permanen
       ab.className='akses-box permanen';
       ab.innerHTML=`<div class="akses-ttl">✅ Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
-      ab.style.display='block';
-      rb.style.display='none';
-    } else {
-      // Belum isi rating → Akses Non-Permanen
+      ab.style.display='block';rb.style.display='none';
+    }else{
       ab.className='akses-box non-permanen';
       ab.innerHTML=`<div class="akses-ttl">🔴 Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
       ab.style.display='block';
-      // Simpan NIM ke variable global untuk dipakai Tally.openPopup
       window._clientNim=d.nim;
       rb.style.display='flex';
     }
-  } else {
-    ab.style.display='none';
-    rb.style.display='none';
-  }
-  // ===== END TOMBOL RATING =====
-
+  }else{ab.style.display='none';rb.style.display='none';}
   renderReferral(d);
 }
-
 function renderPayment(d){
-  const skema=d.skema||'';
-  const is3=skema.includes('3');
+  const skema=d.skema||'';const is3=skema.includes('3');
   const kat=(d.kategori_harga||'').toLowerCase();
   const harga=kat==='kerjasama'?(d.harga_kerjasama||0):(d.harga_umum||0);
   const dp=kat==='kerjasama'?(d.dp_kerjasama||0):(d.dp_umum||0);
   let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'💳'}];
-  if(is3){
-    const t2=Math.round(harga*0.3);
-    const lun=harga-dp-t2;
-    steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});
-    steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});
-  } else {
-    const lun=harga-dp;
-    steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});
-  }
-  document.getElementById('psteps').innerHTML=
-    `<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+
-    steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('');
+  if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
+  else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
+  document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('');
 }
-
 function renderReferral(d){
-  const el=document.getElementById('ref-wrap');
-  const j=d.jumlah_referral||0;const dis=d.diskon_referral||0;
+  const el=document.getElementById('ref-wrap');const j=d.jumlah_referral||0;const dis=d.diskon_referral||0;
   if(j===0){el.style.display='none';return;}
   el.style.display='block';
   if(dis>0)el.innerHTML=`<div class="ref-card ok"><div class="ref-ic">🎁</div><div><div class="ref-ttl">Diskon Referral Aktif!</div><div class="ref-desc">Kamu berhasil mengajak ${j} orang dan mendapat diskon <strong>${fmtRp(dis)}</strong>. Sudah dipotong dari tagihan kamu.</div></div></div>`;
   else{const k=3-j;el.innerHTML=`<div class="ref-card"><div class="ref-ic">🎯</div><div><div class="ref-ttl">Program Referral</div><div class="ref-desc">Kamu sudah mengajak <strong>${j} orang</strong>. Kurang <strong>${k} lagi</strong> untuk mendapatkan diskon spesial!</div></div></div>`;}
 }
-
 function statusClass(s){
   if(!s)return 's-default';const l=s.toLowerCase();
   if(l.includes('menunggu review'))return 's-review';
@@ -503,47 +385,33 @@ function statusClass(s){
 function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
 
-// ===== MODAL RATING =====
-function iframeLoaded(){}
 function openRatingModal(){
   if(window.Tally){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{
       layout:'modal',
       width:500,
-      hideTitle:false,
       hiddenFields:{'NIM/NPM':window._clientNim||''},
       onSubmit:function(){
         window.Tally.closePopup(TALLY_RATING_FORM_ID);
-        // Tunggu Make proses dulu baru cek ke Notion
-        setTimeout(function(){
-          verifyRatingSubmit();
-        }, 4000);
+        setTimeout(verifyRatingSubmit,5000);
       }
     });
   }
 }
-
 function verifyRatingSubmit(){
-  const kode=document.getElementById('kode-inp').value.trim().toUpperCase()||window._lastKode||'';
-  if(!kode) return;
+  const kode=window._lastKode||'';
+  if(!kode)return;
   fetch(`/api/cek-status?kode=${encodeURIComponent(kode)}`)
     .then(r=>r.json())
     .then(data=>{
-      if(data.found && data.testimoni_selesai){
-        // Konfirmasi dari Notion → update UI
-        const ab=document.getElementById('akses-box');
-        const rb=document.getElementById('rating-btn');
+      if(data.found&&data.testimoni_selesai){
+        const ab=document.getElementById('akses-box');const rb=document.getElementById('rating-btn');
         ab.className='akses-box permanen';
         ab.innerHTML=`<div class="akses-ttl">✅ Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
-        ab.style.display='block';
-        rb.style.display='none';
+        ab.style.display='block';rb.style.display='none';
       }
-      // Kalau belum terverifikasi, biarkan tetap kuning — tidak ada perubahan
     }).catch(function(){});
 }
-// ===== END MODAL RATING =====
 </script>
-<script async src="https://tally.so/widgets/embed.js"></script>
-
 </body>
 </html>

@@ -506,13 +506,11 @@ function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric'
 function openRatingModal(){
   document.getElementById('modal-rating').classList.add('on');
   document.body.style.overflow='hidden';
-  // Trigger Tally embed load
-  if(window.Tally){
-    window.Tally.loadEmbeds();
-  } else {
-    const iframeEl=document.getElementById('rating-iframe');
-    const src=iframeEl.getAttribute('data-tally-src');
-    if(src && !iframeEl.src) iframeEl.src=src;
+  // Set src langsung ke iframe saat modal dibuka
+  const iframeEl=document.getElementById('rating-iframe');
+  const tallySrc=iframeEl.getAttribute('data-tally-src');
+  if(tallySrc && iframeEl.src!==tallySrc){
+    iframeEl.src=tallySrc;
   }
 }
 function closeRatingModal(){

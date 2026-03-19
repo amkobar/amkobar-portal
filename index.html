@@ -118,6 +118,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .modal-overlay.on{display:flex}
 .modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;box-shadow:0 24px 80px rgba(13,33,68,.22);display:flex;flex-direction:column;animation:modalIn .25s ease}
 @keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
 .modal-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .modal-ttl{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--navy)}
 .modal-sub{font-size:12.5px;color:var(--g400);margin-top:2px}
@@ -503,9 +504,13 @@ function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
 
 // ===== MODAL RATING =====
+function iframeLoaded(){
+  document.getElementById('rating-loading').style.display='none';
+}
 function openRatingModal(){
   document.getElementById('modal-rating').classList.add('on');
   document.body.style.overflow='hidden';
+  document.getElementById('rating-loading').style.display='flex';
   // Set src langsung ke iframe saat modal dibuka
   const iframeEl=document.getElementById('rating-iframe');
   const tallySrc=iframeEl.getAttribute('data-tally-src');
@@ -537,6 +542,10 @@ document.addEventListener('DOMContentLoaded',function(){
       <button class="modal-close" onclick="closeRatingModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div id="rating-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px;color:var(--g400);font-size:13.5px">
+        <div style="width:28px;height:28px;border:3px solid var(--g200);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></div>
+        Memuat form...
+      </div>
       <iframe id="rating-iframe" class="modal-iframe" data-tally-src="" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" title="Rating Layanan"></iframe>
     </div>
   </div>

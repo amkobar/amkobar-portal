@@ -388,6 +388,7 @@ async function doLogin(){
     const data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||'Terjadi kesalahan server.');
     if(!data.found){al.className='al err';al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';return;}
+    window._lastKode=kode; // simpan kode untuk verifikasi rating
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
@@ -509,12 +510,35 @@ function openRatingModal(){
       layout:'modal',
       width:500,
       hideTitle:false,
-      hiddenFields:{nim:window._clientNim||''},
+      hiddenFields:{'NIM/NPM':window._clientNim||''},
       onSubmit:function(){
         window.Tally.closePopup(TALLY_RATING_FORM_ID);
+        // Tunggu Make proses dulu baru cek ke Notion
+        setTimeout(function(){
+          verifyRatingSubmit();
+        }, 4000);
       }
     });
   }
+}
+
+function verifyRatingSubmit(){
+  const kode=document.getElementById('kode-inp').value.trim().toUpperCase()||window._lastKode||'';
+  if(!kode) return;
+  fetch(`/api/cek-status?kode=${encodeURIComponent(kode)}`)
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.found && data.testimoni_selesai){
+        // Konfirmasi dari Notion → update UI
+        const ab=document.getElementById('akses-box');
+        const rb=document.getElementById('rating-btn');
+        ab.className='akses-box permanen';
+        ab.innerHTML=`<div class="akses-ttl">✅ Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
+        ab.style.display='block';
+        rb.style.display='none';
+      }
+      // Kalau belum terverifikasi, biarkan tetap kuning — tidak ada perubahan
+    }).catch(function(){});
 }
 // ===== END MODAL RATING =====
 </script>

@@ -113,6 +113,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .akses-box .akses-ttl{font-weight:700;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
 .akses-box .akses-desc{font-size:12.5px;line-height:1.6;opacity:.9}
 /* ===== END AKSES BOX ===== */
+/* ===== MODAL RATING ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(13,33,68,.55);backdrop-filter:blur(4px);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.on{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;box-shadow:0 24px 80px rgba(13,33,68,.22);display:flex;flex-direction:column;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.modal-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-ttl{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--navy)}
+.modal-sub{font-size:12.5px;color:var(--g400);margin-top:2px}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--g100);color:var(--g600);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+.modal-close:hover{background:var(--g200);color:var(--g800)}
+.modal-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.modal-iframe{width:100%;flex:1;border:none;min-height:460px}
+/* ===== END MODAL RATING ===== */
+/* ===== MODAL RATING ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.on{display:flex}
+.modal-box{background:#fff;border-radius:20px;width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.modal-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-ttl{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy)}
+.modal-sub{font-size:12.5px;color:var(--g400);margin-top:2px}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--g100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--g600);transition:all .18s;flex-shrink:0}
+.modal-close:hover{background:var(--g200);color:var(--g800)}
+.modal-body{flex:1;overflow:hidden;position:relative;min-height:480px}
+.modal-iframe{width:100%;height:100%;border:none;position:absolute;inset:0}
+.modal-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#fff;z-index:1}
+.modal-loading .spin{width:36px;height:36px;border:3px solid var(--g200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-loading p{font-size:13px;color:var(--g400)}
+/* ===== END MODAL RATING ===== */
 .ref-card{border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;border:1px solid var(--warn-border);background:var(--warn-bg)}
 .ref-card.ok{background:var(--ok-bg);border-color:var(--ok-border)}
 .ref-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--accent);flex-shrink:0}
@@ -232,7 +262,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
             <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">📂 Kirim File & Data Disini</a>
             <!-- INFO AKSES + TOMBOL RATING — muncul otomatis saat status Selesai -->
             <div id="akses-box" style="display:none"></div>
-            <a id="rating-btn" href="#" target="_blank" class="rating-btn" style="display:none">⭐ Beri Rating & Testimoni</a>
+            <button id="rating-btn" onclick="openRatingModal()" class="rating-btn" style="display:none">⭐ Beri Rating & Testimoni</button>
           </div>
         </div>
       </div>
@@ -251,6 +281,27 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   </div>
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
+
+<!-- MODAL RATING -->
+<div id="modal-rating" class="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl">⭐ Beri Rating & Testimoni</div>
+        <div class="modal-sub">Isi form berikut untuk mengaktifkan Akses Permanen</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-loading" id="modal-loading">
+        <div class="spin"></div>
+        <p>Memuat form...</p>
+      </div>
+      <iframe id="modal-iframe" class="modal-iframe" src="" onload="iframeLoaded()" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<!-- END MODAL RATING -->
 
 <script>
 const FAQ_PUB=[
@@ -394,7 +445,8 @@ function renderDash(d){
       ab.className='akses-box non-permanen';
       ab.innerHTML=`<div class="akses-ttl">🔴 Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
       ab.style.display='block';
-      rb.href=`https://tally.so/r/${TALLY_RATING_FORM_ID}?nim=${encodeURIComponent(d.nim)}`;
+      // Set iframe src dengan NIM otomatis
+      document.getElementById('rating-iframe').src=`https://tally.so/embed/${TALLY_RATING_FORM_ID}?nim=${encodeURIComponent(d.nim)}&transparentBackground=1`;
       rb.style.display='flex';
     }
   } else {
@@ -448,6 +500,41 @@ function statusClass(s){
 }
 function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
+
+// ===== MODAL RATING =====
+function openRatingModal(){
+  document.getElementById('modal-rating').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeRatingModal(){
+  document.getElementById('modal-rating').classList.remove('on');
+  document.body.style.overflow='';
+}
+// Tutup modal kalau klik overlay
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('modal-rating').addEventListener('click',function(e){
+    if(e.target===this) closeRatingModal();
+  });
+});
+// ===== END MODAL RATING =====
 </script>
+
+<!-- MODAL RATING -->
+<div id="modal-rating" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl">⭐ Beri Rating & Testimoni</div>
+        <div class="modal-sub">Ulasan Anda membantu kami berkembang lebih baik</div>
+      </div>
+      <button class="modal-close" onclick="closeRatingModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="rating-iframe" class="modal-iframe" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<!-- END MODAL RATING -->
+
 </body>
 </html>

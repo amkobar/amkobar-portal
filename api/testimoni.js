@@ -50,7 +50,8 @@ export default async function handler(req, res) {
       const props = p.properties;
       const nama = getText(props['Nama Client']) || '';
       const inisial = nama.split(' ').slice(0, 2).map(w => w.charAt(0).toUpperCase()).join('');
-      const namaShort = nama.split(' ').slice(0, 2).join(' ');
+      const parts = nama.split(' ');
+	  const namaShort = parts.length <= 1 ? parts[0] : parts[0] + ' ' + parts.slice(1).map(w => w.charAt(0).toUpperCase() + '.').join(' ');
       const jenis = mapLayanan(getSelect(props['Jenis Layanan']));
       const aplikasi = getSelect(props['Aplikasi']);
       const subtitle = [jenis, aplikasi].filter(Boolean).join(' \u00b7 ');

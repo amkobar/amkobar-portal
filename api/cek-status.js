@@ -87,9 +87,10 @@ export default async function handler(req, res) {
       sisa_pembayaran: getFormula(props['Sisa Pembayaran']),
       total_addon: getRollup(props['Total Add-On']) || getFormula(props['Total Add-On']) || 0,
       link_drive: getUrl(props['Link Drive']),
+      link_hasil_final: getUrl(props['Link Hasil Final']),
       jumlah_referral: getRollup(props['Jumlah Referral']) || 0,
       diskon_referral: getFormula(props['Diskon Referral']) || 0,
-      testimoni_selesai: getCheckbox(props['Testimoni_Selesai']), // ✅ TAMBAHAN
+      testimoni_selesai: getCheckbox(props['Testimoni_Selesai']),
     });
 
   } catch (err) {

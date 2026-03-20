@@ -337,7 +337,11 @@ function renderDash(d){
   if(d.total_addon&&d.total_addon>0){document.getElementById('addon-row').style.display='flex';document.getElementById('addon-amt').textContent=fmtRp(d.total_addon);}
   else document.getElementById('addon-row').style.display='none';
   const db=document.getElementById('drive-btn');
-  if(d.link_drive){db.href=d.link_drive;db.style.display='flex';}else db.style.display='none';
+var statusNow=(d.status_project||'').toLowerCase();
+var isAksesFinal=statusNow.includes('pendampingan')||statusNow.includes('selesai');
+if(isAksesFinal&&d.link_hasil_final){db.href=d.link_hasil_final;db.textContent='📂 Akses Folder Project';db.style.display='flex';}
+else if(d.link_drive){db.href=d.link_drive;db.textContent='📂 Upload File & Data Kamu Di Sini';db.style.display='flex';}
+else{db.style.display='none';}
   const rb=document.getElementById('rating-btn');const ab=document.getElementById('akses-box');
   const status=(d.status_project||'').toLowerCase();
   if(status.includes('selesai')&&d.nim){

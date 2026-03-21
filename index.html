@@ -471,7 +471,7 @@ function renderReferral(d){
   let html=`<div class="ref-card-right ${sudahCukup||dis>0?'active':'pending'}">`;
   html+=`<div class="ref-top"><span class="ref-title">Referral Saya</span><span class="ref-counter ${sudahCukup||dis>0?'':'pending'}">${Math.min(j,3)} / 3</span></div>`;
   html+=`<div class="ref-progress">${dots}</div>`;
-  if(dis>0){
+  if(dis>0 && j>=3){
     html+=`<div class="ref-dis-box">🎁 Diskon <strong>${fmtRp(dis)}</strong> sudah aktif!</div>`;
   } else if(sudahCukup){
     html+=`<div class="ref-dis-box">✅ Syarat terpenuhi! Diskon sedang diproses.</div>`;

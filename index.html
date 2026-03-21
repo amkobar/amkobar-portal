@@ -417,8 +417,9 @@ else{db.style.display='none';}
 function renderPayment(d){
   const skema=d.skema||'';const is3=skema.includes('3');
   const kat=(d.kategori_harga||'').toLowerCase();
-  const harga=kat==='kerjasama'?(d.harga_kerjasama||0):(d.harga_umum||0);
-  const dp=kat==='kerjasama'?(d.dp_kerjasama||0):(d.dp_umum||0);
+  const isKerjasama=kat==='kerjasama'||kat==='khk';
+  const harga=isKerjasama?(d.harga_kerjasama||0):(d.harga_umum||0);
+  const dp=isKerjasama?(d.dp_kerjasama||0):(d.dp_umum||0);
   let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'💳'}];
   if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
   else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
@@ -431,8 +432,13 @@ function renderReferral(d){
   const kode=d.kode_akses||'';
   const baseUrl='https://amkobar-portal.vercel.app';
   const kat=(d.kategori_harga||'').toLowerCase();
-  const formId=kat==='kerjasama'?'jaBkzY':'MeOabY';
-  const khParam=kat==='kerjasama'?'khk':'khu';
+  const isKerjasama=kat==='kerjasama'||kat==='khk';
+  const formId=isKerjasama?'jaBkzY':'MeOabY';
+  const khParam=isKerjasama?'khk':'khu';
+  
+  
+  
+  
   const refLink=`https://tally.so/r/${formId}?kh=${khParam}&ref=${kode}`;
   const dots=[0,1,2].map(i=>`<div class="ref-dot${i<j?' filled':''}"></div>`).join('');
   const sudahCukup=j>=3;

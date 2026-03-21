@@ -84,7 +84,13 @@ export default async function handler(req, res) {
       dp_masuk: getCheckbox(props['DP Masuk']),
       tahap2_masuk: getCheckbox(props['Tahap 2 Masuk']),
       pelunasan_masuk: getCheckbox(props['Pelunasan Masuk']),
-      sisa_pembayaran: getFormula(props['Sisa Pembayaran']),
+     sisa_pembayaran: (() => {
+	 const raw = getFormula(props['Sisa Pembayaran']);
+	 const dis = props['Diskon Referral']?.number || 0;
+	 const j = getRollup(props['Jumlah Referral']) || 0;
+	 if (dis > 0 && j < 3) return (raw || 0) + dis;
+	 return raw;
+	 })(),
       total_addon: getRollup(props['Total Add-On']) || getFormula(props['Total Add-On']) || 0,
       link_drive: getUrl(props['Link Drive']),
       link_hasil_final: getUrl(props['Link Hasil Final']),

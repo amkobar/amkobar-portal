@@ -151,9 +151,33 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .ref-copy-btn{width:100%;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
 .ref-copy-btn:hover{background:var(--navy-2)}
 .ref-dis-box{background:var(--ok-bg);border:1px solid var(--ok-border);border-radius:8px;padding:10px 14px;font-size:13px;color:#065f46;font-weight:500;text-align:center;margin-bottom:8px}
+
+.ref-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.ref-popup{background:#fff;border-radius:var(--r);padding:28px;max-width:380px;width:100%;box-shadow:var(--sh2)}
+.ref-popup-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.ref-popup-desc{font-size:13.5px;color:var(--g600);line-height:1.65;margin-bottom:20px}
+.ref-popup-btns{display:flex;gap:10px}
+.ref-popup-cancel{flex:1;padding:10px;border:1px solid var(--g200);border-radius:var(--rs);background:#fff;font-size:13.5px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--g600);cursor:pointer}
+.ref-popup-copy{flex:2;padding:10px;border:none;border-radius:var(--rs);background:var(--navy);color:#fff;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer}
+.ref-popup-copy:hover{background:var(--navy-2)}
+
+
+
 </style>
 </head>
 <body>
+
+<div id="ref-popup-overlay" class="ref-popup-overlay" style="display:none" onclick="if(event.target===this)closeRefPopup()">
+  <div class="ref-popup">
+  <div class="ref-popup-title">⚠️ Setelah Membagikan Link</div>
+  <div class="ref-popup-desc">Ingatkan calon client atau teman kamu untuk <strong>menghubungi admin AMKOBAR via WhatsApp terlebih dahulu</strong> sebelum mengisi form registrasi.</div>
+   <div class="ref-popup-btns">
+      <button class="ref-popup-cancel" onclick="closeRefPopup()">Batal</button>
+      <button class="ref-popup-copy" id="ref-popup-copy-btn" onclick="doRefCopy()">Salin & Bagikan</button>
+    </div>
+  </div>
+</div>
+
 
 <nav class="nav">
   <div class="nav-brand" onclick="goHome()">
@@ -461,12 +485,26 @@ function renderReferral(d){
   el.innerHTML=html;
   el.style.display='block';
 }
+
 function copyRefLink(url,btn){
-  navigator.clipboard.writeText(url).then(()=>{
-    btn.textContent='✓ Tersalin!';setTimeout(()=>{btn.textContent='Salin Link Referral';},2000);
+  window._refLinkToCopy=url;
+  document.getElementById('ref-popup-overlay').style.display='flex';
+}
+function closeRefPopup(){
+  document.getElementById('ref-popup-overlay').style.display='none';
+}
+function doRefCopy(){
+  const url=window._refLinkToCopy||'';
+  const waUrl='https://wa.me/6281267090606';
+  const pesan=`Halo! Saya merekomendasikan kamu untuk menggunakan layanan AMKOBAR 🎓\n\nSebelum mendaftar, hubungi admin dulu via WhatsApp:\n${waUrl}\n\nSetelah deal dengan admin, gunakan link registrasi ini:\n${url}`;
+  const btn=document.getElementById('ref-popup-copy-btn');
+  navigator.clipboard.writeText(pesan).then(()=>{
+    btn.textContent='✓ Tersalin!';
+    setTimeout(()=>{btn.textContent='Salin & Bagikan';closeRefPopup();},1500);
   }).catch(()=>{
-    const t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);
-    btn.textContent='✓ Tersalin!';setTimeout(()=>{btn.textContent='Salin Link Referral';},2000);
+    const t=document.createElement('textarea');t.value=pesan;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);
+    btn.textContent='✓ Tersalin!';
+    setTimeout(()=>{btn.textContent='Salin & Bagikan';closeRefPopup();},1500);
   });
 }
 function statusClass(s){

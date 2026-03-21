@@ -90,6 +90,7 @@ export default async function handler(req, res) {
       link_hasil_final: getUrl(props['Link Hasil Final']),
       jumlah_referral: getRollup(props['Jumlah Referral']) || 0,
       diskon_referral: getFormula(props['Diskon Referral']) || 0,
+	  kode_akses: getFormula(props['Kode Akses']),
       testimoni_selesai: getCheckbox(props['Testimoni_Selesai']),
     });
 

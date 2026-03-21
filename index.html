@@ -447,8 +447,9 @@ function renderPayment(d){
   let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'💳'}];
   if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
   else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
-  const dis=d.diskon_referral||0;
-const disRow=dis>0?`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:var(--rs);border:1px solid var(--ok-border);background:var(--ok-bg);margin-top:-4px"><div style="font-size:13.5px;font-weight:500;color:var(--ok);display:flex;align-items:center;gap:8px"><span>🎁</span><span>Diskon Referral</span></div><div style="font-size:13.5px;font-weight:600;color:var(--ok)">-${fmtRp(dis)}</div></div>`:'';
+ const dis=d.diskon_referral||0;
+const j=d.jumlah_referral||0;
+const disRow=(dis>0&&j>=3)?`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:var(--rs);border:1px solid var(--ok-border);background:var(--ok-bg);margin-top:-4px"><div style="font-size:13.5px;font-weight:500;color:var(--ok);display:flex;align-items:center;gap:8px"><span>🎁</span><span>Diskon Referral</span></div><div style="font-size:13.5px;font-weight:600;color:var(--ok)">-${fmtRp(dis)}</div></div>`:'';
 document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('')+disRow;
 }
 function renderReferral(d){

@@ -331,7 +331,17 @@ function buildCBH(){
 }
 
 
+// ============================================================
+// GANTI SELURUH FUNGSI loadTestimoni() DI index.html DENGAN INI
+// ============================================================
+
 var _testimoniLoaded=false;
+var _testimoniAll=[];
+var _testimoniFiltered=[];
+var _testimoniShown=0;
+var _testimoniPerPage=8;
+var _testimoniActiveFilter='Semua';
+
 function loadTestimoni(){
   if(_testimoniLoaded)return;
   _testimoniLoaded=true;
@@ -340,24 +350,110 @@ function loadTestimoni(){
   grid.innerHTML='<p style="font-size:14px;color:var(--g400)">Memuat...</p>';
   fetch('/api/testimoni').then(function(r){return r.json();}).then(function(data){
     if(!data.length){grid.innerHTML='<p style="font-size:14px;color:var(--g400)">Belum ada testimoni.</p>';return;}
+    _testimoniAll=data;
+
+    // Hitung rata-rata
     var total=data.reduce(function(s,t){return s+t.rating;},0);
     var rataRata=(total/data.length).toFixed(1);
-    var colors=[['#E6F1FB','#0C447C'],['#E1F5EE','#085041'],['#EEEDFE','#3C3489'],['#FAEEDA','#633806'],['#FAECE7','#993C1D'],['#EAF3DE','#27500A']];
-    avg.innerHTML='<span style="font-size:22px;font-weight:600;color:var(--g800)">'+rataRata+'</span><span style="color:#BA7517;font-size:18px">★★★★★</span><span style="font-size:13px;color:var(--g600)">('+data.length+' ulasan)</span>';
-    grid.innerHTML=data.map(function(t,i){
-      var c=colors[i%colors.length];
-      var stars='';for(var s=1;s<=5;s++)stars+='<span style="color:'+(s<=t.rating?'#BA7517':'#ddd')+'">★</span>';
-      return '<div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px">'
-        +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">'
-        +'<div style="width:38px;height:38px;border-radius:50%;background:'+c[0]+';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:'+c[1]+';flex-shrink:0">'+t.inisial+'</div>'
-        +'<div><p style="font-size:13px;font-weight:600;margin:0;color:var(--g800)">'+t.nama+'</p>'
-        +'<p style="font-size:11px;color:var(--g600);margin:0">'+t.subtitle+'</p></div></div>'
-        +'<div style="font-size:14px;margin-bottom:8px">'+stars+'</div>'
-        +'<p style="font-size:13px;color:var(--g600);margin:0;line-height:1.6;font-style:italic">"'+t.teks+'"</p>'
-        +'</div>';
-    }).join('');
-  }).catch(function(){grid.innerHTML='<p style="font-size:14px;color:var(--g400)">Gagal memuat testimoni.</p>';});
+    avg.innerHTML='<span style="font-size:22px;font-weight:600;color:var(--g800)">'+rataRata+'</span>'
+      +'<span style="color:#BA7517;font-size:18px">★★★★★</span>'
+      +'<span style="font-size:13px;color:var(--g600)">('+data.length+' ulasan)</span>';
+
+    // Buat tombol filter
+    var filters=['Semua','BAB IV','BAB IV–V','BAB I–V','BAB I–V + Judul','D0'];
+    var filterHtml='<div id="testimoni-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">';
+    filters.forEach(function(f){
+      var isActive=f==='Semua';
+      filterHtml+='<button onclick="filterTestimoni(\''+f+'\')" id="tf-'+f.replace(/[^a-zA-Z0-9]/g,'_')+'"'
+        +' style="padding:7px 16px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:\'DM Sans\',sans-serif;'
+        +(isActive
+          ? 'background:var(--navy);color:#fff;border:1.5px solid var(--navy);'
+          : 'background:#fff;color:var(--g600);border:1.5px solid var(--g200);')
+        +'">'+f+'</button>';
+    });
+    filterHtml+='</div>';
+    document.getElementById('testimoni-avg').insertAdjacentHTML('afterend', filterHtml);
+
+    // Tampilkan awal
+    filterTestimoni('Semua');
+  }).catch(function(){
+    document.getElementById('testimoni-grid').innerHTML='<p style="font-size:14px;color:var(--g400)">Gagal memuat testimoni.</p>';
+  });
 }
+
+function filterTestimoni(filter){
+  _testimoniActiveFilter=filter;
+  _testimoniShown=0;
+
+  // Update style tombol filter
+  var filters=['Semua','BAB IV','BAB IV–V','BAB I–V','BAB I–V + Judul','D0'];
+  filters.forEach(function(f){
+    var btn=document.getElementById('tf-'+f.replace(/[^a-zA-Z0-9]/g,'_'));
+    if(!btn)return;
+    if(f===filter){
+      btn.style.background='var(--navy)';btn.style.color='#fff';btn.style.borderColor='var(--navy)';
+    }else{
+      btn.style.background='#fff';btn.style.color='var(--g600)';btn.style.borderColor='var(--g200)';
+    }
+  });
+
+  // Filter data
+  if(filter==='Semua'){
+    _testimoniFiltered=_testimoniAll;
+  }else{
+    _testimoniFiltered=_testimoniAll.filter(function(t){
+      return (t.subtitle||'').includes(filter);
+    });
+  }
+
+  // Reset grid
+  document.getElementById('testimoni-grid').innerHTML='';
+  renderMoreTestimoni();
+}
+
+function renderMoreTestimoni(){
+  var grid=document.getElementById('testimoni-grid');
+  var colors=[['#E6F1FB','#0C447C'],['#E1F5EE','#085041'],['#EEEDFE','#3C3489'],['#FAEEDA','#633806'],['#FAECE7','#993C1D'],['#EAF3DE','#27500A']];
+  
+  // Hapus tombol load more lama jika ada
+  var oldBtn=document.getElementById('load-more-btn');
+  if(oldBtn)oldBtn.remove();
+
+  if(_testimoniFiltered.length===0){
+    grid.innerHTML='<p style="font-size:14px;color:var(--g400);grid-column:1/-1">Belum ada testimoni untuk kategori ini.</p>';
+    return;
+  }
+
+  var batch=_testimoniFiltered.slice(_testimoniShown, _testimoniShown+_testimoniPerPage);
+  batch.forEach(function(t,i){
+    var ci=(_testimoniShown+i)%colors.length;
+    var c=colors[ci];
+    var stars='';for(var s=1;s<=5;s++)stars+='<span style="color:'+(s<=t.rating?'#BA7517':'#ddd')+'">★</span>';
+    var card=document.createElement('div');
+    card.style.cssText='background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px';
+    card.innerHTML='<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">'
+      +'<div style="width:38px;height:38px;border-radius:50%;background:'+c[0]+';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:'+c[1]+';flex-shrink:0">'+t.inisial+'</div>'
+      +'<div><p style="font-size:13px;font-weight:600;margin:0;color:var(--g800)">'+t.nama+'</p>'
+      +'<p style="font-size:11px;color:var(--g600);margin:0">'+t.subtitle+'</p></div></div>'
+      +'<div style="font-size:14px;margin-bottom:8px">'+stars+'</div>'
+      +'<p style="font-size:13px;color:var(--g600);margin:0;line-height:1.6;font-style:italic">"'+t.teks+'"</p>';
+    grid.appendChild(card);
+  });
+
+  _testimoniShown+=batch.length;
+
+  // Tombol load more jika masih ada
+  if(_testimoniShown<_testimoniFiltered.length){
+    var sisa=_testimoniFiltered.length-_testimoniShown;
+    var wrap=document.getElementById('testimoni-wrap');
+    var btn=document.createElement('div');
+    btn.id='load-more-btn';
+    btn.style.cssText='text-align:center;margin-top:24px';
+    btn.innerHTML='<button onclick="renderMoreTestimoni()" style="padding:11px 32px;background:#fff;border:1.5px solid var(--g200);border-radius:100px;font-size:13.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:\'DM Sans\',sans-serif;transition:all .18s" onmouseover="this.style.background=\'var(--navy)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'var(--navy)\'">Lihat '+Math.min(sisa,_testimoniPerPage)+' Testimoni Lagi ('+sisa+' tersisa)</button>';
+    wrap.appendChild(btn);
+  }
+}
+
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.getElementById('dash').classList.remove('on');

@@ -94,6 +94,18 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
 .modal-arrow{color:var(--g400);font-size:12px}
 .modal-cta{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s}
 .modal-cta:hover{background:var(--navy-2)}
+.pkg-full-banner{background:#fef2f2;border-top:1px solid #fecaca;margin:10px -20px -18px;padding:7px 16px;display:flex;align-items:center;gap:6px}
+.pkg-full-dot{width:6px;height:6px;border-radius:50%;background:#dc2626;flex-shrink:0}
+.pkg-full-txt{font-size:10px;color:#991b1b;font-weight:600}
+.pkg-card[data-full="true"]::before{background:#dc2626}
+#m-full-banner{display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.m-full-icon{font-size:14px;flex-shrink:0}
+.m-full-title{font-size:12px;font-weight:700;color:#991b1b;margin-bottom:2px}
+.m-full-desc{font-size:11px;color:#b91c1c;line-height:1.4}
+.modal-cta-wa{width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.modal-cta-wa:hover{background:#1ea952}
+.modal-cta-close{width:100%;padding:10px;background:transparent;color:var(--g400);border:1px solid var(--g200);border-radius:var(--rs);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer}
+.modal-cta-close:hover{background:var(--g50)}
 @media(max-width:768px){
   .nav{padding:0 20px}
   .price-hero{padding:40px 20px 48px}.price-hero h1{font-size:26px}
@@ -210,11 +222,23 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
     <div class="modal-skema-lbl">Skema pembayaran</div>
     <div class="modal-skema-steps" id="m-steps"></div>
   </div>
-  <button class="modal-cta" id="m-cta">Daftar Sekarang →</button>
+  <div id="m-full-banner">
+  <div style="display:flex;gap:8px;align-items:flex-start">
+    <span class="m-full-icon">🔴</span>
+    <div>
+      <div class="m-full-title">Sementara Tidak Tersedia</div>
+      <div class="m-full-desc">Tim kami sedang penuh. Hubungi kami untuk info ketersediaan atau daftarkan antrian.</div>
+    </div>
+  </div>
+</div>
+<button class="modal-cta" id="m-cta">Daftar Sekarang →</button>
+<button class="modal-cta-wa" id="m-cta-wa" style="display:none" onclick="window.open('https://wa.me/6281267090606','_blank')">💬 Tanya via WhatsApp</button>
+<button class="modal-cta-close" onclick="closeModal()">Tutup</button>
 </div>
 
 <script>
 const PW={'4mkob4r':'kerjasama','4dmin':'umum'};
+const FULL_APPS=['Eviews','AMOS','WarpPLS'];
 const FORM={kerjasama:'https://tally.so/r/jaBkzY?kh=khk',umum:'https://tally.so/r/MeOabY?kh=khu'};
 
 const DESC={
@@ -425,17 +449,21 @@ function buildCard(p,isK,lay){
   const is3=lay==='FULL BAB I\u2013V';
   const tahap=is3?'3 Tahap':'2 Tahap';
   const sub=p.st||p.sd||'';
-  const dataAttr=`data-lay="${lay}" data-app="${p.app}" data-v="${p.v}" data-h="${h}" data-dp="${dp}" data-sub="${sub}" data-is3="${is3}"`;
+  const isFull=FULL_APPS.includes(p.app);
+  const dataAttr=`data-lay="${lay}" data-app="${p.app}" data-v="${p.v}" data-h="${h}" data-dp="${dp}" data-sub="${sub}" data-is3="${is3}" data-full="${isFull}"`;
   let badgeHtml='';
   if(p.st) badgeHtml=`<div class="pkg-st">${p.st}</div>`;
-  return `<div class="pkg-card" ${dataAttr}>
+  const fullBanner=isFull?`<div class="pkg-full-banner"><div class="pkg-full-dot"></div><div class="pkg-full-txt">Sementara Penuh</div></div>`:'';
+  const fullStyle=isFull?'style="border:1.5px solid #fca5a5" class="pkg-card"':'class="pkg-card"';
+  return `<div ${fullStyle} ${dataAttr}>
     <div class="pkg-app">${p.app}</div>
     <div class="pkg-var">${p.v}</div>
     ${badgeHtml}
     <div class="pkg-price">${fmtRp(h)}</div>
     <div class="pkg-dp">DP: ${fmtRp(dp)}</div>
     <div class="pkg-skema">📋 ${tahap}</div>
-    <div class="pkg-hint">Klik untuk detail →</div>
+    ${isFull?'':'<div class="pkg-hint">Klik untuk detail →</div>'}
+    ${fullBanner}
   </div>`;
 }
 

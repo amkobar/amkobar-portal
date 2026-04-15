@@ -131,6 +131,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .empty-state .ei{font-size:44px;margin-bottom:14px}
 .empty-state .et{font-size:15px;font-weight:600;color:var(--g600);margin-bottom:6px}
 footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);border-top:1px solid var(--g200);margin-top:40px}
+.bottom-tab-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--g200);z-index:200;height:56px;flex-direction:row}
+.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px 0;transition:all .15s}
+.bottom-tab-ic{font-size:18px;line-height:1}
+.bottom-tab-lbl{font-size:10px;font-weight:500;color:var(--g400)}
+.bottom-tab.on .bottom-tab-lbl{color:var(--blue);font-weight:600}
+.bottom-tab.on .bottom-tab-ic{transform:scale(1.1)}
+@media(max-width:768px){
+  .bottom-tab-bar{display:flex}
+  .pg.on,.dash.on{padding-bottom:56px}
+  .dash-body{padding:20px 20px 76px}
+  .pub{padding:36px 20px 76px}
+}
+
 @media(max-width:768px){
   .nav{padding:0 20px}.nav-links{display:none}
   .hero{padding:44px 20px 52px}.hero h1{font-size:28px}
@@ -458,15 +471,9 @@ function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.getElementById('dash').classList.remove('on');
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('on'));
- if(pg==='faq'){document.getElementById('pg-faq').classList.add('on');document.getElementById('nl-faq').classList.add('on');}
-else if(pg==='testimoni'){document.getElementById('pg-testimoni').classList.add('on');document.getElementById('nl-testimoni').classList.add('on');loadTestimoni();}
-else{document.getElementById('pg-home').classList.add('on');document.getElementById('nl-home').classList.add('on');}
-}
-function goHome(){showPg('home');}
-function switchTab(id,btn){
-  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
-  document.getElementById('tc-'+id).classList.add('on');btn.classList.add('on');
+  if(pg==='faq'){document.getElementById('pg-faq').classList.add('on');document.getElementById('nl-faq').classList.add('on');setBottomTab('faq');}
+  else if(pg==='testimoni'){document.getElementById('pg-testimoni').classList.add('on');document.getElementById('nl-testimoni').classList.add('on');loadTestimoni();setBottomTab('testimoni');}
+  else{document.getElementById('pg-home').classList.add('on');document.getElementById('nl-home').classList.add('on');setBottomTab('home');}
 }
 async function doLogin(){
   const kode=document.getElementById('kode-inp').value.trim().toUpperCase();
@@ -494,6 +501,7 @@ function doLogout(){
   document.getElementById('login-al').className='al';
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',i===0);});
   document.querySelectorAll('.tc').forEach((t,i)=>{t.classList.toggle('on',i===0);});
+  setBottomTab('home');
 }
 function renderDash(d){
   const nama=d.nama||'?';
@@ -617,6 +625,11 @@ function statusClass(s){
 function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
 
+function setBottomTab(pg){
+  document.querySelectorAll('.bottom-tab').forEach(b=>b.classList.remove('on'));
+  var el=document.getElementById('bt-'+pg);
+  if(el)el.classList.add('on');
+}
 function openRatingModal(){
   if(window.Tally){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{
@@ -645,5 +658,23 @@ function verifyRatingSubmit(){
     }).catch(function(){});
 }
 </script>
+<div class="bottom-tab-bar" id="bottom-tab-bar">
+  <button class="bottom-tab on" id="bt-home" onclick="showPg('home')">
+    <span class="bottom-tab-ic">&#9654;</span>
+    <span class="bottom-tab-lbl">Status</span>
+  </button>
+  <button class="bottom-tab" id="bt-faq" onclick="showPg('faq')">
+    <span class="bottom-tab-ic">&#9432;</span>
+    <span class="bottom-tab-lbl">FAQ</span>
+  </button>
+  <button class="bottom-tab" id="bt-testimoni" onclick="showPg('testimoni')">
+    <span class="bottom-tab-ic">&#9733;</span>
+    <span class="bottom-tab-lbl">Testimoni</span>
+  </button>
+  <button class="bottom-tab" id="bt-pricelist" onclick="window.open('pricelist.html','_blank')">
+    <span class="bottom-tab-ic">&#128196;</span>
+    <span class="bottom-tab-lbl">Pricelist</span>
+  </button>
+</div>
 </body>
 </html>

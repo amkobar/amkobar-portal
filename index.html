@@ -402,7 +402,8 @@ function filterTestimoni(filter){
     _testimoniFiltered=_testimoniAll;
   }else{
     _testimoniFiltered=_testimoniAll.filter(function(t){
-      return (t.subtitle||'').includes(filter);
+      var sub=(t.subtitle||'').split(' · ')[0].trim();
+      return sub===filter;
     });
   }
 
@@ -453,7 +454,6 @@ function renderMoreTestimoni(){
     wrap.appendChild(btn);
   }
 }
-
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.getElementById('dash').classList.remove('on');

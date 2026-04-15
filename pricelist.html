@@ -35,6 +35,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .price-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 16px;font-size:12px;color:rgba(255,255,255,.8);margin-bottom:18px}
 .price-hero h1{font-family:'Sora',sans-serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:-.8px;margin-bottom:10px}
 .price-hero p{font-size:14.5px;color:rgba(255,255,255,.6);max-width:480px;margin:0 auto}
+/* FILTER BAR */
+.filter-bar{background:#fff;border-bottom:1px solid var(--g200);padding:16px 48px;position:sticky;top:0;z-index:50;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.filter-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-label{font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.filter-btn{padding:5px 14px;border-radius:100px;font-size:12.5px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;background:#fff;color:var(--g600);border:1.5px solid var(--g200)}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue)}
+.filter-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.filter-divider{width:1px;height:28px;background:var(--g200);flex-shrink:0}
+.filter-count{font-size:12px;color:var(--g400);white-space:nowrap}
 .price-body{padding:40px 48px;max-width:1200px;margin:0 auto}
 .sec-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--g200)}
 .sec-ttl:first-child{margin-top:0}
@@ -51,13 +60,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .pkg-dp{font-size:12px;color:var(--g600);margin-bottom:10px}
 .pkg-skema{display:inline-flex;align-items:center;gap:4px;background:var(--blue-pale);color:var(--blue);padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600}
 .pkg-hint{font-size:11px;color:var(--g400);margin-top:8px}
+.empty-filter{text-align:center;padding:60px 20px;color:var(--g400)}
+.empty-filter .ei{font-size:40px;margin-bottom:12px}
+.empty-filter p{font-size:14px}
 .cta-box{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r);padding:32px 36px;margin-top:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .cta-text h3{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
 .cta-text p{font-size:13.5px;color:rgba(255,255,255,.65);line-height:1.5}
 .cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--navy);padding:13px 28px;border-radius:var(--rs);font-size:14.5px;font-weight:700;font-family:'Sora',sans-serif;text-decoration:none;transition:all .2s;white-space:nowrap}
 .cta-btn:hover{background:#e09500;transform:translateY(-1px)}
 footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-top:1px solid var(--g200)}
-/* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998}
 .modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;padding:28px;width:92%;max-width:420px;max-height:90vh;overflow-y:auto}
 .modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
@@ -83,7 +94,14 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
 .modal-arrow{color:var(--g400);font-size:12px}
 .modal-cta{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s}
 .modal-cta:hover{background:var(--navy-2)}
-@media(max-width:768px){.nav{padding:0 20px}.price-hero{padding:40px 20px 48px}.price-hero h1{font-size:26px}.price-body{padding:24px 20px}.cta-box{padding:24px}.pkg-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+  .nav{padding:0 20px}
+  .price-hero{padding:40px 20px 48px}.price-hero h1{font-size:26px}
+  .price-body{padding:24px 20px}
+  .filter-bar{padding:12px 20px;gap:12px}
+  .cta-box{padding:24px}
+  .pkg-grid{grid-template-columns:1fr 1fr}
+}
 @media(max-width:480px){.pkg-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -113,6 +131,29 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
     <h1>Daftar Harga Layanan</h1>
     <p>Harga spesial untuk mitra AMKOBAR. Semua paket sudah termasuk konsultasi dan pendampingan.</p>
   </div>
+  <div class="filter-bar" id="filter-bar-k">
+    <div class="filter-group">
+      <span class="filter-label">Layanan</span>
+      <button class="filter-btn on" onclick="setFilter('k','lay','Semua',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('k','lay','BAB IV',this)">BAB IV</button>
+      <button class="filter-btn" onclick="setFilter('k','lay','BAB IV\u2013V',this)">BAB IV–V</button>
+      <button class="filter-btn" onclick="setFilter('k','lay','FULL BAB I\u2013V',this)">Full BAB I–V</button>
+      <button class="filter-btn" onclick="setFilter('k','lay','Olahdata Only',this)">Olahdata Only</button>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <span class="filter-label">Aplikasi</span>
+      <button class="filter-btn on" onclick="setFilter('k','app','Semua',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('k','app','SPSS',this)">SPSS</button>
+      <button class="filter-btn" onclick="setFilter('k','app','SmartPLS',this)">SmartPLS</button>
+      <button class="filter-btn" onclick="setFilter('k','app','Lisrel',this)">Lisrel</button>
+      <button class="filter-btn" onclick="setFilter('k','app','Eviews',this)">Eviews</button>
+      <button class="filter-btn" onclick="setFilter('k','app','AMOS',this)">AMOS</button>
+      <button class="filter-btn" onclick="setFilter('k','app','WarpPLS',this)">WarpPLS</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-count" id="count-k"></span>
+  </div>
   <div class="price-body" id="body-k"></div>
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
@@ -123,11 +164,32 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
     <h1>Daftar Harga Layanan</h1>
     <p>Harga reguler layanan AMKOBAR. Semua paket sudah termasuk konsultasi dan pendampingan.</p>
   </div>
+  <div class="filter-bar" id="filter-bar-u">
+    <div class="filter-group">
+      <span class="filter-label">Layanan</span>
+      <button class="filter-btn on" onclick="setFilter('u','lay','Semua',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('u','lay','BAB IV',this)">BAB IV</button>
+      <button class="filter-btn" onclick="setFilter('u','lay','BAB IV\u2013V',this)">BAB IV–V</button>
+      <button class="filter-btn" onclick="setFilter('u','lay','FULL BAB I\u2013V',this)">Full BAB I–V</button>
+      <button class="filter-btn" onclick="setFilter('u','lay','Olahdata Only',this)">Olahdata Only</button>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <span class="filter-label">Aplikasi</span>
+      <button class="filter-btn on" onclick="setFilter('u','app','Semua',this)">Semua</button>
+      <button class="filter-btn" onclick="setFilter('u','app','SPSS',this)">SPSS</button>
+      <button class="filter-btn" onclick="setFilter('u','app','SmartPLS',this)">SmartPLS</button>
+      <button class="filter-btn" onclick="setFilter('u','app','Eviews',this)">Eviews</button>
+      <button class="filter-btn" onclick="setFilter('u','app','AMOS',this)">AMOS</button>
+      <button class="filter-btn" onclick="setFilter('u','app','WarpPLS',this)">WarpPLS</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-count" id="count-u"></span>
+  </div>
   <div class="price-body" id="body-u"></div>
   <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
 </div>
 
-<!-- MODAL -->
 <div class="overlay" id="overlay" onclick="closeModal()"></div>
 <div class="modal" id="modal">
   <div class="modal-header">
@@ -153,57 +215,15 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
 
 <script>
 const PW={'4mkob4r':'kerjasama','4dmin':'umum'};
-const FORM={
-  kerjasama:'https://tally.so/r/jaBkzY?kh=khk',
-  umum:'https://tally.so/r/MeOabY?kh=khu'
-};
+const FORM={kerjasama:'https://tally.so/r/jaBkzY?kh=khk',umum:'https://tally.so/r/MeOabY?kh=khu'};
 
 const DESC={
-  'BAB IV':[
-    'File output (hasil olah data)',
-    'Interpretasi hasil di BAB IV',
-    'Revisi interpretasi diarahkan',
-    'Garansi 100% hasil olahdata',
-    'Pendampingan konsultasi / pembelajaran sampai paham'
-  ],
-  'BAB IV\u2013V':[
-    'File output (hasil olah data)',
-    'Interpretasi hasil di BAB IV dan BAB V',
-    'Revisi interpretasi diarahkan',
-    'Garansi 100% hasil olahdata',
-    'Pendampingan konsultasi / pembelajaran sampai paham'
-  ],
-  'FULL_Belum Ada Judul':[
-    'Pencarian judul sampai ACC',
-    'Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI',
-    'File output (hasil olah data)',
-    'Interpretasi & analisis hasil di BAB IV',
-    'Garansi 100%',
-    'Pendampingan konsultasi / pembelajaran sampai paham',
-    'Pendampingan sampai ACC sidang akhir'
-  ],
-  'FULL_Sudah Ada Judul':[
-    'Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI',
-    'File output (hasil olah data)',
-    'Interpretasi & analisis hasil di BAB IV',
-    'Garansi 100%',
-    'Pendampingan konsultasi / pembelajaran sampai paham',
-    'Pendampingan sampai ACC sidang akhir'
-  ],
-  'D0_Data Sendiri':[
-    'Menggunakan data dari Anda',
-    'File output (hasil olah data)',
-    'Tanpa penulisan BAB \u2014 hanya olah data',
-    'Garansi 100% hasil olahdata',
-    'Pendampingan konsultasi'
-  ],
-  'D0_Data Pengelola':[
-    'Data dibuatkan',
-    'File output (hasil olah data)',
-    'Tanpa penulisan BAB \u2014 hanya olah data',
-    'Garansi 100% hasil olahdata',
-    'Pendampingan konsultasi'
-  ]
+  'BAB IV':['File output (hasil olah data)','Interpretasi hasil di BAB IV','Revisi interpretasi diarahkan','Garansi 100% hasil olahdata','Pendampingan konsultasi / pembelajaran sampai paham'],
+  'BAB IV\u2013V':['File output (hasil olah data)','Interpretasi hasil di BAB IV dan BAB V','Revisi interpretasi diarahkan','Garansi 100% hasil olahdata','Pendampingan konsultasi / pembelajaran sampai paham'],
+  'FULL_Belum Ada Judul':['Pencarian judul sampai ACC','Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI','File output (hasil olah data)','Interpretasi & analisis hasil di BAB IV','Garansi 100%','Pendampingan konsultasi / pembelajaran sampai paham','Pendampingan sampai ACC sidang akhir'],
+  'FULL_Sudah Ada Judul':['Penulisan skripsi lengkap BAB I sampai V atau I\u2013VI','File output (hasil olah data)','Interpretasi & analisis hasil di BAB IV','Garansi 100%','Pendampingan konsultasi / pembelajaran sampai paham','Pendampingan sampai ACC sidang akhir'],
+  'D0_Data Sendiri':['Menggunakan data dari Anda','File output (hasil olah data)','Tanpa penulisan BAB \u2014 hanya olah data','Garansi 100% hasil olahdata','Pendampingan konsultasi'],
+  'D0_Data Pengelola':['Data dibuatkan','File output (hasil olah data)','Tanpa penulisan BAB \u2014 hanya olah data','Garansi 100% hasil olahdata','Pendampingan konsultasi']
 };
 
 const PAKET=[
@@ -216,6 +236,15 @@ const PAKET=[
   {layanan:'BAB IV',app:'SPSS',v:'4 Variabel',hK:750000,dpK:200000,hU:800000,dpU:400000},
   {layanan:'BAB IV',app:'SmartPLS',v:'4 Variabel',hK:850000,dpK:200000,hU:900000,dpU:400000},
   {layanan:'BAB IV',app:'Lisrel',v:'4 Variabel',hK:800000,dpK:200000,hU:null,dpU:null},
+  {layanan:'BAB IV',app:'Eviews',v:'2 Variabel',hK:550000,dpK:200000,hU:650000,dpU:250000},
+  {layanan:'BAB IV',app:'Eviews',v:'3 Variabel',hK:750000,dpK:200000,hU:800000,dpU:300000},
+  {layanan:'BAB IV',app:'Eviews',v:'4 Variabel',hK:850000,dpK:200000,hU:900000,dpU:400000},
+  {layanan:'BAB IV',app:'AMOS',v:'2 Variabel',hK:550000,dpK:200000,hU:650000,dpU:250000},
+  {layanan:'BAB IV',app:'AMOS',v:'3 Variabel',hK:750000,dpK:200000,hU:800000,dpU:300000},
+  {layanan:'BAB IV',app:'AMOS',v:'4 Variabel',hK:850000,dpK:200000,hU:900000,dpU:400000},
+  {layanan:'BAB IV',app:'WarpPLS',v:'2 Variabel',hK:550000,dpK:200000,hU:650000,dpU:250000},
+  {layanan:'BAB IV',app:'WarpPLS',v:'3 Variabel',hK:750000,dpK:200000,hU:800000,dpU:300000},
+  {layanan:'BAB IV',app:'WarpPLS',v:'4 Variabel',hK:850000,dpK:200000,hU:900000,dpU:400000},
   {layanan:'BAB IV\u2013V',app:'SPSS',v:'2 Variabel',hK:550000,dpK:200000,hU:650000,dpU:300000},
   {layanan:'BAB IV\u2013V',app:'SmartPLS',v:'2 Variabel',hK:600000,dpK:200000,hU:700000,dpU:300000},
   {layanan:'BAB IV\u2013V',app:'Lisrel',v:'2 Variabel',hK:580000,dpK:200000,hU:null,dpU:null},
@@ -225,6 +254,15 @@ const PAKET=[
   {layanan:'BAB IV\u2013V',app:'SPSS',v:'4 Variabel',hK:800000,dpK:200000,hU:850000,dpU:400000},
   {layanan:'BAB IV\u2013V',app:'SmartPLS',v:'4 Variabel',hK:900000,dpK:200000,hU:950000,dpU:400000},
   {layanan:'BAB IV\u2013V',app:'Lisrel',v:'4 Variabel',hK:850000,dpK:200000,hU:null,dpU:null},
+  {layanan:'BAB IV\u2013V',app:'Eviews',v:'2 Variabel',hK:600000,dpK:200000,hU:700000,dpU:300000},
+  {layanan:'BAB IV\u2013V',app:'Eviews',v:'3 Variabel',hK:800000,dpK:200000,hU:850000,dpU:350000},
+  {layanan:'BAB IV\u2013V',app:'Eviews',v:'4 Variabel',hK:900000,dpK:200000,hU:950000,dpU:400000},
+  {layanan:'BAB IV\u2013V',app:'AMOS',v:'2 Variabel',hK:600000,dpK:200000,hU:700000,dpU:300000},
+  {layanan:'BAB IV\u2013V',app:'AMOS',v:'3 Variabel',hK:800000,dpK:200000,hU:850000,dpU:350000},
+  {layanan:'BAB IV\u2013V',app:'AMOS',v:'4 Variabel',hK:900000,dpK:200000,hU:950000,dpU:400000},
+  {layanan:'BAB IV\u2013V',app:'WarpPLS',v:'2 Variabel',hK:600000,dpK:200000,hU:700000,dpU:300000},
+  {layanan:'BAB IV\u2013V',app:'WarpPLS',v:'3 Variabel',hK:800000,dpK:200000,hU:850000,dpU:350000},
+  {layanan:'BAB IV\u2013V',app:'WarpPLS',v:'4 Variabel',hK:900000,dpK:200000,hU:950000,dpU:400000},
   {layanan:'FULL BAB I\u2013V',app:'SPSS',v:'2 Variabel',hK:3500000,dpK:700000,hU:3700000,dpU:740000,st:'Belum Ada Judul'},
   {layanan:'FULL BAB I\u2013V',app:'SmartPLS',v:'2 Variabel',hK:3800000,dpK:760000,hU:4000000,dpU:800000,st:'Belum Ada Judul'},
   {layanan:'FULL BAB I\u2013V',app:'Lisrel',v:'2 Variabel',hK:3600000,dpK:720000,hU:null,dpU:null,st:'Belum Ada Judul'},
@@ -243,6 +281,24 @@ const PAKET=[
   {layanan:'FULL BAB I\u2013V',app:'SPSS',v:'4 Variabel',hK:5300000,dpK:1060000,hU:5800000,dpU:1160000,st:'Sudah Ada Judul'},
   {layanan:'FULL BAB I\u2013V',app:'SmartPLS',v:'4 Variabel',hK:5800000,dpK:1160000,hU:6500000,dpU:1300000,st:'Sudah Ada Judul'},
   {layanan:'FULL BAB I\u2013V',app:'Lisrel',v:'4 Variabel',hK:5600000,dpK:1120000,hU:null,dpU:null,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'2 Variabel',hK:3800000,dpK:760000,hU:4000000,dpU:800000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'3 Variabel',hK:5000000,dpK:1000000,hU:5500000,dpU:1100000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'4 Variabel',hK:6000000,dpK:1200000,hU:7000000,dpU:1400000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'2 Variabel',hK:3600000,dpK:720000,hU:3800000,dpU:760000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'3 Variabel',hK:4800000,dpK:960000,hU:5300000,dpU:1060000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'Eviews',v:'4 Variabel',hK:5800000,dpK:1160000,hU:6500000,dpU:1300000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'2 Variabel',hK:3800000,dpK:760000,hU:4000000,dpU:800000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'3 Variabel',hK:5000000,dpK:1000000,hU:5500000,dpU:1100000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'4 Variabel',hK:6000000,dpK:1200000,hU:7000000,dpU:1400000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'2 Variabel',hK:3600000,dpK:720000,hU:3800000,dpU:760000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'3 Variabel',hK:4800000,dpK:960000,hU:5300000,dpU:1060000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'AMOS',v:'4 Variabel',hK:5800000,dpK:1160000,hU:6500000,dpU:1300000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'2 Variabel',hK:3800000,dpK:760000,hU:4000000,dpU:800000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'3 Variabel',hK:5000000,dpK:1000000,hU:5500000,dpU:1100000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'4 Variabel',hK:6000000,dpK:1200000,hU:7000000,dpU:1400000,st:'Belum Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'2 Variabel',hK:3600000,dpK:720000,hU:3800000,dpU:760000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'3 Variabel',hK:4800000,dpK:960000,hU:5300000,dpU:1060000,st:'Sudah Ada Judul'},
+  {layanan:'FULL BAB I\u2013V',app:'WarpPLS',v:'4 Variabel',hK:5800000,dpK:1160000,hU:6500000,dpU:1300000,st:'Sudah Ada Judul'},
   {layanan:'Olahdata Only',app:'SPSS',v:'2 Variabel',hK:200000,dpK:100000,hU:250000,dpU:100000,sd:'Data Sendiri'},
   {layanan:'Olahdata Only',app:'SmartPLS',v:'2 Variabel',hK:250000,dpK:100000,hU:300000,dpU:100000,sd:'Data Sendiri'},
   {layanan:'Olahdata Only',app:'Lisrel',v:'2 Variabel',hK:230000,dpK:100000,hU:null,dpU:null,sd:'Data Sendiri'},
@@ -260,9 +316,29 @@ const PAKET=[
   {layanan:'Olahdata Only',app:'Lisrel',v:'3 Variabel',hK:280000,dpK:100000,hU:null,dpU:null,sd:'Data Pengelola'},
   {layanan:'Olahdata Only',app:'SPSS',v:'4 Variabel',hK:300000,dpK:100000,hU:350000,dpU:150000,sd:'Data Pengelola'},
   {layanan:'Olahdata Only',app:'SmartPLS',v:'4 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Pengelola'},
-  {layanan:'Olahdata Only',app:'Lisrel',v:'4 Variabel',hK:330000,dpK:100000,hU:null,dpU:null,sd:'Data Pengelola'}
+  {layanan:'Olahdata Only',app:'Lisrel',v:'4 Variabel',hK:330000,dpK:100000,hU:null,dpU:null,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'2 Variabel',hK:250000,dpK:100000,hU:300000,dpU:100000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'3 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'4 Variabel',hK:400000,dpK:100000,hU:450000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'2 Variabel',hK:200000,dpK:100000,hU:250000,dpU:100000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'3 Variabel',hK:300000,dpK:100000,hU:350000,dpU:150000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'Eviews',v:'4 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'2 Variabel',hK:250000,dpK:100000,hU:300000,dpU:100000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'3 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'4 Variabel',hK:400000,dpK:100000,hU:450000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'2 Variabel',hK:200000,dpK:100000,hU:250000,dpU:100000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'3 Variabel',hK:300000,dpK:100000,hU:350000,dpU:150000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'AMOS',v:'4 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'2 Variabel',hK:250000,dpK:100000,hU:300000,dpU:100000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'3 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'4 Variabel',hK:400000,dpK:100000,hU:450000,dpU:150000,sd:'Data Sendiri'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'2 Variabel',hK:200000,dpK:100000,hU:250000,dpU:100000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'3 Variabel',hK:300000,dpK:100000,hU:350000,dpU:150000,sd:'Data Pengelola'},
+  {layanan:'Olahdata Only',app:'WarpPLS',v:'4 Variabel',hK:350000,dpK:100000,hU:400000,dpU:150000,sd:'Data Pengelola'}
 ];
 
+// Filter state
+const filterState={k:{lay:'Semua',app:'Semua'},u:{lay:'Semua',app:'Semua'}};
 let currentFormUrl='';
 
 document.addEventListener('click',function(e){
@@ -284,14 +360,33 @@ function checkPw(){
 }
 document.getElementById('pw-inp').addEventListener('keypress',e=>{if(e.key==='Enter')checkPw();});
 
+function setFilter(kat,type,val,btn){
+  filterState[kat][type]=val;
+  // update button styles
+  const bar=document.getElementById('filter-bar-'+kat);
+  const group=btn.parentElement;
+  group.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildPricelist(kat==='k'?'kerjasama':'umum');
+}
+
 function buildPricelist(kat){
   const isK=kat==='kerjasama';
-  const el=document.getElementById('body-'+kat.charAt(0));
+  const katKey=isK?'k':'u';
+  const el=document.getElementById('body-'+(isK?'k':'u'));
+  const fLay=filterState[katKey].lay;
+  const fApp=filterState[katKey].app;
+
   const layananList=['BAB IV','BAB IV\u2013V','FULL BAB I\u2013V','Olahdata Only'];
   let html='';
+  let totalCount=0;
+
   for(const lay of layananList){
-    const allItems=PAKET.filter(p=>p.layanan===lay&&(isK||p.hU!=null));
-    if(!allItems.length)continue;
+    if(fLay!=='Semua'&&fLay!==lay) continue;
+    let allItems=PAKET.filter(p=>p.layanan===lay&&(isK||p.hU!=null));
+    if(fApp!=='Semua') allItems=allItems.filter(p=>p.app===fApp);
+    if(!allItems.length) continue;
+    totalCount+=allItems.length;
     html+=`<div class="sec-ttl">${lay}</div>`;
     const hasSubGroup=allItems[0].st||allItems[0].sd;
     if(hasSubGroup){
@@ -312,8 +407,16 @@ function buildPricelist(kat){
       html+='</div>';
     }
   }
-  html+=`<div class="cta-box"><div class="cta-text"><h3>Siap Mulai Skripsimu?</h3><p>Daftar sekarang dan tim AMKOBAR akan segera menghubungi kamu untuk konfirmasi.</p></div><a class="cta-btn" href="${currentFormUrl}" target="_blank">Daftar Sekarang →</a></div>`;
+
+  if(!totalCount){
+    html=`<div class="empty-filter"><div class="ei">🔍</div><p>Tidak ada paket untuk filter ini.<br>Coba kombinasi filter lain.</p></div>`;
+  } else {
+    html+=`<div class="cta-box"><div class="cta-text"><h3>Siap Mulai Skripsimu?</h3><p>Daftar sekarang dan tim AMKOBAR akan segera menghubungi kamu untuk konfirmasi.</p></div><a class="cta-btn" href="${currentFormUrl}" target="_blank">Daftar Sekarang →</a></div>`;
+  }
+
   el.innerHTML=html;
+  const countEl=document.getElementById('count-'+(isK?'k':'u'));
+  if(countEl) countEl.textContent=totalCount+' paket';
 }
 
 function buildCard(p,isK,lay){
@@ -344,42 +447,23 @@ function openModal(el){
   const dp=parseInt(el.dataset.dp);
   const sub=el.dataset.sub;
   const is3=el.dataset.is3==='true';
-
   document.getElementById('m-tag').textContent=lay;
   document.getElementById('m-title').textContent=app+' \u2014 '+v;
   document.getElementById('m-harga').textContent=fmtRp(h);
   document.getElementById('m-dp').textContent=fmtRp(dp);
-
-  // badge
   const badgeEl=document.getElementById('m-badge');
-  if(sub){
-    const cls=sub.includes('Judul')?'badge-judul':'badge-data';
-    badgeEl.innerHTML=`<span class="modal-badge ${cls}">${sub}</span>`;
-  } else {
-    badgeEl.innerHTML='';
-  }
-
-  // desc key
+  if(sub){const cls=sub.includes('Judul')?'badge-judul':'badge-data';badgeEl.innerHTML=`<span class="modal-badge ${cls}">${sub}</span>`;}
+  else{badgeEl.innerHTML='';}
   let descKey=lay;
   if(lay==='FULL BAB I\u2013V') descKey='FULL_'+sub;
   else if(lay==='Olahdata Only') descKey='D0_'+sub;
   const items=DESC[descKey]||[];
-  document.getElementById('m-items').innerHTML=items.map(i=>
-    `<div class="modal-item"><div class="modal-check">✓</div><span class="modal-item-txt">${i}</span></div>`
-  ).join('');
-
-  // skema steps
+  document.getElementById('m-items').innerHTML=items.map(i=>`<div class="modal-item"><div class="modal-check">✓</div><span class="modal-item-txt">${i}</span></div>`).join('');
   const pelunasan=h-dp;
   let stepsHtml='';
-  if(is3){
-    const tahap2=Math.round(h*0.3);
-    const lun=h-dp-tahap2;
-    stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Tahap 2 ${fmtRp(tahap2)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(lun)}</span>`;
-  } else {
-    stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(pelunasan)}</span>`;
-  }
+  if(is3){const tahap2=Math.round(h*0.3);const lun=h-dp-tahap2;stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Tahap 2 ${fmtRp(tahap2)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(lun)}</span>`;}
+  else{stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(pelunasan)}</span>`;}
   document.getElementById('m-steps').innerHTML=stepsHtml;
-
   document.getElementById('m-cta').onclick=()=>window.open(currentFormUrl,'_blank');
   document.getElementById('overlay').style.display='block';
   document.getElementById('modal').style.display='block';

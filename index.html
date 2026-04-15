@@ -131,17 +131,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .empty-state .ei{font-size:44px;margin-bottom:14px}
 .empty-state .et{font-size:15px;font-weight:600;color:var(--g600);margin-bottom:6px}
 footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);border-top:1px solid var(--g200);margin-top:40px}
-.bottom-tab-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--g200);z-index:200;height:56px;flex-direction:row}
-.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px 0;transition:all .15s}
-.bottom-tab-ic{font-size:18px;line-height:1}
-.bottom-tab-lbl{font-size:10px;font-weight:500;color:var(--g400)}
-.bottom-tab.on .bottom-tab-lbl{color:var(--blue);font-weight:600}
-.bottom-tab.on .bottom-tab-ic{transform:scale(1.1)}
+.bottom-tab-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:#f8fafc;padding:6px 10px 8px;z-index:200;flex-direction:column}
+.bottom-tab-pill{display:flex;background:#0d2144;border-radius:16px;height:50px;padding:0 4px}
+.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:12px;margin:4px 2px;transition:all .18s}
+.bottom-tab.on{background:#1a6bbd}
+.bottom-tab-ic{font-size:15px;color:rgba(255,255,255,.45);line-height:1}
+.bottom-tab.on .bottom-tab-ic{color:#fff}
+.bottom-tab-lbl{font-size:9px;font-weight:500;color:rgba(255,255,255,.4)}
+.bottom-tab.on .bottom-tab-lbl{color:#fff;font-weight:600}
 @media(max-width:768px){
   .bottom-tab-bar{display:flex}
-  .pg.on,.dash.on{padding-bottom:56px}
-  .dash-body{padding:20px 20px 76px}
-  .pub{padding:36px 20px 76px}
+  .pg.on,.dash.on{padding-bottom:68px}
+  .dash-body{padding:20px 20px 80px}
+  .pub{padding:36px 20px 80px}
+  footer{display:none}
 }
 
 @media(max-width:768px){
@@ -659,22 +662,24 @@ function verifyRatingSubmit(){
 }
 </script>
 <div class="bottom-tab-bar" id="bottom-tab-bar">
-  <button class="bottom-tab on" id="bt-home" onclick="showPg('home')">
-    <span class="bottom-tab-ic">&#9654;</span>
-    <span class="bottom-tab-lbl">Status</span>
-  </button>
-  <button class="bottom-tab" id="bt-faq" onclick="showPg('faq')">
-    <span class="bottom-tab-ic">&#9432;</span>
-    <span class="bottom-tab-lbl">FAQ</span>
-  </button>
-  <button class="bottom-tab" id="bt-testimoni" onclick="showPg('testimoni')">
-    <span class="bottom-tab-ic">&#9733;</span>
-    <span class="bottom-tab-lbl">Testimoni</span>
-  </button>
-  <button class="bottom-tab" id="bt-pricelist" onclick="window.open('pricelist.html','_blank')">
-    <span class="bottom-tab-ic">&#128196;</span>
-    <span class="bottom-tab-lbl">Pricelist</span>
-  </button>
+  <div class="bottom-tab-pill">
+    <button class="bottom-tab on" id="bt-home" onclick="showPg('home')">
+      <span class="bottom-tab-ic">&#9654;</span>
+      <span class="bottom-tab-lbl">Status</span>
+    </button>
+    <button class="bottom-tab" id="bt-faq" onclick="showPg('faq')">
+      <span class="bottom-tab-ic">&#9432;</span>
+      <span class="bottom-tab-lbl">FAQ</span>
+    </button>
+    <button class="bottom-tab" id="bt-testimoni" onclick="showPg('testimoni')">
+      <span class="bottom-tab-ic">&#9733;</span>
+      <span class="bottom-tab-lbl">Testimoni</span>
+    </button>
+    <button class="bottom-tab" id="bt-pricelist" onclick="window.open('pricelist.html','_blank')">
+      <span class="bottom-tab-ic">&#128196;</span>
+      <span class="bottom-tab-lbl">Pricelist</span>
+    </button>
+  </div>
 </div>
 </body>
 </html>

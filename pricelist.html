@@ -475,15 +475,29 @@ function openModal(el){
   const dp=parseInt(el.dataset.dp);
   const sub=el.dataset.sub;
   const is3=el.dataset.is3==='true';
+  const isFull=FULL_APPS.includes(app);
   document.getElementById('m-tag').textContent=lay;
-  document.getElementById('m-title').textContent=app+' \u2014 '+v;
+  document.getElementById('m-title').textContent=app+'—'+v;
   document.getElementById('m-harga').textContent=fmtRp(h);
   document.getElementById('m-dp').textContent=fmtRp(dp);
   const badgeEl=document.getElementById('m-badge');
   if(sub){const cls=sub.includes('Judul')?'badge-judul':'badge-data';badgeEl.innerHTML=`<span class="modal-badge ${cls}">${sub}</span>`;}
   else{badgeEl.innerHTML='';}
+  const fullBannerEl=document.getElementById('m-full-banner');
+  const ctaEl=document.getElementById('m-cta');
+  const ctaWaEl=document.getElementById('m-cta-wa');
+  if(isFull){
+    fullBannerEl.style.display='block';
+    ctaEl.style.display='none';
+    ctaWaEl.style.display='block';
+  }else{
+    fullBannerEl.style.display='none';
+    ctaEl.style.display='block';
+    ctaWaEl.style.display='none';
+    ctaEl.onclick=()=>window.open(currentFormUrl,'_blank');
+  }
   let descKey=lay;
-  if(lay==='FULL BAB I\u2013V') descKey='FULL_'+sub;
+  if(lay==='FULL BAB I–V') descKey='FULL_'+sub;
   else if(lay==='Olahdata Only') descKey='D0_'+sub;
   const items=DESC[descKey]||[];
   document.getElementById('m-items').innerHTML=items.map(i=>`<div class="modal-item"><div class="modal-check">✓</div><span class="modal-item-txt">${i}</span></div>`).join('');
@@ -492,7 +506,6 @@ function openModal(el){
   if(is3){const tahap2=Math.round(h*0.3);const lun=h-dp-tahap2;stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Tahap 2 ${fmtRp(tahap2)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(lun)}</span>`;}
   else{stepsHtml=`<span class="modal-step">DP ${fmtRp(dp)}</span><span class="modal-arrow">→</span><span class="modal-step">Pelunasan ${fmtRp(pelunasan)}</span>`;}
   document.getElementById('m-steps').innerHTML=stepsHtml;
-  document.getElementById('m-cta').onclick=()=>window.open(currentFormUrl,'_blank');
   document.getElementById('overlay').style.display='block';
   document.getElementById('modal').style.display='block';
 }

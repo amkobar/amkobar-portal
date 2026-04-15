@@ -105,14 +105,30 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
 .modal-cta-wa{width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;margin-bottom:8px}
 .modal-cta-wa:hover{background:#1ea952}
 @media(max-width:768px){
-  .nav{padding:0 20px}
-  .price-hero{padding:40px 20px 48px}.price-hero h1{font-size:26px}
-  .price-body{padding:24px 20px}
-  .filter-bar{padding:12px 20px;gap:12px}
-  .cta-box{padding:24px}
+  .nav{padding:0 14px}
+  .back-btn{font-size:11px;padding:5px 10px}
+  .price-hero{padding:32px 16px 40px}.price-hero h1{font-size:22px}.price-hero p{font-size:13px}
+  .price-body{padding:16px 14px}
+  .filter-bar{display:none}
+  .mobile-filter{display:block}
+  .cta-box{padding:20px;flex-direction:column}
   .pkg-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:480px){.pkg-grid{grid-template-columns:1fr}}
+.mobile-filter{display:none;background:#fff;border-bottom:1px solid var(--g200);padding:10px 14px}
+.mf-row{display:flex;align-items:center;gap:8px}
+.mf-tags{display:flex;gap:5px;flex:1;overflow:hidden;min-width:0}
+.mf-tag{background:#e8f2fc;color:#0c447c;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.mf-btn{background:#0d2144;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'DM Sans',sans-serif}
+.mf-btn.open{background:#1a6bbd}
+.mf-count{font-size:10px;color:var(--g400);margin-top:5px}
+.mf-panel{display:none;background:#fff;border-bottom:1px solid var(--g200);padding:12px 14px}
+.mf-panel.open{display:block}
+.mf-panel-ttl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.mf-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.mf-chips:last-child{margin-bottom:0}
+.mf-chip{padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:500;background:var(--g100);color:var(--g600);border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.mf-chip.on{background:#0d2144;color:#fff}
 </style>
 </head>
 <body>
@@ -140,6 +156,36 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
     <div class="price-badge">✦ Harga Khusus Partner</div>
     <h1>Daftar Harga Layanan</h1>
     <p>Harga spesial untuk mitra AMKOBAR. Semua paket sudah termasuk konsultasi dan pendampingan.</p>
+  </div>
+  <div class="mobile-filter" id="mobile-filter-k">
+    <div class="mf-row">
+      <div class="mf-tags">
+        <div class="mf-tag" id="mf-tag-lay-k">Semua Layanan</div>
+        <div class="mf-tag" id="mf-tag-app-k">Semua Aplikasi</div>
+      </div>
+      <button class="mf-btn" id="mf-btn-k" onclick="toggleMfPanel('k')">&#9881; Filter</button>
+    </div>
+    <div class="mf-count" id="mf-count-k"></div>
+  </div>
+  <div class="mf-panel" id="mf-panel-k">
+    <div class="mf-panel-ttl">Layanan</div>
+    <div class="mf-chips">
+      <button class="mf-chip on" onclick="setMfFilter('k','lay','Semua',this)">Semua</button>
+      <button class="mf-chip" onclick="setMfFilter('k','lay','BAB IV',this)">BAB IV</button>
+      <button class="mf-chip" onclick="setMfFilter('k','lay','BAB IV–V',this)">BAB IV–V</button>
+      <button class="mf-chip" onclick="setMfFilter('k','lay','FULL BAB I–V',this)">Full BAB I–V</button>
+      <button class="mf-chip" onclick="setMfFilter('k','lay','Olahdata Only',this)">Olahdata</button>
+    </div>
+    <div class="mf-panel-ttl">Aplikasi</div>
+    <div class="mf-chips">
+      <button class="mf-chip on" onclick="setMfFilter('k','app','Semua',this)">Semua</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','SPSS',this)">SPSS</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','SmartPLS',this)">SmartPLS</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','Lisrel',this)">Lisrel</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','Eviews',this)">Eviews</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','AMOS',this)">AMOS</button>
+      <button class="mf-chip" onclick="setMfFilter('k','app','WarpPLS',this)">WarpPLS</button>
+    </div>
   </div>
   <div class="filter-bar" id="filter-bar-k">
     <div class="filter-group">
@@ -173,6 +219,35 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
     <div class="price-badge">✦ Harga Reguler</div>
     <h1>Daftar Harga Layanan</h1>
     <p>Harga reguler layanan AMKOBAR. Semua paket sudah termasuk konsultasi dan pendampingan.</p>
+  </div>
+  <div class="mobile-filter" id="mobile-filter-u">
+    <div class="mf-row">
+      <div class="mf-tags">
+        <div class="mf-tag" id="mf-tag-lay-u">Semua Layanan</div>
+        <div class="mf-tag" id="mf-tag-app-u">Semua Aplikasi</div>
+      </div>
+      <button class="mf-btn" id="mf-btn-u" onclick="toggleMfPanel('u')">&#9881; Filter</button>
+    </div>
+    <div class="mf-count" id="mf-count-u"></div>
+  </div>
+  <div class="mf-panel" id="mf-panel-u">
+    <div class="mf-panel-ttl">Layanan</div>
+    <div class="mf-chips">
+      <button class="mf-chip on" onclick="setMfFilter('u','lay','Semua',this)">Semua</button>
+      <button class="mf-chip" onclick="setMfFilter('u','lay','BAB IV',this)">BAB IV</button>
+      <button class="mf-chip" onclick="setMfFilter('u','lay','BAB IV–V',this)">BAB IV–V</button>
+      <button class="mf-chip" onclick="setMfFilter('u','lay','FULL BAB I–V',this)">Full BAB I–V</button>
+      <button class="mf-chip" onclick="setMfFilter('u','lay','Olahdata Only',this)">Olahdata</button>
+    </div>
+    <div class="mf-panel-ttl">Aplikasi</div>
+    <div class="mf-chips">
+      <button class="mf-chip on" onclick="setMfFilter('u','app','Semua',this)">Semua</button>
+      <button class="mf-chip" onclick="setMfFilter('u','app','SPSS',this)">SPSS</button>
+      <button class="mf-chip" onclick="setMfFilter('u','app','SmartPLS',this)">SmartPLS</button>
+      <button class="mf-chip" onclick="setMfFilter('u','app','Eviews',this)">Eviews</button>
+      <button class="mf-chip" onclick="setMfFilter('u','app','AMOS',this)">AMOS</button>
+      <button class="mf-chip" onclick="setMfFilter('u','app','WarpPLS',this)">WarpPLS</button>
+    </div>
   </div>
   <div class="filter-bar" id="filter-bar-u">
     <div class="filter-group">
@@ -438,6 +513,8 @@ function buildPricelist(kat){
   el.innerHTML=html;
   const countEl=document.getElementById('count-'+(isK?'k':'u'));
   if(countEl) countEl.textContent=totalCount+' paket';
+  const mfCountEl=document.getElementById('mf-count-'+(isK?'k':'u'));
+  if(mfCountEl) mfCountEl.textContent=totalCount+' paket tersedia';
 }
 
 function buildCard(p,isK,lay){
@@ -510,6 +587,34 @@ function openModal(el){
 function closeModal(){
   document.getElementById('overlay').style.display='none';
   document.getElementById('modal').style.display='none';
+}
+
+function toggleMfPanel(kat){
+  const panel=document.getElementById('mf-panel-'+kat);
+  const btn=document.getElementById('mf-btn-'+kat);
+  const isOpen=panel.classList.contains('open');
+  panel.classList.toggle('open',!isOpen);
+  btn.classList.toggle('open',!isOpen);
+  btn.textContent=isOpen?'⚙ Filter':'✕ Tutup';
+}
+
+function setMfFilter(kat,type,val,btn){
+  filterState[kat][type]=val;
+  const panel=document.getElementById('mf-panel-'+kat);
+  const group=btn.parentElement;
+  group.querySelectorAll('.mf-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  // Update tag
+  const layLabel=filterState[kat].lay==='Semua'?'Semua Layanan':filterState[kat].lay==='FULL BAB I–V'?'Full BAB I–V':filterState[kat].lay==='Olahdata Only'?'Olahdata':filterState[kat].lay;
+  const appLabel=filterState[kat].app==='Semua'?'Semua Aplikasi':filterState[kat].app;
+  document.getElementById('mf-tag-lay-'+kat).textContent=layLabel;
+  document.getElementById('mf-tag-app-'+kat).textContent=appLabel;
+  // Sync desktop filter juga
+  setFilter(kat,type,val,document.querySelector('#filter-bar-'+kat+' .filter-btn.on'));
+  buildPricelist(kat==='k'?'kerjasama':'umum');
+  // Update count
+  const countEl=document.getElementById('mf-count-'+kat);
+  if(countEl) countEl.textContent=document.getElementById('count-'+kat).textContent+' tersedia';
 }
 
 function fmtRp(n){if(n==null||isNaN(n))return'\u2014';return'Rp '+Math.round(n).toLocaleString('id-ID');}

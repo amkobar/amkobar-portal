@@ -630,7 +630,7 @@ function admViewClient(kode){
 function loadAdminData(){
   if(_admLoaded)return;
   _admLoaded=true;
-  fetch('/api/cek-status?admin=1')
+  fetch('/api/get-all-clients')
     .then(function(r){return r.json();})
     .then(function(data){
       if(Array.isArray(data)){

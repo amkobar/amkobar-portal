@@ -1014,7 +1014,7 @@ function renderAdmQuickApps(){
   el.innerHTML=_APPS.map(function(app){
     var appItems=_plData.filter(function(p){return p.aplikasi===app;});
     var allPenuh=appItems.length>0&&appItems.every(function(p){return p.status_penuh;});
-    return '<div class="adm-app-item'+(allPenuh?' penuh':'')+'' data-app="'+app+'" onclick="toggleAdmApp(this.dataset.app)" id="adm-app-item-'+app+'">'
+    return '<div class="adm-app-item'+(allPenuh?' penuh':'')+' data-app="'+app+'" onclick="toggleAdmApp(this.dataset.app)" id="adm-app-item-'+app+'">'
       +'<span class="adm-app-name">'+app+'</span>'
       +'<div class="adm-sm-tog'+(allPenuh?' off':' on')+'" id="adm-app-tog-'+app+'"><div class="adm-sm-tog-thumb"></div></div>'
       +'</div>';

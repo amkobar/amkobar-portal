@@ -312,6 +312,37 @@ footer{text-align:center;padding:28px;font-size:12.5px;color:var(--g400);border-
 <script>
 const PW={'4mkob4r':'kerjasama','4dmin':'umum'};
 const FULL_APPS=['Eviews','AMOS','WarpPLS'];
+var _paketStatus={};
+var _paketStatusLoaded=false;
+
+function makePaketKey(app,lay,v,sub){
+  var notionLay=lay==='FULL BAB I–V'?'FULL BAB (I–V)':lay;
+  return app+'|'+notionLay+'|'+v+'|'+(sub||'');
+}
+
+function isPackageFull(app,lay,v,sub){
+  if(_paketStatusLoaded){
+    var key=makePaketKey(app,lay,v,sub);
+    if(key in _paketStatus) return _paketStatus[key];
+    return false;
+  }
+  return FULL_APPS.includes(app);
+}
+
+function loadPaketStatus(callback){
+  fetch('/api/get-paket-status').then(function(r){return r.json();}).then(function(data){
+    _paketStatus={};
+    (data||[]).forEach(function(p){
+      var key=makePaketKey(p.aplikasi,p.jenis_layanan,p.jumlah_variabel,p.sub_kategori);
+      _paketStatus[key]=p.status_penuh;
+    });
+    _paketStatusLoaded=true;
+    if(callback) callback();
+  }).catch(function(){
+    _paketStatusLoaded=false;
+    if(callback) callback();
+  });
+}
 const FORM={kerjasama:'https://tally.so/r/jaBkzY?kh=khk',umum:'https://tally.so/r/MeOabY?kh=khu'};
 
 const DESC={
@@ -452,8 +483,11 @@ function checkPw(){
   if(!kat){al.className='al err';al.textContent='Kode tidak valid. Hubungi tim AMKOBAR.';return;}
   currentFormUrl=FORM[kat];
   document.getElementById('gate').style.display='none';
-  buildPricelist(kat);
-  document.getElementById('pl-'+kat).classList.add('on');
+  var katFinal=kat;
+  loadPaketStatus(function(){
+    buildPricelist(katFinal);
+    document.getElementById('pl-'+katFinal).classList.add('on');
+  });
 }
 document.getElementById('pw-inp').addEventListener('keypress',e=>{if(e.key==='Enter')checkPw();});
 
@@ -524,7 +558,7 @@ function buildCard(p,isK,lay){
   const is3=lay==='FULL BAB I\u2013V';
   const tahap=is3?'3 Tahap':'2 Tahap';
   const sub=p.st||p.sd||'';
-  const isFull=FULL_APPS.includes(p.app);
+  const isFull=isPackageFull(p.app,lay,p.v,p.st||p.sd||'');
   const dataAttr=`data-lay="${lay}" data-app="${p.app}" data-v="${p.v}" data-h="${h}" data-dp="${dp}" data-sub="${sub}" data-is3="${is3}" data-full="${isFull}"`;
   let badgeHtml='';
   if(p.st) badgeHtml=`<div class="pkg-st">${p.st}</div>`;
@@ -550,7 +584,7 @@ function openModal(el){
   const dp=parseInt(el.dataset.dp);
   const sub=el.dataset.sub;
   const is3=el.dataset.is3==='true';
-  const isFull=FULL_APPS.includes(app);
+  const isFull=isPackageFull(app,lay,v,sub);
   document.getElementById('m-tag').textContent=lay;
   document.getElementById('m-title').textContent=app+'—'+v;
   document.getElementById('m-harga').textContent=fmtRp(h);

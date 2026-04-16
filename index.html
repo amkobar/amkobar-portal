@@ -139,6 +139,28 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .bottom-tab.on .bottom-tab-ic{color:#fff}
 .bottom-tab-lbl{font-size:9px;font-weight:500;color:rgba(255,255,255,.4)}
 .bottom-tab.on .bottom-tab-lbl{color:#fff;font-weight:600}
+/* ===== CAROUSEL TESTIMONI ===== */
+.testi-carousel-wrap{position:relative;overflow:hidden;border-radius:16px;margin-bottom:16px;touch-action:pan-y}
+.testi-carousel-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.testi-slide{min-width:100%;display:flex;gap:12px;padding:0 2px}
+.testi-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;flex:1;min-width:0}
+.testi-card-head{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.testi-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.testi-name{font-size:13px;font-weight:600;color:var(--g800);margin:0}
+.testi-type{font-size:11px;color:var(--g600);margin:0}
+.testi-stars{font-size:14px;margin-bottom:8px}
+.testi-text{font-size:13px;color:var(--g600);margin:0;line-height:1.65;font-style:italic}
+.testi-nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:8px}
+.testi-dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;flex:1}
+.testi-dot{width:6px;height:6px;border-radius:50%;background:var(--g200);transition:all .2s;cursor:pointer;border:none;padding:0;flex-shrink:0}
+.testi-dot.on{background:var(--blue);width:18px;border-radius:3px}
+.testi-counter{font-size:12px;color:var(--g400);white-space:nowrap}
+.testi-arr-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--g600);transition:all .18s;flex-shrink:0}
+.testi-arr-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-pale)}
+.testi-progress{height:2px;background:var(--g100);border-radius:1px;margin-top:10px;overflow:hidden}
+.testi-progress-bar{height:100%;background:var(--blue);border-radius:1px;transition:width .1s linear}
+@media(min-width:600px){.testi-slide{min-width:50%}}
+/* ============================= */
 @media(max-width:768px){
   .bottom-tab-bar{display:flex}
   .pg.on,.dash.on{padding-bottom:68px}
@@ -153,6 +175,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   .sg{grid-template-columns:1fr}
   #pg-home{padding-bottom:0}
   #pg-home .hero{min-height:calc(100vh - 48px - 58px);display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .testi-slide{min-width:100%}
 }
 .ref-card-right{background:#fff;border-radius:var(--r);padding:20px 22px;border:1.5px solid #86efac;margin-bottom:14px}
 .ref-card-right.pending{border-color:var(--warn-border);background:var(--warn-bg)}
@@ -168,7 +191,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .ref-copy-btn{width:100%;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
 .ref-copy-btn:hover{background:var(--navy-2)}
 .ref-dis-box{background:var(--ok-bg);border:1px solid var(--ok-border);border-radius:8px;padding:10px 14px;font-size:13px;color:#065f46;font-weight:500;text-align:center;margin-bottom:8px}
-
 .ref-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
 .ref-popup{background:#fff;border-radius:var(--r);padding:28px;max-width:380px;width:100%;box-shadow:var(--sh2)}
 .ref-popup-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:8px}
@@ -177,87 +199,86 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .ref-popup-cancel{flex:1;padding:10px;border:1px solid var(--g200);border-radius:var(--rs);background:#fff;font-size:13.5px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--g600);cursor:pointer}
 .ref-popup-copy{flex:2;padding:10px;border:none;border-radius:var(--rs);background:var(--navy);color:#fff;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer}
 .ref-popup-copy:hover{background:var(--navy-2)}
-
-
-
 </style>
 </head>
 <body>
 
 <div id="ref-popup-overlay" class="ref-popup-overlay" style="display:none" onclick="if(event.target===this)closeRefPopup()">
   <div class="ref-popup">
-  <div class="ref-popup-title">⚠️ Setelah Membagikan Link</div>
+  <div class="ref-popup-title">&#9888;&#65039; Setelah Membagikan Link</div>
   <div class="ref-popup-desc">Ingatkan calon client atau teman kamu untuk <strong>menghubungi admin AMKOBAR via WhatsApp terlebih dahulu</strong> sebelum mengisi form registrasi.</div>
    <div class="ref-popup-btns">
       <button class="ref-popup-cancel" onclick="closeRefPopup()">Batal</button>
-      <button class="ref-popup-copy" id="ref-popup-copy-btn" onclick="doRefCopy()">Salin & Bagikan</button>
+      <button class="ref-popup-copy" id="ref-popup-copy-btn" onclick="doRefCopy()">Salin &amp; Bagikan</button>
     </div>
   </div>
 </div>
 
-
 <nav class="nav">
   <div class="nav-brand" onclick="goHome()">
-    <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>    
-	<div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik & Statistik</div></div>
+    <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
+    <div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik &amp; Statistik</div></div>
   </div>
   <div class="nav-links">
     <a id="nl-home" class="on" onclick="goHome()">Cek Status</a>
     <a id="nl-faq" onclick="showPg('faq')">FAQ</a>
-	<a id="nl-testimoni" onclick="showPg('testimoni')">Testimoni</a>
-	
+    <a id="nl-testimoni" onclick="showPg('testimoni')">Testimoni</a>
     <a onclick="window.open('pricelist.html','_blank')">Pricelist</a>
   </div>
 </nav>
 
 <div id="pg-home" class="pg on">
   <div class="hero">
-    <div class="hero-badge">✦ Portal Khusus Client AMKOBAR</div>
+    <div class="hero-badge">&#10022; Portal Khusus Client AMKOBAR</div>
     <h1>Pantau Progress<br><span>Pekerjaanmu</span> di Sini</h1>
     <p>Masukkan kode akses yang kamu terima via WhatsApp untuk melihat status pengerjaan dan info pembayaran.</p>
     <div class="lcard">
       <h2>Masuk ke Portal</h2>
       <p>Kode akses dikirimkan setelah registrasi kamu dikonfirmasi oleh tim AMKOBAR.</p>
       <input class="inp" id="kode-inp" type="text" placeholder="Masukkan kode akses kamu..." autocomplete="off"/>
-      <button class="btn" id="login-btn" onclick="doLogin()">Masuk →</button>
+      <button class="btn" id="login-btn" onclick="doLogin()">Masuk &#8594;</button>
       <div id="login-al" class="al"></div>
     </div>
   </div>
-  <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
+  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
 </div>
+
+<!-- HALAMAN TESTIMONI — CAROUSEL -->
 <div id="pg-testimoni" class="pg">
   <div class="pub" id="testimoni-wrap">
     <h2>Kata Mereka</h2>
-    <p class="sub">Ulasan dari beberapa client AMKOBAR yang sudah menggunakan layanan kami.</p>
-    <div id="testimoni-avg" style="display:flex;align-items:center;gap:8px;margin-bottom:28px"></div>
-    <div id="testimoni-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
+    <p class="sub">Ulasan nyata dari client AMKOBAR &#8212; berganti otomatis setiap 10 detik. Geser kiri/kanan untuk navigasi manual.</p>
+    <div id="testimoni-avg" style="display:flex;align-items:center;gap:8px;margin-bottom:20px"></div>
+    <div id="testimoni-filter-wrap"></div>
+    <div id="testimoni-carousel-outer"></div>
   </div>
-  <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
+  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
 </div>
+
 <div id="pg-faq" class="pg">
   <div class="pub">
     <h2>Pertanyaan Umum</h2>
     <p class="sub">Jawaban atas pertanyaan yang paling sering ditanyakan sebelum menggunakan layanan AMKOBAR.</p>
     <div class="faq-list" id="faq-pub"></div>
   </div>
-  <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
+  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
 </div>
 
 <div id="dash" class="dash">
   <div class="dash-hdr">
     <div class="cli-info">
       <div class="cli-av" id="d-av">A</div>
-      <div><div class="cli-name" id="d-nama">—</div><div class="cli-meta" id="d-meta">—</div></div>
+      <div><div class="cli-name" id="d-nama">&#8212;</div><div class="cli-meta" id="d-meta">&#8212;</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-      <div id="d-sbadge" class="sbadge s-default">—</div>
+      <div id="d-sbadge" class="sbadge s-default">&#8212;</div>
       <button class="logout-btn" onclick="doLogout()">Keluar</button>
     </div>
   </div>
   <div class="dash-tabs">
-    <button class="tab-btn on" onclick="switchTab('status',this)">📋 Status & Pembayaran</button>
-    <button class="tab-btn" onclick="switchTab('cbh',this)">📖 Cara Baca Hasil</button>
-    <button class="tab-btn" onclick="switchTab('faq-in',this)">💬 FAQ Sidang</button>
+    <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
+    <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Cara Baca Hasil</button>
+    <button class="tab-btn" onclick="switchTab('faq-in',this)">&#128172; FAQ Sidang</button>
   </div>
   <div class="dash-body">
     <div id="tc-status" class="tc on">
@@ -265,31 +286,31 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
         <div>
           <div class="card">
             <div class="card-ttl">Informasi Project</div>
-            <div class="irow"><div class="ilabel">Judul Penelitian</div><div class="ival judul" id="i-judul">—</div></div>
-            <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
-            <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
-            <div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">—</div></div>
-            <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
-            <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
+            <div class="irow"><div class="ilabel">Judul Penelitian</div><div class="ival judul" id="i-judul">&#8212;</div></div>
+            <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">&#8212;</div></div>
+            <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">&#8212;</div></div>
+            <div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">&#8212;</div></div>
+            <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">&#8212;</div></div>
+            <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">&#8212;</div></div>
           </div>
           <div id="ref-wrap" style="display:none"></div>
         </div>
         <div>
-		<div id="ref-card-right" style="display:none"></div>
-		<div class="card">
-    <div class="card-ttl">Info Pembayaran</div>
+          <div id="ref-card-right" style="display:none"></div>
+          <div class="card">
+            <div class="card-ttl">Info Pembayaran</div>
             <div class="psteps" id="psteps"></div>
             <div id="addon-row" style="display:none;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g50);border-radius:var(--rs);margin-bottom:10px;border:1px solid var(--g200)">
               <div style="font-size:13px;color:var(--g600);">Add-On</div>
-              <div style="font-size:13px;font-weight:600;color:var(--g800)" id="addon-amt">—</div>
+              <div style="font-size:13px;font-weight:600;color:var(--g800)" id="addon-amt">&#8212;</div>
             </div>
             <div class="sisa-box">
-              <div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">—</div></div>
-              <div class="sisa-ic">💰</div>
+              <div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">&#8212;</div></div>
+              <div class="sisa-ic">&#128176;</div>
             </div>
-            <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">📂 Kirim File & Data Disini</a>
+            <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">&#128194; Kirim File &amp; Data Disini</a>
             <div id="akses-box" style="display:none"></div>
-            <button id="rating-btn" class="rating-btn" style="display:none" onclick="openRatingModal()">⭐ Beri Rating & Testimoni</button>
+            <button id="rating-btn" class="rating-btn" style="display:none" onclick="openRatingModal()">&#11088; Beri Rating &amp; Testimoni</button>
           </div>
         </div>
       </div>
@@ -303,17 +324,16 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
       </div>
     </div>
   </div>
-  <footer>© 2026 AMKOBAR — Konsultasi Akademik & Statistik</footer>
+  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
 </div>
 
 <script>
 const TALLY_RATING_FORM_ID='yPD7rg';
-
 const FAQ_PUB=[
-  {q:"Berapa lama proses pengerjaan?",a:"Tergantung jenis layanan. BAB IV dan BAB IV–V Kisaran 2–3 hari kerja dan FULL BAB I–V bisa 5–10 hari kerja. Waktu bisa bervariasi sesuai antrian dan kompleksitas penelitian."},
+  {q:"Berapa lama proses pengerjaan?",a:"Tergantung jenis layanan. BAB IV dan BAB IV\u2013V Kisaran 2\u20133 hari kerja dan FULL BAB I\u2013V bisa 5\u201310 hari kerja. Waktu bisa bervariasi sesuai antrian dan kompleksitas penelitian."},
   {q:"File atau data apa yang perlu dikirim?",a:"Kirim File Panduan Penulisan dari kampus anda (jika ada) data data penelitian pendukung lainya"},
   {q:"Apakah ada garansi revisi?",a:"Ya, AMKOBAR memberikan garansi revisi selama proses pengerjaan berlangsung. Revisi 100% Hasil Olahdata tanpa tambahan Biaya dan Jika Revisi Interpestasi atau penjelasan yang kurang atau tidak memnuhi keinginan dosen maka akan kami bantu kasih arahan sesuai pengalaman kami agar memenuhi revisi dosen anda."},
-  {q:"Bagaimana sistem pembayaran?",a:"Pembayaran dilakukan bertahap. untuk paket BAB IV, BAB IV–V dan Olahdata Only masuk dalam 2 tahap Pembayaran (DP + Pelunasan) sedangkan FULL BAB I–V masuk dalam 3 tahap (DP + Tahap 2 + Pelunasan)."},
+  {q:"Bagaimana sistem pembayaran?",a:"Pembayaran dilakukan bertahap. untuk paket BAB IV, BAB IV\u2013V dan Olahdata Only masuk dalam 2 tahap Pembayaran (DP + Pelunasan) sedangkan FULL BAB I\u2013V masuk dalam 3 tahap (DP + Tahap 2 + Pelunasan)."},
   {q:"Apakah bisa konsultasi dulu sebelum daftar?",a:"Tentu! Kamu bisa langsung hubungi kami via WhatsApp untuk konsultasi gratis sebelum memutuskan menggunakan layanan."},
   {q:"Software apa saja yang tersedia?",a:"AMKOBAR melayani analisis menggunakan SPSS, SmartPLS, Lisrel, AMOS, WarpPLS dan Eviews, berdasarkan slot masih tersedia atau tidak (full)"},
   {q:"Apakah mendapatkan arahan atau pembelajaran?",a:"Ya, kami mewajibkan setiap client mengikuti sesi pembelajaran (Gmeet-Zoom dll) dan boleh belajar atau minta pembelajaran ulang maksimal 2 kali belajar, jika client tidak ingin ikut sesi belajar dan bisa memahami sendiri wajib konfirmasi ke tim AMKOBAR, kami mewajib anda ikut di sesi arahan walapun anda tidak ikut sesi pembelajaran, karna kami akan memberikan arahan yang sifatnya agar anda tidak terjadi masalah ke depan perihal hasil yang anda peroleh dari kami."},
@@ -324,153 +344,192 @@ const FAQ_IN=[
   {q:"Bagaimana validitas dan reliabilitas instrumen dijamin?",a:"Untuk SPSS: nilai r-hitung > r-tabel (validitas) dan Cronbach Alpha > 0.7 (reliabilitas). Untuk SmartPLS: AVE > 0.5, HTMT < 0.85, Composite Reliability > 0.7."},
   {q:"Apa arti nilai p-value dalam hasil penelitian?",a:"P-value menunjukkan probabilitas hasil terjadi secara kebetulan. P-value < 0.05 berarti hubungan/pengaruh signifikan secara statistik pada tingkat kepercayaan 95%."},
   {q:"Mengapa hasil hipotesis berbeda dari ekspektasi awal?",a:"Jelaskan faktor kontekstual: karakteristik sampel, kondisi industri, atau faktor eksternal. Dukung dengan literatur yang menjelaskan fenomena serupa di konteks berbeda."},
-  {q:"Berapa jumlah sampel minimum yang dibutuhkan?",a:"Regresi: minimal 10x jumlah variabel independen. SEM: minimal 100–200 responden. SmartPLS: minimal 10x indikator terbanyak dalam satu konstruk."},
+  {q:"Berapa jumlah sampel minimum yang dibutuhkan?",a:"Regresi: minimal 10x jumlah variabel independen. SEM: minimal 100\u2013200 responden. SmartPLS: minimal 10x indikator terbanyak dalam satu konstruk."},
   {q:"Apa perbedaan signifikansi statistik dan praktis?",a:"Signifikansi statistik (p < 0.05) menunjukkan hubungan nyata secara matematis. Signifikansi praktis (effect size) menunjukkan seberapa besar dampaknya di dunia nyata. Keduanya penting untuk diinterpretasikan bersama."},
 ];
 const CBH={
-  spss:{title:"📊 Tutorial SPSS",items:[]},
-  smartpls:{title:"🔗 Tutorial SmartPLS",items:[]},
-  lisrel:{title:"📐 Tutorial Lisrel",items:[]},
+  spss:{title:"\ud83d\udcca Tutorial SPSS",items:[]},
+  smartpls:{title:"\ud83d\udd17 Tutorial SmartPLS",items:[]},
+  lisrel:{title:"\ud83d\udcd0 Tutorial Lisrel",items:[]},
 };
-
 buildFaq('faq-pub',FAQ_PUB);
 buildFaq('faq-in',FAQ_IN);
 buildCBH();
-
 function buildFaq(id,data){
-  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">${f.q}<div class="faq-arr">▼</div></div><div class="faq-a">${f.a}</div></div>`).join('');
+  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a}</div></div>`).join('');
 }
 function buildCBH(){
   const el=document.getElementById('cbh-content');let html='';
-  for(const k of['spss','smartpls','lisrel']){const s=CBH[k];if(!s.items.length)continue;html+=`<div class="cbh-stitle">${s.title}</div><div class="cbh-grid">`;for(const item of s.items){if(item.type==='youtube')html+=`<div class="cbh-card"><iframe class="cbh-embed" src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div></div></div>`;else html+=`<div class="cbh-card"><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div><a class="cbh-lnk" href="${item.url}" target="_blank">📄 Buka File →</a></div></div>`;}html+='</div>';}
-  if(!html)html=`<div class="empty-state"><div class="ei">📚</div><div class="et">Konten sedang dipersiapkan</div><div style="font-size:13.5px">Tutorial cara baca hasil akan segera tersedia.</div></div>`;
+  for(const k of['spss','smartpls','lisrel']){const s=CBH[k];if(!s.items.length)continue;html+=`<div class="cbh-stitle">${s.title}</div><div class="cbh-grid">`;for(const item of s.items){if(item.type==='youtube')html+=`<div class="cbh-card"><iframe class="cbh-embed" src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div></div></div>`;else html+=`<div class="cbh-card"><div class="cbh-body"><div class="cbh-ttl">${item.title}</div><div class="cbh-desc">${item.desc}</div><a class="cbh-lnk" href="${item.url}" target="_blank">&#128196; Buka File &#8594;</a></div></div>`;}html+='</div>';}
+  if(!html)html=`<div class="empty-state"><div class="ei">&#128218;</div><div class="et">Konten sedang dipersiapkan</div><div style="font-size:13.5px">Tutorial cara baca hasil akan segera tersedia.</div></div>`;
   el.innerHTML=html;
 }
 
-
-// ============================================================
-// GANTI SELURUH FUNGSI loadTestimoni() DI index.html DENGAN INI
-// ============================================================
-
+/* ===== TESTIMONI STATE ===== */
 var _testimoniLoaded=false;
 var _testimoniAll=[];
 var _testimoniFiltered=[];
-var _testimoniShown=0;
-var _testimoniPerPage=8;
 var _testimoniActiveFilter='Semua';
+var _COLORS=[
+  ['#E6F1FB','#0C447C'],['#E1F5EE','#085041'],['#EEEDFE','#3C3489'],
+  ['#FAEEDA','#633806'],['#FAECE7','#993C1D'],['#EAF3DE','#27500A']
+];
+/* Carousel state */
+var _carCur=0,_carTotal=0,_carPerSlide=1;
+var _carTimer=null,_carInterval=10000;
+var _carProgress=0,_carProgressTimer=null;
+var _swipeStartX=0,_swipeStartY=0;
 
 function loadTestimoni(){
   if(_testimoniLoaded)return;
   _testimoniLoaded=true;
-  var grid=document.getElementById('testimoni-grid');
-  var avg=document.getElementById('testimoni-avg');
-  grid.innerHTML='<p style="font-size:14px;color:var(--g400)">Memuat...</p>';
+  var outer=document.getElementById('testimoni-carousel-outer');
+  outer.innerHTML='<p style="font-size:14px;color:var(--g400);padding:20px 0">Memuat testimoni...</p>';
   fetch('/api/testimoni').then(function(r){return r.json();}).then(function(data){
-    if(!data.length){grid.innerHTML='<p style="font-size:14px;color:var(--g400)">Belum ada testimoni.</p>';return;}
+    if(!data||!data.length){outer.innerHTML='<p style="font-size:14px;color:var(--g400)">Belum ada testimoni.</p>';return;}
     _testimoniAll=data;
-
-    // Hitung rata-rata
-    var total=data.reduce(function(s,t){return s+t.rating;},0);
-    var rataRata=(total/data.length).toFixed(1);
-    avg.innerHTML='<span style="font-size:22px;font-weight:600;color:var(--g800)">'+rataRata+'</span>'
-      +'<span style="color:#BA7517;font-size:18px">★★★★★</span>'
+    var total=data.reduce(function(s,t){return s+(t.rating||5);},0);
+    var rata=(total/data.length).toFixed(1);
+    document.getElementById('testimoni-avg').innerHTML=
+      '<span style="font-size:22px;font-weight:600;color:var(--g800)">'+rata+'</span>'
+      +'<span style="color:#BA7517;font-size:18px">&#9733;&#9733;&#9733;&#9733;&#9733;</span>'
       +'<span style="font-size:13px;color:var(--g600)">('+data.length+' ulasan)</span>';
-
-    // Buat tombol filter
-    var filters=['Semua','BAB IV','BAB IV–V','BAB I–V','BAB I–V + Judul','D0'];
-    var filterHtml='<div id="testimoni-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">';
-    filters.forEach(function(f){
-      var isActive=f==='Semua';
-      filterHtml+='<button onclick="filterTestimoni(\''+f+'\')" id="tf-'+f.replace(/[^a-zA-Z0-9]/g,'_')+'"'
-        +' style="padding:7px 16px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:\'DM Sans\',sans-serif;'
-        +(isActive
-          ? 'background:var(--navy);color:#fff;border:1.5px solid var(--navy);'
-          : 'background:#fff;color:var(--g600);border:1.5px solid var(--g200);')
-        +'">'+f+'</button>';
-    });
-    filterHtml+='</div>';
-    document.getElementById('testimoni-avg').insertAdjacentHTML('afterend', filterHtml);
-
-    // Tampilkan awal
+    var filters=['Semua','BAB IV','BAB IV\u2013V','BAB I\u2013V','BAB I\u2013V + Judul','Data Only'];
+    var fw=document.getElementById('testimoni-filter-wrap');
+    fw.innerHTML='<div id="testi-filter-row" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">'
+      +filters.map(function(f){
+        var act=f==='Semua';
+        return '<button onclick="filterTestimoni(\''+f.replace(/\u2013/g,'\\u2013').replace(/'/g,"\\'")+'\')" id="tf-'+_tfId(f)+'"'
+          +' style="padding:7px 16px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:\'DM Sans\',sans-serif;'
+          +(act?'background:var(--navy);color:#fff;border:1.5px solid var(--navy);':'background:#fff;color:var(--g600);border:1.5px solid var(--g200);')
+          +'">'+f+'</button>';
+      }).join('')+'</div>';
     filterTestimoni('Semua');
   }).catch(function(){
-    document.getElementById('testimoni-grid').innerHTML='<p style="font-size:14px;color:var(--g400)">Gagal memuat testimoni.</p>';
+    document.getElementById('testimoni-carousel-outer').innerHTML='<p style="font-size:14px;color:var(--g400)">Gagal memuat testimoni.</p>';
   });
 }
+
+function _tfId(f){return f.replace(/[^a-zA-Z0-9]/g,'_');}
 
 function filterTestimoni(filter){
   _testimoniActiveFilter=filter;
-  _testimoniShown=0;
-
-  // Update style tombol filter
-  var filters=['Semua','BAB IV','BAB IV–V','BAB I–V','BAB I–V + Judul','D0'];
+  var filters=['Semua','BAB IV','BAB IV\u2013V','BAB I\u2013V','BAB I\u2013V + Judul','Data Only'];
   filters.forEach(function(f){
-    var btn=document.getElementById('tf-'+f.replace(/[^a-zA-Z0-9]/g,'_'));
+    var btn=document.getElementById('tf-'+_tfId(f));
     if(!btn)return;
-    if(f===filter){
-      btn.style.background='var(--navy)';btn.style.color='#fff';btn.style.borderColor='var(--navy)';
-    }else{
-      btn.style.background='#fff';btn.style.color='var(--g600)';btn.style.borderColor='var(--g200)';
-    }
+    if(f===filter){btn.style.background='var(--navy)';btn.style.color='#fff';btn.style.borderColor='var(--navy)';}
+    else{btn.style.background='#fff';btn.style.color='var(--g600)';btn.style.borderColor='var(--g200)';}
   });
-
-  // Filter data
-  if(filter==='Semua'){
-    _testimoniFiltered=_testimoniAll;
-  }else{
+  if(filter==='Semua'){_testimoniFiltered=_testimoniAll;}
+  else{
     _testimoniFiltered=_testimoniAll.filter(function(t){
-      var sub=(t.subtitle||'').split(' · ')[0].trim();
+      var sub=(t.subtitle||'').split(' \u00b7 ')[0].trim();
+      if(filter==='Data Only')return sub==='Data Only'||sub==='D0'||sub==='DO';
       return sub===filter;
     });
   }
-
-  // Reset grid
-  document.getElementById('testimoni-grid').innerHTML='';
-  renderMoreTestimoni();
+  buildCarousel();
 }
 
-function renderMoreTestimoni(){
-  var grid=document.getElementById('testimoni-grid');
-  var colors=[['#E6F1FB','#0C447C'],['#E1F5EE','#085041'],['#EEEDFE','#3C3489'],['#FAEEDA','#633806'],['#FAECE7','#993C1D'],['#EAF3DE','#27500A']];
-  
-  // Hapus tombol load more lama jika ada
-  var oldBtn=document.getElementById('load-more-btn');
-  if(oldBtn)oldBtn.remove();
-
-  if(_testimoniFiltered.length===0){
-    grid.innerHTML='<p style="font-size:14px;color:var(--g400);grid-column:1/-1">Belum ada testimoni untuk kategori ini.</p>';
-    return;
+function buildCarousel(){
+  _carPerSlide=window.innerWidth>=600?2:1;
+  _carCur=0;
+  var outer=document.getElementById('testimoni-carousel-outer');
+  if(!_testimoniFiltered.length){
+    outer.innerHTML='<p style="font-size:14px;color:var(--g400)">Belum ada testimoni untuk kategori ini.</p>';
+    stopCarousel();return;
   }
-
-  var batch=_testimoniFiltered.slice(_testimoniShown, _testimoniShown+_testimoniPerPage);
-  batch.forEach(function(t,i){
-    var ci=(_testimoniShown+i)%colors.length;
-    var c=colors[ci];
-    var stars='';for(var s=1;s<=5;s++)stars+='<span style="color:'+(s<=t.rating?'#BA7517':'#ddd')+'">★</span>';
-    var card=document.createElement('div');
-    card.style.cssText='background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px';
-    card.innerHTML='<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">'
-      +'<div style="width:38px;height:38px;border-radius:50%;background:'+c[0]+';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:'+c[1]+';flex-shrink:0">'+t.inisial+'</div>'
-      +'<div><p style="font-size:13px;font-weight:600;margin:0;color:var(--g800)">'+t.nama+'</p>'
-      +'<p style="font-size:11px;color:var(--g600);margin:0">'+t.subtitle+'</p></div></div>'
-      +'<div style="font-size:14px;margin-bottom:8px">'+stars+'</div>'
-      +'<p style="font-size:13px;color:var(--g600);margin:0;line-height:1.6;font-style:italic">"'+t.teks+'"</p>';
-    grid.appendChild(card);
-  });
-
-  _testimoniShown+=batch.length;
-
-  // Tombol load more jika masih ada
-  if(_testimoniShown<_testimoniFiltered.length){
-    var sisa=_testimoniFiltered.length-_testimoniShown;
-    var wrap=document.getElementById('testimoni-wrap');
-    var btn=document.createElement('div');
-    btn.id='load-more-btn';
-    btn.style.cssText='text-align:center;margin-top:24px';
-    btn.innerHTML='<button onclick="renderMoreTestimoni()" style="padding:11px 32px;background:#fff;border:1.5px solid var(--g200);border-radius:100px;font-size:13.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:\'DM Sans\',sans-serif;transition:all .18s" onmouseover="this.style.background=\'var(--navy)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'var(--navy)\'">Lihat '+Math.min(sisa,_testimoniPerPage)+' Testimoni Lagi ('+sisa+' tersisa)</button>';
-    wrap.appendChild(btn);
-  }
+  var slides=[];
+  for(var i=0;i<_testimoniFiltered.length;i+=_carPerSlide)slides.push(_testimoniFiltered.slice(i,i+_carPerSlide));
+  _carTotal=slides.length;
+  var trackHtml=slides.map(function(group,si){
+    var cardsHtml=group.map(function(t,ci){
+      var colorIdx=(si*_carPerSlide+ci)%_COLORS.length;
+      var c=_COLORS[colorIdx];
+      var stars='';
+      for(var s=1;s<=5;s++)stars+='<span style="color:'+(s<=(t.rating||5)?'#BA7517':'#ddd')+'">&#9733;</span>';
+      return '<div class="testi-card">'
+        +'<div class="testi-card-head">'
+        +'<div class="testi-av" style="background:'+c[0]+';color:'+c[1]+'">'+t.inisial+'</div>'
+        +'<div><p class="testi-name">'+t.nama+'</p><p class="testi-type">'+t.subtitle+'</p></div>'
+        +'</div>'
+        +'<div class="testi-stars">'+stars+'</div>'
+        +'<p class="testi-text">&ldquo;'+t.teks+'&rdquo;</p>'
+        +'</div>';
+    }).join('');
+    return '<div class="testi-slide">'+cardsHtml+'</div>';
+  }).join('');
+  var maxDots=Math.min(_carTotal,7);
+  var dotsHtml='';
+  for(var d=0;d<maxDots;d++)dotsHtml+='<button class="testi-dot'+(d===0?' on':'')+'" onclick="goCarousel('+d+')" aria-label="Slide '+(d+1)+'"></button>';
+  outer.innerHTML=
+    '<div class="testi-carousel-wrap" id="testi-car-wrap">'
+    +'<div class="testi-carousel-track" id="testi-car-track">'+trackHtml+'</div>'
+    +'</div>'
+    +'<div class="testi-nav-row">'
+    +'<button class="testi-arr-btn" onclick="stepCarousel(-1)">&#8592;</button>'
+    +'<div class="testi-dots" id="testi-dots">'+dotsHtml+'</div>'
+    +'<span class="testi-counter" id="testi-counter">1 / '+_carTotal+'</span>'
+    +'<button class="testi-arr-btn" onclick="stepCarousel(1)">&#8594;</button>'
+    +'</div>'
+    +'<div class="testi-progress"><div class="testi-progress-bar" id="testi-pb" style="width:0%"></div></div>';
+  var wrap=document.getElementById('testi-car-wrap');
+  wrap.addEventListener('touchstart',function(e){_swipeStartX=e.touches[0].clientX;_swipeStartY=e.touches[0].clientY;},{passive:true});
+  wrap.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_swipeStartX;
+    var dy=e.changedTouches[0].clientY-_swipeStartY;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40)stepCarousel(dx<0?1:-1);
+  },{passive:true});
+  updateCarouselUI();
+  startCarousel();
 }
+
+function goCarousel(idx){_carCur=idx;updateCarouselUI();resetCarouselTimer();}
+function stepCarousel(dir){_carCur=(_carCur+dir+_carTotal)%_carTotal;updateCarouselUI();resetCarouselTimer();}
+
+function updateCarouselUI(){
+  var track=document.getElementById('testi-car-track');
+  if(track)track.style.transform='translateX(-'+(_carCur*100)+'%)';
+  var maxDots=Math.min(_carTotal,7);
+  var activeDot=_carTotal>1?Math.round((_carCur/(_carTotal-1))*(maxDots-1)):0;
+  document.querySelectorAll('#testi-dots .testi-dot').forEach(function(d,i){d.classList.toggle('on',i===activeDot);});
+  var counter=document.getElementById('testi-counter');
+  if(counter)counter.textContent=(_carCur+1)+' / '+_carTotal;
+}
+
+function startCarousel(){
+  stopCarousel();
+  _carProgress=0;
+  var pb=document.getElementById('testi-pb');if(pb)pb.style.width='0%';
+  var step=100/(_carInterval/100);
+  _carProgressTimer=setInterval(function(){
+    _carProgress+=step;
+    var pb=document.getElementById('testi-pb');if(pb)pb.style.width=Math.min(_carProgress,100)+'%';
+  },100);
+  _carTimer=setInterval(function(){
+    _carCur=(_carCur+1)%_carTotal;
+    updateCarouselUI();
+    _carProgress=0;
+    var pb=document.getElementById('testi-pb');if(pb)pb.style.width='0%';
+  },_carInterval);
+}
+
+function stopCarousel(){
+  if(_carTimer)clearInterval(_carTimer);
+  if(_carProgressTimer)clearInterval(_carProgressTimer);
+  _carTimer=null;_carProgressTimer=null;
+}
+
+function resetCarouselTimer(){
+  _carProgress=0;
+  var pb=document.getElementById('testi-pb');if(pb)pb.style.width='0%';
+  stopCarousel();startCarousel();
+}
+
+window.addEventListener('resize',function(){if(_testimoniFiltered.length)buildCarousel();});
+
+/* ===== NAVIGASI ===== */
 function goHome(){showPg('home');}
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -496,7 +555,7 @@ async function doLogin(){
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
   }catch(e){al.className='al err';al.textContent=e.message||'Gagal menghubungi server.';}
-  finally{btn.disabled=false;btn.textContent='Masuk →';}
+  finally{btn.disabled=false;btn.textContent='Masuk \u2192';}
 }
 document.getElementById('kode-inp').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 function doLogout(){
@@ -512,34 +571,34 @@ function renderDash(d){
   const nama=d.nama||'?';
   document.getElementById('d-av').textContent=nama.charAt(0).toUpperCase();
   document.getElementById('d-nama').textContent=nama;
-  document.getElementById('d-meta').textContent=[d.nim,d.universitas].filter(Boolean).join(' · ');
-  const sb=document.getElementById('d-sbadge');sb.textContent=d.status_project||'—';sb.className='sbadge '+statusClass(d.status_project);
-  document.getElementById('i-judul').textContent=d.judul||'—';
-  document.getElementById('i-layanan').textContent=d.jenis_layanan||'—';
-  document.getElementById('i-app').textContent=d.aplikasi||'—';
-  document.getElementById('i-variabel').textContent=d.jumlah_variabel||'—';
-  document.getElementById('i-univ').textContent=d.universitas||'—';
+  document.getElementById('d-meta').textContent=[d.nim,d.universitas].filter(Boolean).join(' \u00b7 ');
+  const sb=document.getElementById('d-sbadge');sb.textContent=d.status_project||'\u2014';sb.className='sbadge '+statusClass(d.status_project);
+  document.getElementById('i-judul').textContent=d.judul||'\u2014';
+  document.getElementById('i-layanan').textContent=d.jenis_layanan||'\u2014';
+  document.getElementById('i-app').textContent=d.aplikasi||'\u2014';
+  document.getElementById('i-variabel').textContent=d.jumlah_variabel||'\u2014';
+  document.getElementById('i-univ').textContent=d.universitas||'\u2014';
   document.getElementById('i-ddl').textContent=d.deadline?fmtDate(d.deadline):'Belum ditentukan';
   renderPayment(d);
-  document.getElementById('sisa-amt').textContent=d.sisa_pembayaran!=null?fmtRp(d.sisa_pembayaran):'—';
+  document.getElementById('sisa-amt').textContent=d.sisa_pembayaran!=null?fmtRp(d.sisa_pembayaran):'\u2014';
   if(d.total_addon&&d.total_addon>0){document.getElementById('addon-row').style.display='flex';document.getElementById('addon-amt').textContent=fmtRp(d.total_addon);}
   else document.getElementById('addon-row').style.display='none';
   const db=document.getElementById('drive-btn');
-var statusNow=(d.status_project||'').toLowerCase();
-var isAksesFinal=statusNow.includes('pendampingan')||statusNow.includes('selesai');
-if(isAksesFinal&&d.link_hasil_final){db.href=d.link_hasil_final;db.textContent='📂 Akses Folder Project';db.style.display='flex';}
-else if(d.link_drive){db.href=d.link_drive;db.textContent='📂 Upload File & Data Kamu Di Sini';db.style.display='flex';}
-else{db.style.display='none';}
+  var statusNow=(d.status_project||'').toLowerCase();
+  var isAksesFinal=statusNow.includes('pendampingan')||statusNow.includes('selesai');
+  if(isAksesFinal&&d.link_hasil_final){db.href=d.link_hasil_final;db.textContent='\ud83d\udcc2 Akses Folder Project';db.style.display='flex';}
+  else if(d.link_drive){db.href=d.link_drive;db.textContent='\ud83d\udcc2 Upload File & Data Kamu Di Sini';db.style.display='flex';}
+  else{db.style.display='none';}
   const rb=document.getElementById('rating-btn');const ab=document.getElementById('akses-box');
   const status=(d.status_project||'').toLowerCase();
   if(status.includes('selesai')&&d.nim){
     if(d.testimoni_selesai){
       ab.className='akses-box permanen';
-      ab.innerHTML=`<div class="akses-ttl">✅ Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
+      ab.innerHTML=`<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
       ab.style.display='block';rb.style.display='none';
     }else{
       ab.className='akses-box non-permanen';
-      ab.innerHTML=`<div class="akses-ttl">🔴 Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
+      ab.innerHTML=`<div class="akses-ttl">&#128308; Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
       ab.style.display='block';
       window._clientNim=d.nim;
       rb.style.display='flex';
@@ -553,67 +612,50 @@ function renderPayment(d){
   const isKerjasama=kat==='kerjasama'||kat==='khk';
   const harga=isKerjasama?(d.harga_kerjasama||0):(d.harga_umum||0);
   const dp=isKerjasama?(d.dp_kerjasama||0):(d.dp_umum||0);
-  let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'💳'}];
-  if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'💳'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
-  else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'✅'});}
- const dis=d.diskon_referral||0;
-const j=d.jumlah_referral||0;
-const disRow=(dis>0&&j>=3)?`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:var(--rs);border:1px solid var(--ok-border);background:var(--ok-bg);margin-top:-4px"><div style="font-size:13.5px;font-weight:500;color:var(--ok);display:flex;align-items:center;gap:8px"><span>🎁</span><span>Diskon Referral</span></div><div style="font-size:13.5px;font-weight:600;color:var(--ok)">-${fmtRp(dis)}</div></div>`:'';
-document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'✓':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('')+disRow;
+  let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'\ud83d\udcb3'}];
+  if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'\ud83d\udcb3'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'\u2705'});}
+  else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'\u2705'});}
+  const dis=d.diskon_referral||0;
+  const j=d.jumlah_referral||0;
+  const disRow=(dis>0&&j>=3)?`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:var(--rs);border:1px solid var(--ok-border);background:var(--ok-bg);margin-top:-4px"><div style="font-size:13.5px;font-weight:500;color:var(--ok);display:flex;align-items:center;gap:8px"><span>\ud83c\udf81</span><span>Diskon Referral</span></div><div style="font-size:13.5px;font-weight:600;color:var(--ok)">-${fmtRp(dis)}</div></div>`:'';
+  document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'\u2713':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('')+disRow;
 }
 function renderReferral(d){
   const el=document.getElementById('ref-card-right');
   const j=d.jumlah_referral||0;
   const dis=d.diskon_referral||0;
   const kode=d.kode_akses||'';
-  const baseUrl='https://amkobar-portal.vercel.app';
   const kat=(d.kategori_harga||'').toLowerCase();
   const isKerjasama=kat==='kerjasama'||kat==='khk';
   const formId=isKerjasama?'jaBkzY':'MeOabY';
   const khParam=isKerjasama?'khk':'khu';
-  
-  
-  
-  
   const refLink=`https://tally.so/r/${formId}?kh=${khParam}&ref=${kode}`;
   const dots=[0,1,2].map(i=>`<div class="ref-dot${i<j?' filled':''}"></div>`).join('');
   const sudahCukup=j>=3;
   let html=`<div class="ref-card-right ${sudahCukup||dis>0?'active':'pending'}">`;
   html+=`<div class="ref-top"><span class="ref-title">Referral Saya</span><span class="ref-counter ${sudahCukup||dis>0?'':'pending'}">${Math.min(j,3)} / 3</span></div>`;
   html+=`<div class="ref-progress">${dots}</div>`;
-  if(dis>0 && j>=3){
-    html+=`<div class="ref-dis-box">🎁 Diskon <strong>${fmtRp(dis)}</strong> sudah aktif!</div>`;
-  } else if(sudahCukup){
-    html+=`<div class="ref-dis-box">✅ Syarat terpenuhi! Diskon sedang diproses.</div>`;
-  } else {
-    const sisa=3-j;
-    html+=`<div style="font-size:12px;color:var(--warn);margin-bottom:8px">Ajak ${sisa} orang lagi → dapat diskon Rp 50.000–100.000</div>`;
-  }
+  if(dis>0&&j>=3){html+=`<div class="ref-dis-box">\ud83c\udf81 Diskon <strong>${fmtRp(dis)}</strong> sudah aktif!</div>`;}
+  else if(sudahCukup){html+=`<div class="ref-dis-box">\u2705 Syarat terpenuhi! Diskon sedang diproses.</div>`;}
+  else{const sisa=3-j;html+=`<div style="font-size:12px;color:var(--warn);margin-bottom:8px">Ajak ${sisa} orang lagi \u2192 dapat diskon Rp 50.000\u2013100.000</div>`;}
   html+=`<div class="ref-link-box">${refLink}</div>`;
   html+=`<button class="ref-copy-btn" onclick="copyRefLink('${refLink}',this)">Salin Link Referral</button>`;
   html+=`</div>`;
-  el.innerHTML=html;
-  el.style.display='block';
+  el.innerHTML=html;el.style.display='block';
 }
-
-function copyRefLink(url,btn){
-  window._refLinkToCopy=url;
-  document.getElementById('ref-popup-overlay').style.display='flex';
-}
-function closeRefPopup(){
-  document.getElementById('ref-popup-overlay').style.display='none';
-}
+function copyRefLink(url,btn){window._refLinkToCopy=url;document.getElementById('ref-popup-overlay').style.display='flex';}
+function closeRefPopup(){document.getElementById('ref-popup-overlay').style.display='none';}
 function doRefCopy(){
   const url=window._refLinkToCopy||'';
   const waUrl='https://wa.me/6281267090606';
-  const pesan=`Halo! Saya merekomendasikan kamu untuk menggunakan layanan AMKOBAR 🎓\n\nSebelum mendaftar, hubungi admin dulu via WhatsApp:\n${waUrl}\n\nSetelah deal dengan admin, gunakan link registrasi ini:\n${url}`;
+  const pesan=`Halo! Saya merekomendasikan kamu untuk menggunakan layanan AMKOBAR \ud83c\udf93\n\nSebelum mendaftar, hubungi admin dulu via WhatsApp:\n${waUrl}\n\nSetelah deal dengan admin, gunakan link registrasi ini:\n${url}`;
   const btn=document.getElementById('ref-popup-copy-btn');
   navigator.clipboard.writeText(pesan).then(()=>{
-    btn.textContent='✓ Tersalin!';
+    btn.textContent='\u2713 Tersalin!';
     setTimeout(()=>{btn.textContent='Salin & Bagikan';closeRefPopup();},1500);
   }).catch(()=>{
     const t=document.createElement('textarea');t.value=pesan;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);
-    btn.textContent='✓ Tersalin!';
+    btn.textContent='\u2713 Tersalin!';
     setTimeout(()=>{btn.textContent='Salin & Bagikan';closeRefPopup();},1500);
   });
 }
@@ -629,40 +671,34 @@ function statusClass(s){
 }
 function fmtRp(n){return 'Rp '+Math.round(n).toLocaleString('id-ID');}
 function fmtDate(s){return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});}
-
 function setBottomTab(pg){
   document.querySelectorAll('.bottom-tab').forEach(b=>b.classList.remove('on'));
-  var el=document.getElementById('bt-'+pg);
-  if(el)el.classList.add('on');
+  var el=document.getElementById('bt-'+pg);if(el)el.classList.add('on');
 }
 function openRatingModal(){
   if(window.Tally){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{
-      layout:'modal',
-      width:500,
+      layout:'modal',width:500,
       hiddenFields:{'nim':window._clientNim||''},
-      onSubmit:function(){
-        window.Tally.closePopup(TALLY_RATING_FORM_ID);
-        setTimeout(verifyRatingSubmit,5000);
-      }
+      onSubmit:function(){window.Tally.closePopup(TALLY_RATING_FORM_ID);setTimeout(verifyRatingSubmit,5000);}
     });
   }
 }
 function verifyRatingSubmit(){
-  const kode=window._lastKode||'';
-  if(!kode)return;
+  const kode=window._lastKode||'';if(!kode)return;
   fetch(`/api/cek-status?kode=${encodeURIComponent(kode)}`)
     .then(r=>r.json())
     .then(data=>{
       if(data.found&&data.testimoni_selesai){
         const ab=document.getElementById('akses-box');const rb=document.getElementById('rating-btn');
         ab.className='akses-box permanen';
-        ab.innerHTML=`<div class="akses-ttl">✅ Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
+        ab.innerHTML=`<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
         ab.style.display='block';rb.style.display='none';
       }
     }).catch(function(){});
 }
 </script>
+
 <div class="bottom-tab-bar" id="bottom-tab-bar">
   <div class="bottom-tab-pill">
     <button class="bottom-tab on" id="bt-home" onclick="showPg('home')">

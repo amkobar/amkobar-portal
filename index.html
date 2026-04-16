@@ -202,6 +202,54 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 
 
 /* ===== ADMIN FAQ ACCORDION ===== */
+/* ===== FAQ CRUD ===== */
+.faq-crud-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--g50);border-radius:8px;margin-bottom:7px}
+.faq-crud-content{flex:1;min-width:0}
+.faq-crud-q{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.faq-crud-a{font-size:12px;color:var(--g600);line-height:1.5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.faq-crud-actions{display:flex;gap:5px;flex-shrink:0;margin-top:2px}
+.faq-crud-edit{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer;transition:all .18s}
+.faq-crud-edit:hover{border-color:var(--blue);color:var(--blue)}
+.faq-crud-del{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid #fecaca;background:#fff7f7;color:var(--err);cursor:pointer;transition:all .18s}
+.faq-crud-del:hover{background:#fef2f2}
+.faq-crud-form{background:#fff;border:1.5px solid var(--blue);border-radius:10px;padding:14px;margin-bottom:8px}
+.faq-crud-form-ttl{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:10px}
+.faq-crud-inp{width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:var(--g50);margin-bottom:10px;outline:none;transition:border-color .2s}
+.faq-crud-inp:focus{border-color:var(--blue);background:#fff}
+.faq-crud-ta{width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:var(--g50);resize:none;height:80px;margin-bottom:10px;outline:none;transition:border-color .2s}
+.faq-crud-ta:focus{border-color:var(--blue);background:#fff}
+.faq-crud-form-btns{display:flex;gap:8px}
+.faq-crud-save{flex:1;padding:8px;border-radius:7px;font-size:12.5px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer;transition:all .18s}
+.faq-crud-save:hover{background:var(--navy-2)}
+.faq-crud-cancel{padding:8px 14px;border-radius:7px;font-size:12.5px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer}
+.faq-crud-confirm{background:#fff7f7;border:1.5px solid #fecaca;border-radius:8px;padding:11px 14px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.faq-crud-confirm-txt{font-size:12px;color:#991b1b;flex:1}
+.faq-crud-confirm-btns{display:flex;gap:6px;flex-shrink:0}
+.faq-crud-ya{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;border:none;background:var(--err);color:#fff;cursor:pointer}
+.faq-crud-tidak{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer}
+.faq-crud-tambah{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px;border-radius:8px;font-size:12.5px;font-weight:600;border:1.5px dashed var(--g400);background:#fff;color:var(--g600);cursor:pointer;margin-top:8px;transition:all .18s;font-family:'DM Sans',sans-serif}
+.faq-crud-tambah:hover{border-color:var(--blue);color:var(--blue)}
+.faq-crud-empty{text-align:center;padding:20px;font-size:13px;color:var(--g400)}
+/* Modal tambah FAQ */
+.faq-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center;padding:20px}
+.faq-modal-overlay.on{display:flex}
+.faq-modal{background:#fff;border-radius:20px;padding:26px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(13,33,68,.2)}
+.faq-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.faq-modal-ttl{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;color:var(--navy)}
+.faq-modal-close{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--g600);cursor:pointer}
+.faq-modal-lbl{font-size:10.5px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.faq-modal-cats{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.faq-modal-cat{padding:5px 12px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .18s}
+.faq-modal-cat.pub{background:#e8f2fc;color:#0c447c}
+.faq-modal-cat.pub.on{border-color:#1a6bbd}
+.faq-modal-cat.sid{background:#fef3c7;color:#92400e}
+.faq-modal-cat.sid.on{border-color:#f0a500}
+.faq-modal-cat.cbh{background:#dcfce7;color:#166534}
+.faq-modal-cat.cbh.on{border-color:#16a34a}
+.faq-modal-btns{display:flex;gap:10px;margin-top:6px}
+.faq-modal-cancel{padding:10px 18px;border-radius:8px;font-size:13.5px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer}
+.faq-modal-save{flex:1;padding:10px;border-radius:8px;font-size:13.5px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer;transition:all .18s}
+.faq-modal-save:hover{background:var(--navy-2)}
 .adm-acc-sec{background:#fff;border:1px solid var(--g200);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .adm-acc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .18s}
 .adm-acc-hdr:hover{background:var(--g50)}
@@ -592,10 +640,7 @@ function switchAdmTab(tab,btn){
     loadTestimoni();
   }
   if(tab==='faq'){
-    var pubEl=document.getElementById('adm-faq-pub');
-    if(pubEl&&!pubEl.children.length) buildFaq('adm-faq-pub',FAQ_PUB);
-    var sidEl=document.getElementById('adm-faq-sidang');
-    if(sidEl&&!sidEl.children.length) buildFaq('adm-faq-sidang',FAQ_IN);
+    loadFaqAdmin();
   }
 }
 
@@ -671,6 +716,191 @@ function loadAdminData(){
     }).catch(function(){
       document.getElementById('adm-tbody').innerHTML='<tr><td colspan="5" class="adm-empty">Gagal memuat data. Cek koneksi.</td></tr>';
     });
+}
+
+
+/* ===== FAQ CRUD ===== */
+var _faqData=[];
+var _faqModalKat='Publik';
+var _faqLoaded=false;
+
+function loadFaqAdmin(){
+  if(_faqLoaded)return;
+  _faqLoaded=true;
+  fetch('/api/get-faq').then(function(r){return r.json();}).then(function(data){
+    _faqData=data||[];
+    renderFaqAdmin();
+  }).catch(function(){
+    ['pub','sidang','cbh'].forEach(function(s){
+      var el=document.getElementById('adm-faq-'+s+'-list');
+      if(el)el.innerHTML='<div class="faq-crud-empty">Gagal memuat data.</div>';
+    });
+  });
+}
+
+function renderFaqAdmin(){
+  var pubs=_faqData.filter(function(f){return f.kategori==='Publik';});
+  var sids=_faqData.filter(function(f){return f.kategori==='Sidang';});
+  var cbhs=_faqData.filter(function(f){return f.kategori==='CBH';});
+  renderFaqSection('pub',pubs,'Publik');
+  renderFaqSection('sidang',sids,'Sidang');
+  renderFaqSection('cbh',cbhs,'CBH');
+  // Update subtitle count
+  var subPub=document.getElementById('adm-acc-sub-pub');
+  var subSid=document.getElementById('adm-acc-sub-sidang');
+  var subCbh=document.getElementById('adm-acc-sub-cbh');
+  if(subPub)subPub.textContent=pubs.length+' pertanyaan aktif';
+  if(subSid)subSid.textContent=sids.length+' pertanyaan aktif';
+  if(subCbh)subCbh.textContent=cbhs.length+' konten aktif';
+}
+
+function renderFaqSection(sec,items,kat){
+  var el=document.getElementById('adm-faq-'+sec+'-list');
+  if(!el)return;
+  if(!items.length){
+    el.innerHTML='<div class="faq-crud-empty">Belum ada pertanyaan. Klik tombol + untuk menambah.</div>';
+    return;
+  }
+  el.innerHTML=items.map(function(f){
+    var safeQ=f.pertanyaan.replace(/'/g,"\'").replace(/"/g,'&quot;');
+    var safeA=f.jawaban.replace(/'/g,"\'").replace(/"/g,'&quot;');
+    return '<div class="faq-crud-row" id="faq-row-'+f.id+'">'
+      +'<div class="faq-crud-content">'
+      +'<div class="faq-crud-q">'+f.pertanyaan+'</div>'
+      +'<div class="faq-crud-a">'+f.jawaban+'</div>'
+      +'</div>'
+      +'<div class="faq-crud-actions">'
+      +'<button class="faq-crud-edit" onclick="editFaqRow(''+f.id+'',''+safeQ+'',''+safeA+'','+f.urutan+',''+kat+'')">Edit</button>'
+      +'<button class="faq-crud-del" onclick="confirmHapusFaq(''+f.id+'',''+safeQ+'')">Hapus</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function editFaqRow(id,q,a,urutan,kat){
+  // Tutup form edit lain yang mungkin terbuka
+  document.querySelectorAll('.faq-crud-form').forEach(function(f){f.remove();});
+  var row=document.getElementById('faq-row-'+id);
+  if(!row)return;
+  var form=document.createElement('div');
+  form.className='faq-crud-form';
+  form.id='faq-edit-form-'+id;
+  form.innerHTML='<div class="faq-crud-form-ttl">&#9998; Edit Pertanyaan</div>'
+    +'<input class="faq-crud-inp" id="faq-edit-q-'+id+'" value="'+q+'"/>'
+    +'<textarea class="faq-crud-ta" id="faq-edit-a-'+id+'">'+a+'</textarea>'
+    +'<input class="faq-crud-inp" id="faq-edit-urutan-'+id+'" type="number" value="'+urutan+'" placeholder="Urutan"/>'
+    +'<div class="faq-crud-form-btns">'
+    +'<button class="faq-crud-cancel" onclick="cancelEditFaq(''+id+'')">Batal</button>'
+    +'<button class="faq-crud-save" onclick="saveEditFaq(''+id+'',''+kat+'')">&#10003; Simpan</button>'
+    +'</div>';
+  row.insertAdjacentElement('afterend', form);
+  row.style.display='none';
+}
+
+function cancelEditFaq(id){
+  var form=document.getElementById('faq-edit-form-'+id);
+  var row=document.getElementById('faq-row-'+id);
+  if(form)form.remove();
+  if(row)row.style.display='';
+}
+
+function saveEditFaq(id,kat){
+  var q=document.getElementById('faq-edit-q-'+id).value.trim();
+  var a=document.getElementById('faq-edit-a-'+id).value.trim();
+  var urutan=parseInt(document.getElementById('faq-edit-urutan-'+id).value)||0;
+  if(!q||!a){alert('Pertanyaan dan jawaban tidak boleh kosong!');return;}
+  var btn=document.querySelector('#faq-edit-form-'+id+' .faq-crud-save');
+  btn.textContent='Menyimpan...';btn.disabled=true;
+  fetch('/api/update-faq',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'edit',id:id,pertanyaan:q,jawaban:a,kategori:kat,urutan:urutan})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.success){
+      var idx=_faqData.findIndex(function(f){return f.id===id;});
+      if(idx>-1){_faqData[idx].pertanyaan=q;_faqData[idx].jawaban=a;_faqData[idx].urutan=urutan;}
+      renderFaqAdmin();
+    }else{alert('Gagal menyimpan: '+(data.error||''));}
+  }).catch(function(){alert('Gagal menghubungi server.');btn.textContent='Simpan';btn.disabled=false;});
+}
+
+function confirmHapusFaq(id,q){
+  document.querySelectorAll('.faq-crud-confirm').forEach(function(f){f.remove();});
+  var row=document.getElementById('faq-row-'+id);
+  if(!row)return;
+  var confirm=document.createElement('div');
+  confirm.className='faq-crud-confirm';
+  confirm.id='faq-confirm-'+id;
+  var shortQ=q.length>50?q.substring(0,50)+'...':q;
+  confirm.innerHTML='<div class="faq-crud-confirm-txt">&#9888; Hapus "'+shortQ+'"?</div>'
+    +'<div class="faq-crud-confirm-btns">'
+    +'<button class="faq-crud-tidak" onclick="cancelHapusFaq(''+id+'')">Tidak</button>'
+    +'<button class="faq-crud-ya" onclick="doHapusFaq(''+id+'')">Ya, Hapus</button>'
+    +'</div>';
+  row.insertAdjacentElement('afterend',confirm);
+}
+
+function cancelHapusFaq(id){
+  var el=document.getElementById('faq-confirm-'+id);
+  if(el)el.remove();
+}
+
+function doHapusFaq(id){
+  var btn=document.querySelector('#faq-confirm-'+id+' .faq-crud-ya');
+  btn.textContent='Menghapus...';btn.disabled=true;
+  fetch('/api/update-faq',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'hapus',id:id})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.success){
+      _faqData=_faqData.filter(function(f){return f.id!==id;});
+      renderFaqAdmin();
+    }else{alert('Gagal menghapus: '+(data.error||''));}
+  }).catch(function(){alert('Gagal menghubungi server.');btn.textContent='Ya, Hapus';btn.disabled=false;});
+}
+
+function openFaqModal(kat){
+  _faqModalKat=kat||'Publik';
+  document.getElementById('faq-modal-q').value='';
+  document.getElementById('faq-modal-a').value='';
+  document.getElementById('faq-modal-urutan').value='';
+  document.querySelectorAll('.faq-modal-cat').forEach(function(c){c.classList.remove('on');});
+  var map={'Publik':'pub','Sidang':'sid','CBH':'cbh'};
+  var active=document.querySelector('.faq-modal-cat.'+map[kat]);
+  if(active)active.classList.add('on');
+  document.getElementById('faq-modal-overlay').classList.add('on');
+}
+
+function closeFaqModal(){
+  document.getElementById('faq-modal-overlay').classList.remove('on');
+}
+
+function setFaqModalKat(kat,btn){
+  _faqModalKat=kat;
+  document.querySelectorAll('.faq-modal-cat').forEach(function(c){c.classList.remove('on');});
+  btn.classList.add('on');
+}
+
+function saveFaqTambah(){
+  var q=document.getElementById('faq-modal-q').value.trim();
+  var a=document.getElementById('faq-modal-a').value.trim();
+  var urutan=parseInt(document.getElementById('faq-modal-urutan').value)||0;
+  if(!q||!a){alert('Pertanyaan dan jawaban tidak boleh kosong!');return;}
+  var btn=document.querySelector('.faq-modal-save');
+  btn.textContent='Menyimpan...';btn.disabled=true;
+  fetch('/api/update-faq',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.success){
+      _faqData.push({id:data.id,pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aktif:true});
+      renderFaqAdmin();
+      closeFaqModal();
+    }else{alert('Gagal menyimpan: '+(data.error||''));}
+  }).catch(function(){alert('Gagal menghubungi server.');})
+  .finally(function(){btn.textContent='Simpan Pertanyaan';btn.disabled=false;});
 }
 
 function goHome(){showPg('home');}
@@ -928,13 +1158,14 @@ function verifyRatingSubmit(){
             <div class="adm-acc-ic" style="background:#e8f2fc">&#128172;</div>
             <div>
               <div class="adm-acc-ttl">FAQ Publik</div>
-              <div class="adm-acc-sub">Ditampilkan di halaman publik sebelum login</div>
+              <div class="adm-acc-sub" id="adm-acc-sub-pub">Ditampilkan di halaman publik sebelum login</div>
             </div>
           </div>
           <div class="adm-acc-arr" id="adm-acc-arr-pub">&#9660;</div>
         </div>
         <div class="adm-acc-body" id="adm-acc-body-pub" style="display:none">
-          <div class="faq-list" id="adm-faq-pub"></div>
+          <div id="adm-faq-pub-list"></div>
+          <button class="faq-crud-tambah" onclick="openFaqModal('Publik')">&#43; Tambah Pertanyaan</button>
         </div>
       </div>
       <!-- Section 2: FAQ Sidang -->
@@ -944,13 +1175,14 @@ function verifyRatingSubmit(){
             <div class="adm-acc-ic" style="background:#fef3c7">&#127979;</div>
             <div>
               <div class="adm-acc-ttl">FAQ Sidang</div>
-              <div class="adm-acc-sub">Ditampilkan di dashboard client — tab FAQ Sidang</div>
+              <div class="adm-acc-sub" id="adm-acc-sub-sidang">Ditampilkan di dashboard client — tab FAQ Sidang</div>
             </div>
           </div>
           <div class="adm-acc-arr" id="adm-acc-arr-sidang">&#9660;</div>
         </div>
         <div class="adm-acc-body" id="adm-acc-body-sidang" style="display:none">
-          <div class="faq-list" id="adm-faq-sidang"></div>
+          <div id="adm-faq-sidang-list"></div>
+          <button class="faq-crud-tambah" onclick="openFaqModal('Sidang')">&#43; Tambah Pertanyaan</button>
         </div>
       </div>
       <!-- Section 3: Cara Baca Hasil -->
@@ -960,13 +1192,39 @@ function verifyRatingSubmit(){
             <div class="adm-acc-ic" style="background:#dcfce7">&#128218;</div>
             <div>
               <div class="adm-acc-ttl">Cara Baca Hasil</div>
-              <div class="adm-acc-sub">Ditampilkan di dashboard client — tab Cara Baca Hasil</div>
+              <div class="adm-acc-sub" id="adm-acc-sub-cbh">Ditampilkan di dashboard client — tab Cara Baca Hasil</div>
             </div>
           </div>
           <div class="adm-acc-arr" id="adm-acc-arr-cbh">&#9660;</div>
         </div>
         <div class="adm-acc-body" id="adm-acc-body-cbh" style="display:none">
-          <div id="adm-cbh-content" style="font-size:13px;color:var(--g400);padding:8px 0">Konten Cara Baca Hasil belum tersedia — menunggu link YouTube &amp; Drive dari admin.</div>
+          <div id="adm-faq-cbh-list"></div>
+          <button class="faq-crud-tambah" onclick="openFaqModal('CBH')">&#43; Tambah Konten</button>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Tambah FAQ -->
+    <div class="faq-modal-overlay" id="faq-modal-overlay" onclick="if(event.target===this)closeFaqModal()">
+      <div class="faq-modal">
+        <div class="faq-modal-hdr">
+          <div class="faq-modal-ttl">&#43; Tambah Pertanyaan</div>
+          <div class="faq-modal-close" onclick="closeFaqModal()">&#10005;</div>
+        </div>
+        <div class="faq-modal-lbl">Kategori</div>
+        <div class="faq-modal-cats">
+          <div class="faq-modal-cat pub on" onclick="setFaqModalKat('Publik',this)">&#128172; FAQ Publik</div>
+          <div class="faq-modal-cat sid" onclick="setFaqModalKat('Sidang',this)">&#127979; FAQ Sidang</div>
+          <div class="faq-modal-cat cbh" onclick="setFaqModalKat('CBH',this)">&#128218; Cara Baca Hasil</div>
+        </div>
+        <div class="faq-modal-lbl">Pertanyaan</div>
+        <input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
+        <div class="faq-modal-lbl">Jawaban</div>
+        <textarea class="faq-crud-ta" id="faq-modal-a" placeholder="Tulis jawaban lengkap di sini..."></textarea>
+        <div class="faq-modal-lbl">Urutan Tampil</div>
+        <input class="faq-crud-inp" id="faq-modal-urutan" type="number" placeholder="Contoh: 9"/>
+        <div class="faq-modal-btns">
+          <button class="faq-modal-cancel" onclick="closeFaqModal()">Batal</button>
+          <button class="faq-modal-save" onclick="saveFaqTambah()">Simpan Pertanyaan</button>
         </div>
       </div>
     </div>

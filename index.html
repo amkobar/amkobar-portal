@@ -804,8 +804,8 @@ function editFaqRow(id,q,a,urutan,kat){
     +'<textarea class="faq-crud-ta" id="faq-edit-a-'+id+'">'+a+'</textarea>'
     +'<input class="faq-crud-inp" id="faq-edit-urutan-'+id+'" type="number" value="'+urutan+'" placeholder="Urutan"/>'
     +'<div class="faq-crud-form-btns">'
-    +'<button class="faq-crud-cancel" onclick="cancelEditFaq(''+id+'')">Batal</button>'
-    +'<button class="faq-crud-save" onclick="saveEditFaq(''+id+'',''+kat+'')">&#10003; Simpan</button>'
+    +'<button class="faq-crud-cancel" onclick="cancelEditFaq(&quot;'+id+'&quot;)">Batal</button>'
+    +'<button class="faq-crud-save" onclick="saveEditFaq(&quot;'+id+'&quot;,&quot;'+kat+'&quot;)">&#10003; Simpan</button>'
     +'</div>';
   row.insertAdjacentElement('afterend', form);
   row.style.display='none';
@@ -848,9 +848,9 @@ function confirmHapusFaq(id,q){
   var shortQ=q.length>50?q.substring(0,50)+'...':q;
   confirm.innerHTML='<div class="faq-crud-confirm-txt">&#9888; Hapus "'+shortQ+'"?</div>'
     +'<div class="faq-crud-confirm-btns">'
-    +'<button class="faq-crud-tidak" onclick="cancelHapusFaq(''+id+'')">Tidak</button>'
-    +'<button class="faq-crud-ya" onclick="doHapusFaq(''+id+'')">Ya, Hapus</button>'
-    +'</div>';
+    +'<button class="faq-crud-tidak" onclick="cancelHapusFaq(&quot;'+id+'&quot;)">Tidak</button>'
+    +'<button class="faq-crud-tidak" onclick="cancelHapusFaq(&quot;'+id+'&quot;)">Tidak</button>'
+    +'<button class="faq-crud-ya" onclick="doHapusFaq(&quot;'+id+'&quot;)">Ya, Hapus</button>'
   row.insertAdjacentElement('afterend',confirm);
 }
 

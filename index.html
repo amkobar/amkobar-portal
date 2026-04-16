@@ -464,7 +464,7 @@ function loadFaqPublik(){
     var items=data.filter(function(f){return f.kategori==='Publik';});
     if(!items.length){buildFaq('faq-pub',FAQ_PUB);return;}
     document.getElementById('faq-pub').innerHTML=items.map(function(f){
-      return '<div class="faq-item" onclick="this.classList.toggle('open')">'
+      return '<div class="faq-item" onclick="this.classList.toggle(&quot;open&quot;)">'
         +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
         +'<div class="faq-a">'+f.jawaban+'</div></div>';
     }).join('');
@@ -476,14 +476,14 @@ function loadFaqSidang(){
     var items=data.filter(function(f){return f.kategori==='Sidang';});
     if(!items.length){buildFaq('faq-in',FAQ_IN);return;}
     document.getElementById('faq-in').innerHTML=items.map(function(f){
-      return '<div class="faq-item" onclick="this.classList.toggle('open')">'
+      return '<div class="faq-item" onclick="this.classList.toggle(&quot;open&quot;)">'
         +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
         +'<div class="faq-a">'+f.jawaban+'</div></div>';
     }).join('');
   }).catch(function(){buildFaq('faq-in',FAQ_IN);});
 }
 function buildFaq(id,data){
-  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a}</div></div>`).join('');
+  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle(&quot;open&quot;)"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a}</div></div>`).join('');
 }
 function buildCBH(){
   const el=document.getElementById('cbh-content');let html='';

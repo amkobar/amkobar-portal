@@ -243,6 +243,11 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .adm-sm-tog-thumb{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
 .adm-sm-tog.on .adm-sm-tog-thumb{left:14px}
 .adm-sm-tog.off .adm-sm-tog-thumb{left:2px}
+
+.adm-kat-sel{display:flex;gap:10px;margin-bottom:14px}
+.adm-kat-btn{flex:1;padding:11px;border-radius:10px;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;border:2px solid var(--g200);background:#fff;color:var(--g600)}
+.adm-kat-btn.on.kerjasama{background:#0d2144;color:#fff;border-color:#0d2144}
+.adm-kat-btn.on.umum{background:var(--blue);color:#fff;border-color:var(--blue)}
 .adm-pl-loading{text-align:center;padding:40px;font-size:13px;color:var(--g400)}
 /* ===== FAQ CRUD ===== */
 .faq-crud-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--g50);border-radius:8px;margin-bottom:7px}
@@ -988,6 +993,7 @@ function saveFaqTambah(){
 var _plData=[];
 var _plLoaded=false;
 var _plFilter={lay:'Semua',app:'Semua',var:'Semua',st:'Semua'};
+var _plKat='kerjasama';
 var _APPS=['SPSS','SmartPLS','Lisrel','Eviews','AMOS','WarpPLS'];
 
 function loadAdmPricelist(){
@@ -1008,7 +1014,7 @@ function renderAdmQuickApps(){
   el.innerHTML=_APPS.map(function(app){
     var appItems=_plData.filter(function(p){return p.aplikasi===app;});
     var allPenuh=appItems.length>0&&appItems.every(function(p){return p.status_penuh;});
-    +'<div class="adm-app-item"+(allPenuh?" penuh":"")+" onclick=\"toggleAdmApp(this.dataset.app)\" data-app=\"'+app+'\"" id="adm-app-item-'+app+'">'
+    return '<div class="adm-app-item'+(allPenuh?' penuh':'')+'' data-app="'+app+'" onclick="toggleAdmApp(this.dataset.app)" id="adm-app-item-'+app+'">'
       +'<span class="adm-app-name">'+app+'</span>'
       +'<div class="adm-sm-tog'+(allPenuh?' off':' on')+'" id="adm-app-tog-'+app+'"><div class="adm-sm-tog-thumb"></div></div>'
       +'</div>';
@@ -1059,6 +1065,13 @@ function toggleAdmPkg(id){
   });
 }
 
+
+function setAdmKat(kat,btn){
+  _plKat=kat;
+  document.querySelectorAll('.adm-kat-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  renderAdmPlGrid();
+}
 function setAdmPlFilter(type,val,btn){
   _plFilter[type]=val;
   var group=btn.parentElement;
@@ -1100,8 +1113,10 @@ function renderAdmPlGrid(){
     html+='<div class="adm-pl-grid">';
     items.forEach(function(p){
       var penuh=p.status_penuh;
-      var harga=p.harga_kerjasama?fmtRp(p.harga_kerjasama):'—';
-      var dp=p.dp_kerjasama?fmtRp(p.dp_kerjasama):'—';
+      var isK=_plKat==='kerjasama';
+      var isLisrelUmum=!isK&&p.aplikasi==='Lisrel';
+      var harga=isLisrelUmum?'Tidak tersedia':(isK?(p.harga_kerjasama?fmtRp(p.harga_kerjasama):'—'):(p.harga_umum?fmtRp(p.harga_umum):'—'));
+      var dp=isLisrelUmum?'':(isK?(p.dp_kerjasama?fmtRp(p.dp_kerjasama):'—'):(p.dp_umum?fmtRp(p.dp_umum):'—'));
       var sub=p.sub_kategori?'<div style="font-size:10px;color:var(--g400);margin-bottom:4px">'+p.sub_kategori+'</div>':'';
       html+='<div class="adm-pkg'+(penuh?' penuh':'')+'">'
         +'<div class="adm-pkg-app">'+p.aplikasi+'</div>'
@@ -1111,8 +1126,8 @@ function renderAdmPlGrid(){
         +'<div class="adm-pkg-dp">DP: '+dp+'</div>'
         +'<div class="adm-pkg-tog-row">'
         +'<span class="adm-pkg-lbl'+(penuh?' penuh':'')+'">'+( penuh?'Sementara Penuh':'Tersedia')+'</span>'
-        +'<div class="adm-sm-tog"+(penuh?" off":" on")+" onclick=\"toggleAdmPkg(this.dataset.id)\" data-id=\"'+p.id+'\">'
-        +'<div class="adm-sm-tog-thumb"></div></div>'
+        +'<div class="adm-sm-tog'+(penuh?' off':' on')+'" data-id="'+p.id+'" onclick="toggleAdmPkg(this.dataset.id)"><div class="adm-sm-tog-thumb"></div></div>'
+
         +'</div></div>';
     });
     html+='</div>';
@@ -1461,6 +1476,11 @@ function verifyRatingSubmit(){
         <div class="adm-quick-apps" id="adm-quick-apps">
           <div class="adm-pl-loading">Memuat...</div>
         </div>
+      </div>
+      <!-- Kategori Selector -->
+      <div class="adm-kat-sel">
+        <button class="adm-kat-btn on kerjasama" id="adm-kat-k" onclick="setAdmKat('kerjasama',this)">&#127775; Kerjasama</button>
+        <button class="adm-kat-btn umum" id="adm-kat-u" onclick="setAdmKat('umum',this)">&#128100; Umum</button>
       </div>
       <!-- Filter -->
       <div class="adm-pl-filter">

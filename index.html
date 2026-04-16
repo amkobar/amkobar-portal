@@ -200,6 +200,17 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .ref-popup-copy{flex:2;padding:10px;border:none;border-radius:var(--rs);background:var(--navy);color:#fff;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer}
 .ref-popup-copy:hover{background:var(--navy-2)}
 
+
+/* ===== ADMIN FAQ ACCORDION ===== */
+.adm-acc-sec{background:#fff;border:1px solid var(--g200);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.adm-acc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .18s}
+.adm-acc-hdr:hover{background:var(--g50)}
+.adm-acc-left{display:flex;align-items:center;gap:12px}
+.adm-acc-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.adm-acc-ttl{font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.adm-acc-sub{font-size:11.5px;color:var(--g400)}
+.adm-acc-arr{width:24px;height:24px;background:var(--g100);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--g600);flex-shrink:0;transition:transform .2s}
+.adm-acc-body{padding:4px 18px 16px;border-top:1px solid var(--g100)}
 /* ===== ADMIN DASHBOARD ===== */
 .adm-dash{display:none}.adm-dash.on{display:block}
 .adm-header{background:var(--navy);padding:18px 48px 0}
@@ -560,6 +571,15 @@ function switchTab(tab,btn){
   btn.classList.add('on');
   document.getElementById('tc-'+tab).classList.add('on');
 }
+
+function toggleAdmAcc(sec){
+  var body=document.getElementById('adm-acc-body-'+sec);
+  var arr=document.getElementById('adm-acc-arr-'+sec);
+  if(!body)return;
+  var isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  arr.innerHTML=isOpen?'&#9660;':'&#9650;';
+}
 function switchAdmTab(tab,btn){
   document.querySelectorAll('.adm-tab-btn').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.adm-tc').forEach(t=>t.classList.remove('on'));
@@ -571,8 +591,10 @@ function switchAdmTab(tab,btn){
     loadTestimoni();
   }
   if(tab==='faq'){
-    var el=document.getElementById('adm-faq');
-    if(el&&!el.children.length) buildFaq('adm-faq',FAQ_PUB);
+    var pubEl=document.getElementById('adm-faq-pub');
+    if(pubEl&&!pubEl.children.length) buildFaq('adm-faq-pub',FAQ_PUB);
+    var sidEl=document.getElementById('adm-faq-sidang');
+    if(sidEl&&!sidEl.children.length) buildFaq('adm-faq-sidang',FAQ_IN);
   }
 }
 
@@ -897,9 +919,54 @@ function verifyRatingSubmit(){
 
     <!-- Tab FAQ -->
     <div id="adm-tc-faq" class="adm-tc">
-      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Pertanyaan Umum</h2>
-      <p style="font-size:14px;color:var(--g600);margin-bottom:26px;line-height:1.6">FAQ yang tampil ke client.</p>
-      <div class="faq-list" id="adm-faq"></div>
+      <!-- Section 1: FAQ Publik -->
+      <div class="adm-acc-sec" id="adm-acc-pub">
+        <div class="adm-acc-hdr" onclick="toggleAdmAcc('pub')">
+          <div class="adm-acc-left">
+            <div class="adm-acc-ic" style="background:#e8f2fc">&#128172;</div>
+            <div>
+              <div class="adm-acc-ttl">FAQ Publik</div>
+              <div class="adm-acc-sub">Ditampilkan di halaman publik sebelum login</div>
+            </div>
+          </div>
+          <div class="adm-acc-arr" id="adm-acc-arr-pub">&#9650;</div>
+        </div>
+        <div class="adm-acc-body" id="adm-acc-body-pub">
+          <div class="faq-list" id="adm-faq-pub"></div>
+        </div>
+      </div>
+      <!-- Section 2: FAQ Sidang -->
+      <div class="adm-acc-sec" id="adm-acc-sidang">
+        <div class="adm-acc-hdr" onclick="toggleAdmAcc('sidang')">
+          <div class="adm-acc-left">
+            <div class="adm-acc-ic" style="background:#fef3c7">&#127979;</div>
+            <div>
+              <div class="adm-acc-ttl">FAQ Sidang</div>
+              <div class="adm-acc-sub">Ditampilkan di dashboard client — tab FAQ Sidang</div>
+            </div>
+          </div>
+          <div class="adm-acc-arr" id="adm-acc-arr-sidang">&#9660;</div>
+        </div>
+        <div class="adm-acc-body" id="adm-acc-body-sidang" style="display:none">
+          <div class="faq-list" id="adm-faq-sidang"></div>
+        </div>
+      </div>
+      <!-- Section 3: Cara Baca Hasil -->
+      <div class="adm-acc-sec" id="adm-acc-cbh">
+        <div class="adm-acc-hdr" onclick="toggleAdmAcc('cbh')">
+          <div class="adm-acc-left">
+            <div class="adm-acc-ic" style="background:#dcfce7">&#128218;</div>
+            <div>
+              <div class="adm-acc-ttl">Cara Baca Hasil</div>
+              <div class="adm-acc-sub">Ditampilkan di dashboard client — tab Cara Baca Hasil</div>
+            </div>
+          </div>
+          <div class="adm-acc-arr" id="adm-acc-arr-cbh">&#9660;</div>
+        </div>
+        <div class="adm-acc-body" id="adm-acc-body-cbh" style="display:none">
+          <div id="adm-cbh-content" style="font-size:13px;color:var(--g400);padding:8px 0">Konten Cara Baca Hasil belum tersedia — menunggu link YouTube &amp; Drive dari admin.</div>
+        </div>
+      </div>
     </div>
 
     <!-- Tab Testimoni -->

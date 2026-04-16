@@ -199,6 +199,52 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .ref-popup-cancel{flex:1;padding:10px;border:1px solid var(--g200);border-radius:var(--rs);background:#fff;font-size:13.5px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--g600);cursor:pointer}
 .ref-popup-copy{flex:2;padding:10px;border:none;border-radius:var(--rs);background:var(--navy);color:#fff;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer}
 .ref-popup-copy:hover{background:var(--navy-2)}
+
+/* ===== ADMIN DASHBOARD ===== */
+.adm-dash{display:none}.adm-dash.on{display:block}
+.adm-header{background:var(--navy);padding:18px 48px 0}
+.adm-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.adm-badge{background:var(--accent);color:var(--navy);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.3px}
+.adm-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-bottom:20px}
+.adm-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:14px 16px}
+.adm-stat-lbl{font-size:10.5px;color:rgba(255,255,255,.5);margin-bottom:5px;font-weight:500}
+.adm-stat-val{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.adm-stat-val.amber{color:var(--accent)}
+.adm-stat-val.green{color:#4ade80}
+.adm-stat-val.red{color:#f87171}
+.adm-stat-val.blue{color:#60a5fa}
+.adm-tabs{background:#fff;border-bottom:1px solid var(--g200);padding:0 48px;display:flex;overflow-x:auto}
+.adm-tab-btn{padding:14px 22px;border:none;background:none;font-size:13.5px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--g600);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap}
+.adm-tab-btn:hover{color:var(--navy)}
+.adm-tab-btn.on{color:var(--navy);border-bottom-color:var(--blue);font-weight:600}
+.adm-body{padding:28px 48px;max-width:1180px;margin:0 auto}
+.adm-tc{display:none}.adm-tc.on{display:block}
+.adm-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.adm-search{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--g800);outline:none;background:#fff;transition:all .2s}
+.adm-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,189,.08)}
+.adm-filter-btns{display:flex;gap:6px;flex-wrap:wrap}
+.adm-fbtn{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;background:#fff;color:var(--g600);border:1.5px solid var(--g200)}
+.adm-fbtn:hover{border-color:var(--blue);color:var(--blue)}
+.adm-fbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.adm-table-wrap{background:#fff;border-radius:var(--r);border:1px solid var(--g100);overflow:hidden;box-shadow:var(--sh)}
+.adm-table{width:100%;border-collapse:collapse;font-size:13px}
+.adm-table th{text-align:left;font-size:10.5px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;padding:11px 16px;border-bottom:1px solid var(--g200);background:var(--g50)}
+.adm-table td{padding:11px 16px;border-bottom:1px solid var(--g100);color:var(--g800);vertical-align:middle}
+.adm-table tr:last-child td{border-bottom:none}
+.adm-table tr.urgent td{background:#fff7f7}
+.adm-table tbody tr:hover td{background:var(--g50);cursor:pointer}
+.adm-client-name{font-weight:600;font-size:13.5px;color:var(--navy);margin:0}
+.adm-client-kode{font-size:11px;color:var(--g400);margin:0}
+.adm-empty{text-align:center;padding:48px 20px;color:var(--g400)}
+.deadline-warn{font-size:11px;color:#dc2626;font-weight:600}
+@media(max-width:768px){
+  .adm-header{padding:14px 16px 0}
+  .adm-stat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .adm-tabs{padding:0 16px}
+  .adm-body{padding:16px 16px 80px}
+  .adm-table th:nth-child(3),.adm-table td:nth-child(3),
+  .adm-table th:nth-child(5),.adm-table td:nth-child(5){display:none}
+}
 </style>
 </head>
 <body>
@@ -492,6 +538,118 @@ function resetCarouselTimer(){
 window.addEventListener('resize',function(){if(_testimoniFiltered.length)buildCarousel();});
 
 /* ===== NAVIGASI ===== */
+
+/* ===== ADMIN ===== */
+const ADMIN_PW='amkobar2026admin';
+var _admClients=[];
+var _admFilter='Semua';
+var _admLoaded=false;
+
+function doAdminLogout(){
+  document.getElementById('adm-dash').classList.remove('on');
+  document.getElementById('pg-home').classList.add('on');
+  document.getElementById('kode-inp').value='';
+  document.getElementById('login-al').className='al';
+  setBottomTab('home');
+  _admLoaded=false;_admClients=[];
+}
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tc-'+tab).classList.add('on');
+}
+function switchAdmTab(tab,btn){
+  document.querySelectorAll('.adm-tab-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.adm-tc').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('adm-tc-'+tab).classList.add('on');
+  if(tab==='testimoni'&&!_testimoniLoaded){
+    var outer=document.getElementById('adm-testimoni-carousel-outer');
+    if(outer)outer.id='testimoni-carousel-outer';
+    loadTestimoni();
+  }
+  if(tab==='faq'){
+    var el=document.getElementById('adm-faq');
+    if(el&&!el.children.length) buildFaq('adm-faq',FAQ_PUB);
+  }
+}
+
+function setAdmFilter(f,btn){
+  _admFilter=f;
+  document.querySelectorAll('.adm-fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAdmTable();
+}
+
+function renderAdmTable(){
+  var q=(document.getElementById('adm-search').value||'').toLowerCase();
+  var tbody=document.getElementById('adm-tbody');
+  var rows=_admClients.filter(function(c){
+    var matchQ=!q||(c.nama||'').toLowerCase().includes(q)||(c.kode_akses||'').toLowerCase().includes(q)||(c.universitas||'').toLowerCase().includes(q);
+    var st=(c.status_project||'').toLowerCase();
+    var matchF=_admFilter==='Semua'||st.includes(_admFilter);
+    return matchQ&&matchF;
+  });
+  if(!rows.length){
+    tbody.innerHTML='<tr><td colspan="5" class="adm-empty">Tidak ada client ditemukan.</td></tr>';
+    return;
+  }
+  var today=new Date();
+  tbody.innerHTML=rows.map(function(c){
+    var dl=c.deadline?new Date(c.deadline):null;
+    var isUrgent=dl&&!isNaN(dl)&&(dl-today)/(1000*60*60*24)<=3&&!(c.status_project||'').toLowerCase().includes('selesai');
+    var dlTxt=dl&&!isNaN(dl)?dl.toLocaleDateString('id-ID',{day:'numeric',month:'short'}):'&#8212;';
+    var dlHtml=isUrgent?'<span class="deadline-warn">&#9888; '+dlTxt+'</span>':dlTxt;
+    return '<tr class="'+(isUrgent?'urgent':'')+'" data-kode="'+c.kode_akses+'" onclick="admViewClient(this.dataset.kode)">'
+      +'<td><p class="adm-client-name">'+( c.nama||'&#8212;')+'</p><p class="adm-client-kode">'+(c.kode_akses||'')+'</p></td>'
+      +'<td>'+(c.jenis_layanan||'&#8212;')+'</td>'
+      +'<td>'+(c.aplikasi||'&#8212;')+'</td>'
+      +'<td><span class="sbadge '+statusClass(c.status_project)+'">'+(c.status_project||'&#8212;')+'</span></td>'
+      +'<td>'+dlHtml+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function admViewClient(kode){
+  if(!kode)return;
+  fetch('/api/cek-status?kode='+encodeURIComponent(kode))
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.found){
+        window._lastKode=kode;
+        renderDash(data);
+        document.getElementById('adm-dash').classList.remove('on');
+        document.getElementById('dash').classList.add('on');
+        document.getElementById('dash').dataset.fromAdmin='1';
+      }
+    }).catch(function(){});
+}
+
+function loadAdminData(){
+  if(_admLoaded)return;
+  _admLoaded=true;
+  fetch('/api/cek-status?admin=1')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(Array.isArray(data)){
+        _admClients=data;
+        var total=data.length;
+        var diproses=data.filter(function(c){return(c.status_project||'').toLowerCase().includes('diproses');}).length;
+        var pelunasan=data.filter(function(c){return(c.status_project||'').toLowerCase().includes('pelunasan');}).length;
+        var selesai=data.filter(function(c){return(c.status_project||'').toLowerCase().includes('selesai');}).length;
+        document.getElementById('adm-total').textContent=total;
+        document.getElementById('adm-diproses').textContent=diproses;
+        document.getElementById('adm-pelunasan').textContent=pelunasan;
+        document.getElementById('adm-selesai').textContent=selesai;
+        renderAdmTable();
+      }
+    }).catch(function(){
+      document.getElementById('adm-tbody').innerHTML='<tr><td colspan="5" class="adm-empty">Gagal memuat data. Cek koneksi.</td></tr>';
+    });
+}
+
 function goHome(){showPg('home');}
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -502,31 +660,47 @@ function showPg(pg){
   else{document.getElementById('pg-home').classList.add('on');document.getElementById('nl-home').classList.add('on');setBottomTab('home');}
 }
 async function doLogin(){
-  const kode=document.getElementById('kode-inp').value.trim().toUpperCase();
+  const kode=document.getElementById('kode-inp').value.trim();
+  const kodeUpper=kode.toUpperCase();
   const al=document.getElementById('login-al');const btn=document.getElementById('login-btn');
   al.className='al';al.textContent='';
   if(!kode){al.className='al err';al.textContent='Kode akses tidak boleh kosong.';return;}
+  /* Cek admin password */
+  if(kode===ADMIN_PW){
+    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+    document.getElementById('dash').classList.remove('on');
+    document.getElementById('adm-dash').classList.add('on');
+    setBottomTab('home');
+    loadAdminData();
+    return;
+  }
   btn.disabled=true;btn.textContent='Memuat...';
   try{
-    const res=await fetch(`/api/cek-status?kode=${encodeURIComponent(kode)}`);
+    const res=await fetch(`/api/cek-status?kode=${encodeURIComponent(kodeUpper)}`);
     const data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||'Terjadi kesalahan server.');
     if(!data.found){al.className='al err';al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';return;}
-    window._lastKode=kode;
+    window._lastKode=kodeUpper;
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
   }catch(e){al.className='al err';al.textContent=e.message||'Gagal menghubungi server.';}
-  finally{btn.disabled=false;btn.textContent='Masuk \u2192';}
+  finally{btn.disabled=false;btn.textContent='Masuk →';}
 }
 document.getElementById('kode-inp').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 function doLogout(){
+  var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
   document.getElementById('dash').classList.remove('on');
+  document.getElementById('dash').dataset.fromAdmin='';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',i===0);});
+  document.querySelectorAll('.tc').forEach((t,i)=>{t.classList.toggle('on',i===0);});
+  if(fromAdmin==='1'){
+    document.getElementById('adm-dash').classList.add('on');
+    return;
+  }
   document.getElementById('pg-home').classList.add('on');
   document.getElementById('kode-inp').value='';
   document.getElementById('login-al').className='al';
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',i===0);});
-  document.querySelectorAll('.tc').forEach((t,i)=>{t.classList.toggle('on',i===0);});
   setBottomTab('home');
 }
 function renderDash(d){
@@ -660,6 +834,98 @@ function verifyRatingSubmit(){
     }).catch(function(){});
 }
 </script>
+
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="adm-dash" class="adm-dash">
+  <div class="adm-header">
+    <div class="adm-header-top">
+      <div class="adm-brand-row">
+        <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
+        <div>
+          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:-.3px">AMKOBAR</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.45)">Konsultasi Akademik &amp; Statistik</div>
+        </div>
+        <div class="adm-badge">ADMIN</div>
+      </div>
+      <button class="logout-btn" onclick="doAdminLogout()">Keluar</button>
+    </div>
+    <div class="adm-stat-grid">
+      <div class="adm-stat"><div class="adm-stat-lbl">Total Client</div><div class="adm-stat-val blue" id="adm-total">&#8212;</div></div>
+      <div class="adm-stat"><div class="adm-stat-lbl">Sedang Diproses</div><div class="adm-stat-val amber" id="adm-diproses">&#8212;</div></div>
+      <div class="adm-stat"><div class="adm-stat-lbl">Menunggu Pelunasan</div><div class="adm-stat-val red" id="adm-pelunasan">&#8212;</div></div>
+      <div class="adm-stat"><div class="adm-stat-lbl">Selesai</div><div class="adm-stat-val green" id="adm-selesai">&#8212;</div></div>
+    </div>
+  </div>
+  <div class="adm-tabs">
+    <button class="adm-tab-btn on" onclick="switchAdmTab('status',this)">&#128203; Cek Status</button>
+    <button class="adm-tab-btn" onclick="switchAdmTab('faq',this)">&#128172; FAQ</button>
+    <button class="adm-tab-btn" onclick="switchAdmTab('testimoni',this)">&#9733; Testimoni</button>
+    <button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">&#128196; Pricelist</button>
+  </div>
+  <div class="adm-body">
+
+    <!-- Tab Status -->
+    <div id="adm-tc-status" class="adm-tc on">
+      <div class="adm-toolbar">
+        <input class="adm-search" id="adm-search" type="text" placeholder="Cari nama, kode akses, universitas..." oninput="renderAdmTable()"/>
+        <div class="adm-filter-btns">
+          <button class="adm-fbtn on" onclick="setAdmFilter('Semua',this)">Semua</button>
+          <button class="adm-fbtn" onclick="setAdmFilter('diproses',this)">Diproses</button>
+          <button class="adm-fbtn" onclick="setAdmFilter('antrian',this)">Antrian</button>
+          <button class="adm-fbtn" onclick="setAdmFilter('pelunasan',this)">Pelunasan</button>
+          <button class="adm-fbtn" onclick="setAdmFilter('selesai',this)">Selesai</button>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Layanan</th>
+              <th>Aplikasi</th>
+              <th>Status</th>
+              <th>Deadline</th>
+            </tr>
+          </thead>
+          <tbody id="adm-tbody">
+            <tr><td colspan="5" class="adm-empty">Memuat data client...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab FAQ -->
+    <div id="adm-tc-faq" class="adm-tc">
+      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Pertanyaan Umum</h2>
+      <p style="font-size:14px;color:var(--g600);margin-bottom:26px;line-height:1.6">FAQ yang tampil ke client.</p>
+      <div class="faq-list" id="adm-faq"></div>
+    </div>
+
+    <!-- Tab Testimoni -->
+    <div id="adm-tc-testimoni" class="adm-tc">
+      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Testimoni</h2>
+      <p style="font-size:14px;color:var(--g600);margin-bottom:20px">Tampilan testimoni seperti yang dilihat client.</p>
+      <div id="adm-testimoni-carousel-outer"></div>
+    </div>
+
+    <!-- Tab Pricelist -->
+    <div id="adm-tc-pricelist" class="adm-tc">
+      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Pricelist</h2>
+      <p style="font-size:14px;color:var(--g600)">Akses pricelist lengkap.</p>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="pricelist.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--navy);color:#fff;border-radius:var(--rs);font-size:13.5px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif">&#128196; Buka Pricelist Kerjasama</a>
+        <a href="pricelist.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--blue);color:#fff;border-radius:var(--rs);font-size:13.5px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif">&#128196; Buka Pricelist Umum</a>
+      </div>
+      <div style="margin-top:24px;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--rs);padding:14px 16px">
+        <div style="font-size:13px;font-weight:600;color:var(--warn);margin-bottom:8px">&#9881; Toggle Sementara Penuh</div>
+        <p style="font-size:12.5px;color:var(--warn);line-height:1.6">Fitur toggle per aplikasi akan tersedia di update berikutnya.</p>
+      </div>
+    </div>
+
+  </div>
+  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
+</div>
 
 <div class="bottom-tab-bar" id="bottom-tab-bar">
   <div class="bottom-tab-pill">

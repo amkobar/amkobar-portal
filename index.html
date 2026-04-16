@@ -596,7 +596,7 @@ function renderAdmTable(){
     var isUrgent=dl&&!isNaN(dl)&&(dl-today)/(1000*60*60*24)<=3&&!(c.status_project||'').toLowerCase().includes('selesai');
     var dlTxt=dl&&!isNaN(dl)?dl.toLocaleDateString('id-ID',{day:'numeric',month:'short'}):'&#8212;';
     var dlHtml=isUrgent?'<span class="deadline-warn">&#9888; '+dlTxt+'</span>':dlTxt;
-    return '<tr class="'+(isUrgent?'urgent':'')+'" onclick="admViewClient(''+c.kode_akses+'')">'
+    return '<tr class="'+(isUrgent?'urgent':'')+'" data-kode="'+c.kode_akses+'" onclick="admViewClient(this.dataset.kode)">'
       +'<td><p class="adm-client-name">'+( c.nama||'&#8212;')+'</p><p class="adm-client-kode">'+(c.kode_akses||'')+'</p></td>'
       +'<td>'+(c.jenis_layanan||'&#8212;')+'</td>'
       +'<td>'+(c.aplikasi||'&#8212;')+'</td>'

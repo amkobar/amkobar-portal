@@ -271,7 +271,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   </div>
 </div>
 
-<nav class="nav">
+<nav class="nav" id="nav-main">
   <div class="nav-brand" onclick="goHome()">
     <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
     <div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik &amp; Statistik</div></div>
@@ -558,6 +558,7 @@ var _admLoaded=false;
 
 function doAdminLogout(){
   document.getElementById('adm-dash').classList.remove('on');
+  document.getElementById('nav-main').style.display='';
   document.getElementById('pg-home').classList.add('on');
   document.getElementById('kode-inp').value='';
   document.getElementById('login-al').className='al';
@@ -692,6 +693,7 @@ async function doLogin(){
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.remove('on');
     document.getElementById('adm-dash').classList.add('on');
+    document.getElementById('nav-main').style.display='none';
     setBottomTab('home');
     loadAdminData();
     return;
@@ -929,9 +931,9 @@ function verifyRatingSubmit(){
               <div class="adm-acc-sub">Ditampilkan di halaman publik sebelum login</div>
             </div>
           </div>
-          <div class="adm-acc-arr" id="adm-acc-arr-pub">&#9650;</div>
+          <div class="adm-acc-arr" id="adm-acc-arr-pub">&#9660;</div>
         </div>
-        <div class="adm-acc-body" id="adm-acc-body-pub">
+        <div class="adm-acc-body" id="adm-acc-body-pub" style="display:none">
           <div class="faq-list" id="adm-faq-pub"></div>
         </div>
       </div>

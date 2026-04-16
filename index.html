@@ -154,7 +154,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .testi-dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;flex:1}
 .testi-dot{width:6px;height:6px;border-radius:50%;background:var(--g200);transition:all .2s;cursor:pointer;border:none;padding:0;flex-shrink:0}
 .testi-dot.on{background:var(--blue);width:18px;border-radius:3px}
-.testi-counter{font-size:12px;color:var(--g400);white-space:nowrap}
+
 .testi-arr-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--g600);transition:all .18s;flex-shrink:0}
 .testi-arr-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-pale)}
 .testi-progress{height:2px;background:var(--g100);border-radius:1px;margin-top:10px;overflow:hidden}
@@ -435,7 +435,7 @@ function buildCarousel(){
     +'<div class="testi-nav-row">'
     +'<button class="testi-arr-btn" onclick="stepCarousel(-1)">&#8592;</button>'
     +'<div class="testi-dots" id="testi-dots">'+dotsHtml+'</div>'
-    +'<span class="testi-counter" id="testi-counter">1 / '+_carTotal+'</span>'
+    +''
     +'<button class="testi-arr-btn" onclick="stepCarousel(1)">&#8594;</button>'
     +'</div>'
     +'<div class="testi-progress"><div class="testi-progress-bar" id="testi-pb" style="width:0%"></div></div>';
@@ -459,8 +459,7 @@ function updateCarouselUI(){
   var maxDots=Math.min(_carTotal,7);
   var activeDot=_carTotal>1?Math.round((_carCur/(_carTotal-1))*(maxDots-1)):0;
   document.querySelectorAll('#testi-dots .testi-dot').forEach(function(d,i){d.classList.toggle('on',i===activeDot);});
-  var counter=document.getElementById('testi-counter');
-  if(counter)counter.textContent=(_carCur+1)+' / '+_carTotal;
+
 }
 
 function startCarousel(){

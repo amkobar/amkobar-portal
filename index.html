@@ -455,9 +455,33 @@ const CBH={
   smartpls:{title:"\ud83d\udd17 Tutorial SmartPLS",items:[]},
   lisrel:{title:"\ud83d\udcd0 Tutorial Lisrel",items:[]},
 };
-buildFaq('faq-pub',FAQ_PUB);
-buildFaq('faq-in',FAQ_IN);
 buildCBH();
+loadFaqPublik();
+loadFaqSidang();
+
+function loadFaqPublik(){
+  fetch('/api/get-faq').then(function(r){return r.json();}).then(function(data){
+    var items=data.filter(function(f){return f.kategori==='Publik';});
+    if(!items.length){buildFaq('faq-pub',FAQ_PUB);return;}
+    document.getElementById('faq-pub').innerHTML=items.map(function(f){
+      return '<div class="faq-item" onclick="this.classList.toggle('open')">'
+        +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
+        +'<div class="faq-a">'+f.jawaban+'</div></div>';
+    }).join('');
+  }).catch(function(){buildFaq('faq-pub',FAQ_PUB);});
+}
+
+function loadFaqSidang(){
+  fetch('/api/get-faq').then(function(r){return r.json();}).then(function(data){
+    var items=data.filter(function(f){return f.kategori==='Sidang';});
+    if(!items.length){buildFaq('faq-in',FAQ_IN);return;}
+    document.getElementById('faq-in').innerHTML=items.map(function(f){
+      return '<div class="faq-item" onclick="this.classList.toggle('open')">'
+        +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
+        +'<div class="faq-a">'+f.jawaban+'</div></div>';
+    }).join('');
+  }).catch(function(){buildFaq('faq-in',FAQ_IN);});
+}
 function buildFaq(id,data){
   document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a}</div></div>`).join('');
 }

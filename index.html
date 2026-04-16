@@ -202,6 +202,48 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 
 
 /* ===== ADMIN FAQ ACCORDION ===== */
+
+/* ===== ADMIN PRICELIST ===== */
+.adm-quick-bar{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:14px 18px;margin-bottom:14px}
+.adm-quick-ttl{font-size:10.5px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.adm-quick-apps{display:flex;flex-wrap:wrap;gap:8px}
+.adm-app-item{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:8px;border:1.5px solid var(--g200);background:var(--g50);cursor:pointer;transition:all .18s}
+.adm-app-item:hover{border-color:var(--blue)}
+.adm-app-item.penuh{border-color:#fecaca;background:#fff7f7}
+.adm-app-name{font-size:12px;font-weight:600;color:var(--navy)}
+.adm-app-item.penuh .adm-app-name{color:var(--err)}
+.adm-pl-filter{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:12px 18px;margin-bottom:14px}
+.adm-pl-frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.adm-pl-frow:last-child{margin-bottom:0}
+.adm-pl-flbl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;min-width:56px}
+.adm-pl-chips{display:flex;gap:5px;flex-wrap:wrap}
+.adm-pl-chip{padding:4px 11px;border-radius:100px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid var(--g200);background:#fff;color:var(--g600);transition:all .18s;font-family:'DM Sans',sans-serif}
+.adm-pl-chip:hover{border-color:var(--blue);color:var(--blue)}
+.adm-pl-chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.adm-pl-chip.penuh-chip.on{background:var(--err);border-color:var(--err)}
+.adm-pl-count{font-size:12px;color:var(--g400);margin-bottom:12px}
+.adm-pl-count span{font-weight:600;color:var(--navy)}
+.adm-pl-sec{font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between}
+.adm-pl-sec-count{font-size:10px;color:var(--g400);font-weight:400;text-transform:none;letter-spacing:0}
+.adm-pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:6px}
+.adm-pkg{background:#fff;border-radius:11px;padding:13px;border:1px solid var(--g100);position:relative;overflow:hidden;transition:all .18s;box-shadow:var(--sh)}
+.adm-pkg::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue)}
+.adm-pkg.penuh::before{background:var(--err)}
+.adm-pkg.penuh{border-color:#fecaca}
+.adm-pkg-app{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:1px}
+.adm-pkg-var{font-size:10.5px;color:var(--g400);margin-bottom:5px}
+.adm-pkg-price{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:1px}
+.adm-pkg-dp{font-size:10.5px;color:var(--g600);margin-bottom:8px}
+.adm-pkg-tog-row{display:flex;align-items:center;justify-content:space-between;padding-top:7px;border-top:1px solid var(--g100)}
+.adm-pkg-lbl{font-size:10px;font-weight:600;color:var(--ok)}
+.adm-pkg-lbl.penuh{color:var(--err)}
+.adm-sm-tog{width:28px;height:16px;border-radius:8px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.adm-sm-tog.on{background:var(--ok)}
+.adm-sm-tog.off{background:var(--g200)}
+.adm-sm-tog-thumb{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
+.adm-sm-tog.on .adm-sm-tog-thumb{left:14px}
+.adm-sm-tog.off .adm-sm-tog-thumb{left:2px}
+.adm-pl-loading{text-align:center;padding:40px;font-size:13px;color:var(--g400)}
 /* ===== FAQ CRUD ===== */
 .faq-crud-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--g50);border-radius:8px;margin-bottom:7px}
 .faq-crud-content{flex:1;min-width:0}
@@ -658,6 +700,7 @@ function switchAdmTab(tab,btn){
   document.querySelectorAll('.adm-tc').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
   document.getElementById('adm-tc-'+tab).classList.add('on');
+  if(tab==='pricelist') loadAdmPricelist();
   if(tab==='testimoni'&&!_testimoniLoaded){
     var outer=document.getElementById('adm-testimoni-carousel-outer');
     if(outer)outer.id='testimoni-carousel-outer';
@@ -938,6 +981,143 @@ function saveFaqTambah(){
     }else{alert('Gagal menyimpan: '+(data.error||''));}
   }).catch(function(){alert('Gagal menghubungi server.');})
   .finally(function(){btn.textContent='Simpan Pertanyaan';btn.disabled=false;});
+}
+
+
+/* ===== ADMIN PRICELIST ===== */
+var _plData=[];
+var _plLoaded=false;
+var _plFilter={lay:'Semua',app:'Semua',var:'Semua',st:'Semua'};
+var _APPS=['SPSS','SmartPLS','Lisrel','Eviews','AMOS','WarpPLS'];
+
+function loadAdmPricelist(){
+  if(_plLoaded)return;
+  _plLoaded=true;
+  fetch('/api/get-paket-status').then(function(r){return r.json();}).then(function(data){
+    _plData=data||[];
+    renderAdmQuickApps();
+    renderAdmPlGrid();
+  }).catch(function(){
+    document.getElementById('adm-pl-grid').innerHTML='<div class="adm-pl-loading">Gagal memuat data.</div>';
+  });
+}
+
+function renderAdmQuickApps(){
+  var el=document.getElementById('adm-quick-apps');
+  if(!el)return;
+  el.innerHTML=_APPS.map(function(app){
+    var appItems=_plData.filter(function(p){return p.aplikasi===app;});
+    var allPenuh=appItems.length>0&&appItems.every(function(p){return p.status_penuh;});
+    +'<div class="adm-app-item"+(allPenuh?" penuh":"")+" onclick=\"toggleAdmApp(this.dataset.app)\" data-app=\"'+app+'\"" id="adm-app-item-'+app+'">'
+      +'<span class="adm-app-name">'+app+'</span>'
+      +'<div class="adm-sm-tog'+(allPenuh?' off':' on')+'" id="adm-app-tog-'+app+'"><div class="adm-sm-tog-thumb"></div></div>'
+      +'</div>';
+  }).join('');
+}
+
+function toggleAdmApp(app){
+  var appItems=_plData.filter(function(p){return p.aplikasi===app;});
+  var allPenuh=appItems.every(function(p){return p.status_penuh;});
+  var newStatus=!allPenuh;
+  var ids=appItems.map(function(p){return p.id;});
+  // Optimistic update
+  _plData.forEach(function(p){if(p.aplikasi===app)p.status_penuh=newStatus;});
+  renderAdmQuickApps();
+  renderAdmPlGrid();
+  // Save to Notion
+  fetch('/api/update-paket-status',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'update_banyak',ids:ids,status_penuh:newStatus})
+  }).catch(function(){
+    // Revert on error
+    _plData.forEach(function(p){if(p.aplikasi===app)p.status_penuh=!newStatus;});
+    renderAdmQuickApps();
+    renderAdmPlGrid();
+    alert('Gagal update. Coba lagi.');
+  });
+}
+
+function toggleAdmPkg(id){
+  var pkg=_plData.find(function(p){return p.id===id;});
+  if(!pkg)return;
+  var newStatus=!pkg.status_penuh;
+  // Optimistic update
+  pkg.status_penuh=newStatus;
+  renderAdmQuickApps();
+  renderAdmPlGrid();
+  // Save to Notion
+  fetch('/api/update-paket-status',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'update_satu',id:id,status_penuh:newStatus})
+  }).catch(function(){
+    pkg.status_penuh=!newStatus;
+    renderAdmQuickApps();
+    renderAdmPlGrid();
+    alert('Gagal update. Coba lagi.');
+  });
+}
+
+function setAdmPlFilter(type,val,btn){
+  _plFilter[type]=val;
+  var group=btn.parentElement;
+  group.querySelectorAll('.adm-pl-chip').forEach(function(c){c.classList.remove('on');});
+  btn.classList.add('on');
+  renderAdmPlGrid();
+}
+
+function renderAdmPlGrid(){
+  var filtered=_plData.filter(function(p){
+    if(_plFilter.lay!=='Semua'&&p.jenis_layanan!==_plFilter.lay)return false;
+    if(_plFilter.app!=='Semua'&&p.aplikasi!==_plFilter.app)return false;
+    if(_plFilter.var!=='Semua'&&p.jumlah_variabel!==_plFilter.var)return false;
+    if(_plFilter.st==='tersedia'&&p.status_penuh)return false;
+    if(_plFilter.st==='penuh'&&!p.status_penuh)return false;
+    return true;
+  });
+
+  var countEl=document.getElementById('adm-pl-count');
+  if(countEl)countEl.innerHTML='Menampilkan <span>'+filtered.length+'</span> paket';
+
+  var el=document.getElementById('adm-pl-grid');
+  if(!el)return;
+  if(!filtered.length){el.innerHTML='<div class="adm-pl-loading">Tidak ada paket untuk filter ini.</div>';return;}
+
+  // Group by layanan
+  var layGroups={};
+  var layOrder=['BAB IV','BAB IV–V','FULL BAB (I–V)','Olahdata Only'];
+  filtered.forEach(function(p){
+    if(!layGroups[p.jenis_layanan])layGroups[p.jenis_layanan]=[];
+    layGroups[p.jenis_layanan].push(p);
+  });
+
+  var html='';
+  layOrder.forEach(function(lay){
+    if(!layGroups[lay])return;
+    var items=layGroups[lay];
+    html+='<div class="adm-pl-sec"><span>'+lay+'</span><span class="adm-pl-sec-count">'+items.length+' paket</span></div>';
+    html+='<div class="adm-pl-grid">';
+    items.forEach(function(p){
+      var penuh=p.status_penuh;
+      var harga=p.harga_kerjasama?fmtRp(p.harga_kerjasama):'—';
+      var dp=p.dp_kerjasama?fmtRp(p.dp_kerjasama):'—';
+      var sub=p.sub_kategori?'<div style="font-size:10px;color:var(--g400);margin-bottom:4px">'+p.sub_kategori+'</div>':'';
+      html+='<div class="adm-pkg'+(penuh?' penuh':'')+'">'
+        +'<div class="adm-pkg-app">'+p.aplikasi+'</div>'
+        +'<div class="adm-pkg-var">'+p.jumlah_variabel+'</div>'
+        +sub
+        +'<div class="adm-pkg-price">'+harga+'</div>'
+        +'<div class="adm-pkg-dp">DP: '+dp+'</div>'
+        +'<div class="adm-pkg-tog-row">'
+        +'<span class="adm-pkg-lbl'+(penuh?' penuh':'')+'">'+( penuh?'Sementara Penuh':'Tersedia')+'</span>'
+        +'<div class="adm-sm-tog"+(penuh?" off":" on")+" onclick=\"toggleAdmPkg(this.dataset.id)\" data-id=\"'+p.id+'\">'
+        +'<div class="adm-sm-tog-thumb"></div></div>'
+        +'</div></div>';
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
 }
 
 function goHome(){showPg('home');}
@@ -1275,16 +1455,58 @@ function verifyRatingSubmit(){
 
     <!-- Tab Pricelist -->
     <div id="adm-tc-pricelist" class="adm-tc">
-      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Pricelist</h2>
-      <p style="font-size:14px;color:var(--g600)">Akses pricelist lengkap.</p>
-      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
-        <a href="pricelist.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--navy);color:#fff;border-radius:var(--rs);font-size:13.5px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif">&#128196; Buka Pricelist Kerjasama</a>
-        <a href="pricelist.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--blue);color:#fff;border-radius:var(--rs);font-size:13.5px;font-weight:600;text-decoration:none;font-family:'DM Sans',sans-serif">&#128196; Buka Pricelist Umum</a>
+      <!-- Toggle cepat per aplikasi -->
+      <div class="adm-quick-bar">
+        <div class="adm-quick-ttl">Toggle Cepat &#8212; klik untuk on/off semua paket per aplikasi</div>
+        <div class="adm-quick-apps" id="adm-quick-apps">
+          <div class="adm-pl-loading">Memuat...</div>
+        </div>
       </div>
-      <div style="margin-top:24px;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--rs);padding:14px 16px">
-        <div style="font-size:13px;font-weight:600;color:var(--warn);margin-bottom:8px">&#9881; Toggle Sementara Penuh</div>
-        <p style="font-size:12.5px;color:var(--warn);line-height:1.6">Fitur toggle per aplikasi akan tersedia di update berikutnya.</p>
+      <!-- Filter -->
+      <div class="adm-pl-filter">
+        <div class="adm-pl-frow">
+          <span class="adm-pl-flbl">Layanan</span>
+          <div class="adm-pl-chips" id="adm-pl-f-lay">
+            <button class="adm-pl-chip on" onclick="setAdmPlFilter('lay','Semua',this)">Semua</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV',this)">BAB IV</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV–V',this)">BAB IV&#x2013;V</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','FULL BAB (I–V)',this)">FULL BAB</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','Olahdata Only',this)">Olahdata</button>
+          </div>
+        </div>
+        <div class="adm-pl-frow">
+          <span class="adm-pl-flbl">Aplikasi</span>
+          <div class="adm-pl-chips" id="adm-pl-f-app">
+            <button class="adm-pl-chip on" onclick="setAdmPlFilter('app','Semua',this)">Semua</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','SPSS',this)">SPSS</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','SmartPLS',this)">SmartPLS</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','Lisrel',this)">Lisrel</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','Eviews',this)">Eviews</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','AMOS',this)">AMOS</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','WarpPLS',this)">WarpPLS</button>
+          </div>
+        </div>
+        <div class="adm-pl-frow">
+          <span class="adm-pl-flbl">Variabel</span>
+          <div class="adm-pl-chips" id="adm-pl-f-var">
+            <button class="adm-pl-chip on" onclick="setAdmPlFilter('var','Semua',this)">Semua</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','2 Variabel',this)">2 Variabel</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','3 Variabel',this)">3 Variabel</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','4 Variabel',this)">4 Variabel</button>
+          </div>
+        </div>
+        <div class="adm-pl-frow">
+          <span class="adm-pl-flbl">Status</span>
+          <div class="adm-pl-chips" id="adm-pl-f-st">
+            <button class="adm-pl-chip on" onclick="setAdmPlFilter('st','Semua',this)">Semua</button>
+            <button class="adm-pl-chip" onclick="setAdmPlFilter('st','tersedia',this)">Tersedia</button>
+            <button class="adm-pl-chip penuh-chip" onclick="setAdmPlFilter('st','penuh',this)">Sementara Penuh</button>
+          </div>
+        </div>
       </div>
+      <!-- Count + Grid -->
+      <div class="adm-pl-count" id="adm-pl-count">Memuat paket...</div>
+      <div id="adm-pl-grid"></div>
     </div>
 
   </div>

@@ -770,13 +770,27 @@ function renderFaqSection(sec,items,kat){
       +'<div class="faq-crud-a">'+f.jawaban+'</div>'
       +'</div>'
       +'<div class="faq-crud-actions">'
-      +'<button class="faq-crud-edit" onclick="editFaqRow(''+f.id+'',''+safeQ+'',''+safeA+'','+f.urutan+',''+kat+'')">Edit</button>'
-      +'<button class="faq-crud-del" onclick="confirmHapusFaq(''+f.id+'',''+safeQ+'')">Hapus</button>'
+      +'<button class="faq-crud-edit" data-id="'+f.id+'" data-q="'+f.pertanyaan.replace(/"/g,"&quot;")+'" data-a="'+f.jawaban.replace(/"/g,"&quot;")+'" data-urutan="'+f.urutan+'" data-kat="'+kat+'" onclick="editFaqRowBtn(this)">Edit</button>'
+      +'<button class="faq-crud-del" data-id="'+f.id+'" data-q="'+f.pertanyaan.replace(/"/g,"&quot;")+'" onclick="confirmHapusFaqBtn(this)">Hapus</button>'
       +'</div>'
       +'</div>';
   }).join('');
 }
 
+
+function editFaqRowBtn(btn){
+  var id=btn.dataset.id;
+  var q=btn.dataset.q;
+  var a=btn.dataset.a;
+  var urutan=parseInt(btn.dataset.urutan)||0;
+  var kat=btn.dataset.kat;
+  editFaqRow(id,q,a,urutan,kat);
+}
+function confirmHapusFaqBtn(btn){
+  var id=btn.dataset.id;
+  var q=btn.dataset.q;
+  confirmHapusFaq(id,q);
+}
 function editFaqRow(id,q,a,urutan,kat){
   // Tutup form edit lain yang mungkin terbuka
   document.querySelectorAll('.faq-crud-form').forEach(function(f){f.remove();});

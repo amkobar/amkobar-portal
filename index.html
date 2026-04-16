@@ -160,6 +160,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .testi-progress{height:2px;background:var(--g100);border-radius:1px;margin-top:10px;overflow:hidden}
 .testi-progress-bar{height:100%;background:var(--blue);border-radius:1px;transition:width .1s linear}
 @media(min-width:600px){.testi-slide{min-width:50%}}
+@media(min-width:900px){.testi-slide{min-width:33.333%}}
 /* ============================= */
 @media(max-width:768px){
   .bottom-tab-bar{display:flex}
@@ -176,6 +177,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   #pg-home{padding-bottom:0}
   #pg-home .hero{min-height:calc(100vh - 48px - 58px);display:flex;flex-direction:column;justify-content:center;align-items:center}
   .testi-slide{min-width:100%}
+  .testi-carousel-wrap{min-height:200px}
 }
 .ref-card-right{background:#fff;border-radius:var(--r);padding:20px 22px;border:1.5px solid #86efac;margin-bottom:14px}
 .ref-card-right.pending{border-color:var(--warn-border);background:var(--warn-bg)}
@@ -247,9 +249,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 <div id="pg-testimoni" class="pg">
   <div class="pub" id="testimoni-wrap">
     <h2>Kata Mereka</h2>
-    <p class="sub">Ulasan nyata dari client AMKOBAR &#8212; berganti otomatis setiap 10 detik. Geser kiri/kanan untuk navigasi manual.</p>
-    <div id="testimoni-avg" style="display:flex;align-items:center;gap:8px;margin-bottom:20px"></div>
-    <div id="testimoni-filter-wrap"></div>
+    <p class="sub">Ulasan nyata dari client AMKOBAR.</p>
     <div id="testimoni-carousel-outer"></div>
   </div>
   <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
@@ -388,52 +388,17 @@ function loadTestimoni(){
   fetch('/api/testimoni').then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){outer.innerHTML='<p style="font-size:14px;color:var(--g400)">Belum ada testimoni.</p>';return;}
     _testimoniAll=data;
-    var total=data.reduce(function(s,t){return s+(t.rating||5);},0);
-    var rata=(total/data.length).toFixed(1);
-    document.getElementById('testimoni-avg').innerHTML=
-      '<span style="font-size:22px;font-weight:600;color:var(--g800)">'+rata+'</span>'
-      +'<span style="color:#BA7517;font-size:18px">&#9733;&#9733;&#9733;&#9733;&#9733;</span>'
-      +'<span style="font-size:13px;color:var(--g600)">('+data.length+' ulasan)</span>';
-    var filters=['Semua','BAB IV','BAB IV\u2013V','BAB I\u2013V','BAB I\u2013V + Judul','Data Only'];
-    var fw=document.getElementById('testimoni-filter-wrap');
-    fw.innerHTML='<div id="testi-filter-row" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">'
-      +filters.map(function(f){
-        var act=f==='Semua';
-        return '<button onclick="filterTestimoni(\''+f.replace(/\u2013/g,'\\u2013').replace(/'/g,"\\'")+'\')" id="tf-'+_tfId(f)+'"'
-          +' style="padding:7px 16px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:\'DM Sans\',sans-serif;'
-          +(act?'background:var(--navy);color:#fff;border:1.5px solid var(--navy);':'background:#fff;color:var(--g600);border:1.5px solid var(--g200);')
-          +'">'+f+'</button>';
-      }).join('')+'</div>';
-    filterTestimoni('Semua');
+    _testimoniFiltered=data;
+    buildCarousel();
   }).catch(function(){
     document.getElementById('testimoni-carousel-outer').innerHTML='<p style="font-size:14px;color:var(--g400)">Gagal memuat testimoni.</p>';
   });
 }
 
-function _tfId(f){return f.replace(/[^a-zA-Z0-9]/g,'_');}
 
-function filterTestimoni(filter){
-  _testimoniActiveFilter=filter;
-  var filters=['Semua','BAB IV','BAB IV\u2013V','BAB I\u2013V','BAB I\u2013V + Judul','Data Only'];
-  filters.forEach(function(f){
-    var btn=document.getElementById('tf-'+_tfId(f));
-    if(!btn)return;
-    if(f===filter){btn.style.background='var(--navy)';btn.style.color='#fff';btn.style.borderColor='var(--navy)';}
-    else{btn.style.background='#fff';btn.style.color='var(--g600)';btn.style.borderColor='var(--g200)';}
-  });
-  if(filter==='Semua'){_testimoniFiltered=_testimoniAll;}
-  else{
-    _testimoniFiltered=_testimoniAll.filter(function(t){
-      var sub=(t.subtitle||'').split(' \u00b7 ')[0].trim();
-      if(filter==='Data Only')return sub==='Data Only'||sub==='D0'||sub==='DO';
-      return sub===filter;
-    });
-  }
-  buildCarousel();
-}
 
 function buildCarousel(){
-  _carPerSlide=window.innerWidth>=600?2:1;
+  _carPerSlide=window.innerWidth>=900?3:window.innerWidth>=600?2:1;
   _carCur=0;
   var outer=document.getElementById('testimoni-carousel-outer');
   if(!_testimoniFiltered.length){

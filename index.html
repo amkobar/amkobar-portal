@@ -142,8 +142,8 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 /* ===== CAROUSEL TESTIMONI ===== */
 .testi-carousel-wrap{position:relative;overflow:hidden;border-radius:16px;margin-bottom:16px;touch-action:pan-y}
 .testi-carousel-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
-.testi-slide{min-width:100%;display:flex;gap:12px;padding:0 2px}
-.testi-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;flex:1;min-width:0}
+.testi-slide{min-width:100%;width:100%;display:flex;gap:14px;padding:0 2px;flex-shrink:0}
+.testi-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;flex:1;min-width:0;overflow:hidden}
 .testi-card-head{display:flex;gap:10px;align-items:center;margin-bottom:12px}
 .testi-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
 .testi-name{font-size:13px;font-weight:600;color:var(--g800);margin:0}
@@ -159,8 +159,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .testi-arr-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-pale)}
 .testi-progress{height:2px;background:var(--g100);border-radius:1px;margin-top:10px;overflow:hidden}
 .testi-progress-bar{height:100%;background:var(--blue);border-radius:1px;transition:width .1s linear}
-@media(min-width:600px){.testi-slide{min-width:50%}}
-@media(min-width:900px){.testi-slide{min-width:33.333%}}
+
 /* ============================= */
 @media(max-width:768px){
   .bottom-tab-bar{display:flex}
@@ -176,8 +175,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   .sg{grid-template-columns:1fr}
   #pg-home{padding-bottom:0}
   #pg-home .hero{min-height:calc(100vh - 48px - 58px);display:flex;flex-direction:column;justify-content:center;align-items:center}
-  .testi-slide{min-width:100%}
-  .testi-carousel-wrap{min-height:200px}
+
 }
 .ref-card-right{background:#fff;border-radius:var(--r);padding:20px 22px;border:1.5px solid #86efac;margin-bottom:14px}
 .ref-card-right.pending{border-color:var(--warn-border);background:var(--warn-bg)}

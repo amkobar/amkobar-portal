@@ -306,6 +306,65 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .adm-acc-sub{font-size:11.5px;color:var(--g400)}
 .adm-acc-arr{width:24px;height:24px;background:var(--g100);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--g600);flex-shrink:0;transition:transform .2s}
 .adm-acc-body{padding:4px 18px 16px;border-top:1px solid var(--g100)}
+/* ===== ADMIN TESTIMONI ===== */
+.adm-testi-wrap{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.adm-testi-toolbar{padding:11px 14px;border-bottom:1px solid var(--g200);background:var(--g50);display:flex;flex-direction:column;gap:8px}
+.adm-testi-toolbar-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.adm-testi-count{font-size:11px;color:var(--g400);padding:6px 14px;border-bottom:1px solid var(--g100)}
+.adm-testi-count span{font-weight:600;color:var(--g800)}
+.adm-testi-note{font-size:11px;color:var(--g400);background:var(--g50);padding:7px 14px;border-bottom:1px solid var(--g100);line-height:1.5}
+.adm-testi-split{display:grid;grid-template-columns:220px 1fr;min-height:400px}
+.adm-testi-list{border-right:1px solid var(--g200);overflow-y:auto;max-height:400px}
+.adm-testi-item{padding:10px 12px;border-bottom:1px solid var(--g100);cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s}
+.adm-testi-item:last-child{border-bottom:none}
+.adm-testi-item:hover{background:var(--g50)}
+.adm-testi-item.active{background:var(--blue-pale);border-left:2px solid var(--blue)}
+.adm-testi-item.dim{opacity:.38}
+.adm-testi-item-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.adm-testi-item-info{flex:1;min-width:0}
+.adm-testi-item-name{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-testi-item-sub{font-size:10px;color:var(--g400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-testi-item-stars{font-size:9px;letter-spacing:.3px}
+.adm-testi-mini-tog{width:24px;height:14px;border-radius:7px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.adm-testi-mini-tog.on{background:var(--ok)}.adm-testi-mini-tog.off{background:var(--g200)}
+.adm-testi-mini-tog-t{width:10px;height:10px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
+.adm-testi-mini-tog.on .adm-testi-mini-tog-t{left:12px}.adm-testi-mini-tog.off .adm-testi-mini-tog-t{left:2px}
+.adm-testi-detail{padding:18px 16px;overflow-y:auto;max-height:400px}
+.adm-testi-empty{display:flex;align-items:center;justify-content:center;height:100%;min-height:280px;font-size:12px;color:var(--g400);text-align:center;line-height:1.6}
+.adm-testi-d-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.adm-testi-d-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.adm-testi-d-name{font-size:14px;font-weight:600;color:var(--navy)}
+.adm-testi-d-sub{font-size:11px;color:var(--g400)}
+.adm-testi-d-stars{font-size:13px;margin-bottom:10px;letter-spacing:.5px}
+.adm-testi-d-quote{font-size:12px;color:var(--g600);line-height:1.65;padding:11px 13px;background:var(--g50);border-radius:var(--rs);margin-bottom:12px;font-style:italic;border:1px solid var(--g100)}
+.adm-testi-d-actions{display:flex;gap:7px;margin-bottom:0}
+.adm-testi-tog-full{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:var(--rs);border:1px solid var(--g200);background:var(--g50);cursor:pointer;flex:1;justify-content:center;transition:all .15s;font-family:'DM Sans',sans-serif}
+.adm-testi-tog-full:hover{border-color:var(--ok)}
+.adm-testi-big-tog{width:28px;height:16px;border-radius:8px;position:relative;flex-shrink:0;pointer-events:none;transition:background .2s}
+.adm-testi-big-tog.on{background:var(--ok)}.adm-testi-big-tog.off{background:var(--g200)}
+.adm-testi-big-tog-t{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
+.adm-testi-big-tog.on .adm-testi-big-tog-t{left:14px}.adm-testi-big-tog.off .adm-testi-big-tog-t{left:2px}
+.adm-testi-tog-lbl{font-size:12px;font-weight:500;color:var(--g600)}
+.adm-testi-edit-btn{flex:1;padding:8px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.adm-testi-edit-btn:hover{border-color:var(--blue);color:var(--blue)}
+.adm-testi-edit-area{margin-top:12px;padding-top:12px;border-top:1px solid var(--g100);display:none}
+.adm-testi-edit-area.open{display:block}
+.adm-testi-ep-lbl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;margin-top:10px}
+.adm-testi-ep-lbl:first-child{margin-top:0}
+.adm-testi-ep-inp{width:100%;padding:7px 10px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--g800);background:var(--g50);outline:none;transition:border-color .2s}
+.adm-testi-ep-inp:focus{border-color:var(--blue);background:#fff}
+.adm-testi-ep-ta{width:100%;padding:7px 10px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--g800);background:var(--g50);resize:none;height:64px;outline:none;transition:border-color .2s;margin-top:4px}
+.adm-testi-ep-ta:focus{border-color:var(--blue);background:#fff}
+.adm-testi-ep-stars{display:flex;gap:3px;margin-top:4px;margin-bottom:2px}
+.adm-testi-star-b{font-size:16px;cursor:pointer;opacity:.2;background:none;border:none;padding:0;line-height:1;color:#BA7517;transition:opacity .15s}
+.adm-testi-star-b.on{opacity:1}
+.adm-testi-ep-btns{display:flex;gap:7px;margin-top:12px}
+.adm-testi-ep-save{flex:1;padding:8px;border-radius:var(--rs);font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif}
+.adm-testi-ep-save:hover{background:var(--navy-2)}
+.adm-testi-ep-cancel{padding:8px 12px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer;font-family:'DM Sans',sans-serif}
+.adm-testi-badge-on{background:var(--ok-bg);color:#065f46;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600}
+.adm-testi-badge-off{background:var(--g100);color:var(--g600);padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600}
+@media(max-width:768px){.adm-testi-split{grid-template-columns:1fr;min-height:auto}.adm-testi-list{max-height:220px;border-right:none;border-bottom:1px solid var(--g200)}.adm-testi-detail{max-height:none}}
 /* ===== ADMIN DASHBOARD ===== */
 .adm-dash{display:none}.adm-dash.on{display:block}
 .adm-header{background:var(--navy);padding:18px 48px 0}
@@ -706,11 +765,7 @@ function switchAdmTab(tab,btn){
   btn.classList.add('on');
   document.getElementById('adm-tc-'+tab).classList.add('on');
   if(tab==='pricelist') loadAdmPricelist();
-  if(tab==='testimoni'&&!_testimoniLoaded){
-    var outer=document.getElementById('adm-testimoni-carousel-outer');
-    if(outer)outer.id='testimoni-carousel-outer';
-    loadTestimoni();
-  }
+  if(tab==='testimoni') loadAdmTestimoni();
   if(tab==='faq'){
     loadFaqAdmin();
   }
@@ -1319,6 +1374,199 @@ function verifyRatingSubmit(){
       }
     }).catch(function(){});
 }
+
+/* ===== ADMIN TESTIMONI ===== */
+var _admTesti=[];
+var _admTestiLoaded=false;
+var _admTestiSelId=null;
+var _admTestiEditOpen=false;
+var _admTestiEditRat={};
+var _admTestiFStatus='semua';
+var _admTestiFStar=0;
+var _admTestiFSearch='';
+var _TESTI_COLORS=[
+  ['#E6F1FB','#0C447C'],['#E1F5EE','#085041'],['#EEEDFE','#3C3489'],
+  ['#FAEEDA','#633806'],['#FAECE7','#993C1D'],['#EAF3DE','#27500A']
+];
+
+function loadAdmTestimoni(){
+  if(_admTestiLoaded)return;
+  _admTestiLoaded=true;
+  fetch('/api/get-testimoni-admin')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(Array.isArray(data)){
+        _admTesti=data;
+        admTestiRender();
+      }else{
+        document.getElementById('adm-testi-list').innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--g400)">Gagal memuat data.</div>';
+      }
+    }).catch(function(){
+      document.getElementById('adm-testi-list').innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--g400)">Gagal menghubungi server.</div>';
+    });
+}
+
+function admTestiFiltered(){
+  return _admTesti.filter(function(d){
+    var mq=!_admTestiFSearch||d.nama.toLowerCase().includes(_admTestiFSearch)||d.teks.toLowerCase().includes(_admTestiFSearch);
+    var ms=_admTestiFStatus==='semua'||(_admTestiFStatus==='tampil'&&d.tampil)||(_admTestiFStatus==='hidden'&&!d.tampil);
+    var mr=_admTestiFStar===0||d.rating===_admTestiFStar;
+    return mq&&ms&&mr;
+  });
+}
+
+function admTestiSetStatus(btn,v){
+  _admTestiFStatus=v;
+  document.querySelectorAll('#adm-testi-chips-status .adm-fbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  admTestiRender();
+}
+function admTestiSetStar(btn,v){
+  _admTestiFStar=v;
+  document.querySelectorAll('#adm-testi-chips-star .adm-fbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  admTestiRender();
+}
+function admTestiSearch(v){_admTestiFSearch=v.toLowerCase();admTestiRender();}
+
+function admTestiStars(r,sz){
+  var s='';
+  for(var i=1;i<=5;i++)s+='<span style="font-size:'+(sz||11)+'px;color:'+(i<=r?'#BA7517':'#ddd')+'">&#9733;</span>';
+  return s;
+}
+
+function admTestiRender(){
+  var list=admTestiFiltered();
+  var countEl=document.getElementById('adm-testi-count');
+  if(countEl)countEl.innerHTML='Menampilkan <span>'+list.length+'</span> testimoni';
+  var listEl=document.getElementById('adm-testi-list');
+  if(!listEl)return;
+  if(!list.length){
+    listEl.innerHTML='<div style="padding:20px;text-align:center;font-size:12px;color:var(--g400)">Tidak ada testimoni ditemukan.</div>';
+    admTestiRenderDetail();
+    return;
+  }
+  listEl.innerHTML=list.map(function(d,idx){
+    var ci=idx%_TESTI_COLORS.length;
+    var c=_TESTI_COLORS[ci];
+    return '<div class="adm-testi-item'+(d.tampil?'':' dim')+(_admTestiSelId===d.page_id?' active':'')+'" onclick="admTestiSelect(\''+d.page_id+'\')">'
+      +'<div class="adm-testi-item-av" style="background:'+c[0]+';color:'+c[1]+'">'+d.inisial+'</div>'
+      +'<div class="adm-testi-item-info">'
+      +'<div class="adm-testi-item-name">'+d.nama+'</div>'
+      +'<div class="adm-testi-item-sub">'+d.subtitle+'</div>'
+      +'<div class="adm-testi-item-stars">'+admTestiStars(d.rating,9)+'</div>'
+      +'</div>'
+      +'<div class="adm-testi-mini-tog '+(d.tampil?'on':'off')+'" onclick="event.stopPropagation();admTestiToggle(\''+d.page_id+'\')">'
+      +'<div class="adm-testi-mini-tog-t"></div></div>'
+      +'</div>';
+  }).join('');
+  admTestiRenderDetail();
+}
+
+function admTestiSelect(id){
+  if(_admTestiSelId===id)return;
+  _admTestiSelId=id;
+  _admTestiEditOpen=false;
+  admTestiRender();
+}
+
+function admTestiToggle(id){
+  var d=_admTesti.find(function(x){return x.page_id===id;});
+  if(!d)return;
+  var newVal=!d.tampil;
+  d.tampil=newVal;
+  admTestiRender();
+  fetch('/api/update-testimoni',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'toggle_tampil',page_id:id,tampil:newVal})
+  }).catch(function(){
+    d.tampil=!newVal;
+    admTestiRender();
+    alert('Gagal update. Coba lagi.');
+  });
+}
+
+function admTestiRenderDetail(){
+  var el=document.getElementById('adm-testi-detail');
+  if(!el)return;
+  if(!_admTestiSelId){
+    el.innerHTML='<div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br>untuk lihat detail &amp; edit</div>';
+    return;
+  }
+  var d=_admTesti.find(function(x){return x.page_id===_admTestiSelId;});
+  if(!d){el.innerHTML='';return;}
+  var ci=_admTesti.indexOf(d)%_TESTI_COLORS.length;
+  var c=_TESTI_COLORS[ci];
+  var r=_admTestiEditRat[d.page_id]||d.rating;
+  var starsEdit='';
+  for(var i=1;i<=5;i++)starsEdit+='<button class="adm-testi-star-b'+(i<=r?' on':'')+'" onclick="admTestiSetStar2(\''+d.page_id+'\','+i+')">&#9733;</button>';
+  el.innerHTML=
+    '<div class="adm-testi-d-head">'
+    +'<div class="adm-testi-d-av" style="background:'+c[0]+';color:'+c[1]+'">'+d.inisial+'</div>'
+    +'<div><div class="adm-testi-d-name">'+d.nama+'</div><div class="adm-testi-d-sub">'+d.subtitle+'</div></div>'
+    +'<div style="margin-left:auto"><span class="'+(d.tampil?'adm-testi-badge-on':'adm-testi-badge-off')+'">'+(d.tampil?'Tampil':'Tersembunyi')+'</span></div>'
+    +'</div>'
+    +'<div class="adm-testi-d-stars">'+admTestiStars(d.rating,13)+'</div>'
+    +'<div class="adm-testi-d-quote">&ldquo;'+d.teks+'&rdquo;</div>'
+    +'<div class="adm-testi-d-actions">'
+    +'<div class="adm-testi-tog-full" onclick="admTestiToggle(\''+d.page_id+'\')">'
+    +'<div class="adm-testi-big-tog '+(d.tampil?'on':'off')+'"><div class="adm-testi-big-tog-t"></div></div>'
+    +'<span class="adm-testi-tog-lbl">'+(d.tampil?'Tampil di carousel':'Tersembunyi dari carousel')+'</span>'
+    +'</div>'
+    +'<div class="adm-testi-edit-btn" onclick="admTestiToggleEdit(\''+d.page_id+'\')">'+((_admTestiEditOpen)?'Tutup':'Edit')+'</div>'
+    +'</div>'
+    +'<div class="adm-testi-edit-area'+((_admTestiEditOpen)?' open':'')+'">'
+    +'<div class="adm-testi-ep-lbl">Nama client</div>'
+    +'<input class="adm-testi-ep-inp" id="adm-testi-ep-nama" value="'+d.nama_asli+'"/>'
+    +'<div class="adm-testi-ep-lbl">Rating</div>'
+    +'<div class="adm-testi-ep-stars" id="adm-testi-ep-stars">'+starsEdit+'</div>'
+    +'<div class="adm-testi-ep-lbl">Teks testimoni</div>'
+    +'<textarea class="adm-testi-ep-ta" id="adm-testi-ep-teks">'+d.teks+'</textarea>'
+    +'<div class="adm-testi-ep-btns">'
+    +'<button class="adm-testi-ep-cancel" onclick="admTestiCancelEdit()">Batal</button>'
+    +'<button class="adm-testi-ep-save" onclick="admTestiSaveEdit(\''+d.page_id+'\')">Simpan ke Notion</button>'
+    +'</div></div>';
+}
+
+function admTestiToggleEdit(id){
+  _admTestiEditOpen=!_admTestiEditOpen;
+  if(_admTestiEditOpen){
+    var d=_admTesti.find(function(x){return x.page_id===id;});
+    if(d)_admTestiEditRat[id]=d.rating;
+  }
+  admTestiRenderDetail();
+}
+function admTestiCancelEdit(){_admTestiEditOpen=false;admTestiRenderDetail();}
+function admTestiSetStar2(id,val){
+  _admTestiEditRat[id]=val;
+  var el=document.getElementById('adm-testi-ep-stars');
+  if(el)el.querySelectorAll('.adm-testi-star-b').forEach(function(b,i){b.classList.toggle('on',i<val);});
+}
+function admTestiSaveEdit(id){
+  var d=_admTesti.find(function(x){return x.page_id===id;});if(!d)return;
+  var nama=document.getElementById('adm-testi-ep-nama').value.trim();
+  var teks=document.getElementById('adm-testi-ep-teks').value.trim();
+  var rating=_admTestiEditRat[id]||d.rating;
+  if(!nama||!teks){alert('Nama dan teks tidak boleh kosong.');return;}
+  var btn=document.querySelector('.adm-testi-ep-save');
+  if(btn){btn.textContent='Menyimpan...';btn.disabled=true;}
+  fetch('/api/update-testimoni',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'edit',page_id:id,nama:nama,teks:teks,rating:rating})
+  }).then(function(r){return r.json();}).then(function(res){
+    if(res.success){
+      d.nama_asli=nama;
+      var parts=nama.split(' ');
+      d.nama=parts.length<=1?parts[0]:parts[0]+' '+parts.slice(1).map(function(w){return w.charAt(0).toUpperCase()+'.';}).join(' ');
+      d.inisial=nama.split(' ').slice(0,2).map(function(w){return w.charAt(0).toUpperCase();}).join('');
+      d.teks=teks;d.rating=rating;
+      _admTestiEditOpen=false;
+      admTestiRender();
+    }else{alert('Gagal menyimpan: '+(res.error||''));if(btn){btn.textContent='Simpan ke Notion';btn.disabled=false;}}
+  }).catch(function(){alert('Gagal menghubungi server.');if(btn){btn.textContent='Simpan ke Notion';btn.disabled=false;}});
+}
 </script>
 
 
@@ -1463,9 +1711,39 @@ function verifyRatingSubmit(){
 
     <!-- Tab Testimoni -->
     <div id="adm-tc-testimoni" class="adm-tc">
-      <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">Testimoni</h2>
-      <p style="font-size:14px;color:var(--g600);margin-bottom:20px">Tampilan testimoni seperti yang dilihat client.</p>
-      <div id="adm-testimoni-carousel-outer"></div>
+      <div class="adm-testi-wrap">
+        <div class="adm-testi-toolbar">
+          <div class="adm-testi-toolbar-row">
+            <input class="adm-search" id="adm-testi-search" type="text" placeholder="Cari nama atau teks testimoni..." oninput="admTestiSearch(this.value)"/>
+            <div class="adm-filter-btns" id="adm-testi-chips-status">
+              <button class="adm-fbtn on" onclick="admTestiSetStatus(this,'semua')">Semua</button>
+              <button class="adm-fbtn" onclick="admTestiSetStatus(this,'tampil')">Tampil</button>
+              <button class="adm-fbtn" onclick="admTestiSetStatus(this,'hidden')">Tersembunyi</button>
+            </div>
+          </div>
+          <div class="adm-testi-toolbar-row">
+            <span style="font-size:11px;color:var(--g400);white-space:nowrap">Filter rating:</span>
+            <div class="adm-filter-btns" id="adm-testi-chips-star">
+              <button class="adm-fbtn on" onclick="admTestiSetStar(this,0)">Semua</button>
+              <button class="adm-fbtn" onclick="admTestiSetStar(this,1)">&#9733;1</button>
+              <button class="adm-fbtn" onclick="admTestiSetStar(this,2)">&#9733;2</button>
+              <button class="adm-fbtn" onclick="admTestiSetStar(this,3)">&#9733;3</button>
+              <button class="adm-fbtn" onclick="admTestiSetStar(this,4)">&#9733;4</button>
+              <button class="adm-fbtn" onclick="admTestiSetStar(this,5)">&#9733;5</button>
+            </div>
+          </div>
+        </div>
+        <div class="adm-testi-count" id="adm-testi-count">Memuat testimoni...</div>
+        <div class="adm-testi-note">&#8505; Hanya testimoni baru (dari Tally/Notion) yang dapat dikelola. Testimoni lama selalu tampil otomatis.</div>
+        <div class="adm-testi-split">
+          <div class="adm-testi-list" id="adm-testi-list">
+            <div style="padding:20px;text-align:center;font-size:13px;color:var(--g400)">Memuat...</div>
+          </div>
+          <div class="adm-testi-detail" id="adm-testi-detail">
+            <div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br>untuk lihat detail &amp; edit</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Tab Pricelist -->

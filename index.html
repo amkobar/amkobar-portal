@@ -1932,7 +1932,7 @@ function loadBankTeori() {
       _btData.teori = data.teori || [];
       _btData.bidang = data.bidang || [];
       btApplyRandomOrder();
-      btRenderAll();
+      setTimeout(function() { btRenderAll(); }, 50);
     })
     .catch(function() {
       document.getElementById('bt-kar-grid').innerHTML = '<div class="bt-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div><div>Coba refresh halaman.</div></div>';

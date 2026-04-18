@@ -30,7 +30,8 @@ export default async function handler(req, res) {
     if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status} - ${JSON.stringify(data)}` });
     if (!data.results || data.results.length === 0) return res.status(200).json({ found: false });
 
-    const props = data.results[0].properties;
+    const page = data.results[0];
+    const props = page.properties;
 
     const getText = p => {
       if (!p) return null;
@@ -64,8 +65,18 @@ export default async function handler(req, res) {
     const getDate = p => p?.date?.start || null;
     const getUrl = p => p?.url || null;
 
+    // Cek akses aktif — kalau false, tolak login
+    const aksesAktif = getCheckbox(props['Akses_Aktif']);
+    if (!aksesAktif) {
+      return res.status(200).json({
+        found: false,
+        nonaktif: true
+      });
+    }
+
     return res.status(200).json({
       found: true,
+      page_id: page.id,
       nama: getText(props['Nama Client']),
       nim: getText(props['NIM/NPM']),
       universitas: getSelect(props['Universitas']),
@@ -84,20 +95,21 @@ export default async function handler(req, res) {
       dp_masuk: getCheckbox(props['DP Masuk']),
       tahap2_masuk: getCheckbox(props['Tahap 2 Masuk']),
       pelunasan_masuk: getCheckbox(props['Pelunasan Masuk']),
-     sisa_pembayaran: (() => {
-	 const raw = getFormula(props['Sisa Pembayaran']);
-	 const dis = props['Diskon Referral']?.number || 0;
-	 const j = getRollup(props['Jumlah Referral']) || 0;
-	 if (dis > 0 && j < 3) return (raw || 0) + dis;
-	 return raw;
-	 })(),
+      sisa_pembayaran: (() => {
+        const raw = getFormula(props['Sisa Pembayaran']);
+        const dis = props['Diskon Referral']?.number || 0;
+        const j = getRollup(props['Jumlah Referral']) || 0;
+        if (dis > 0 && j < 3) return (raw || 0) + dis;
+        return raw;
+      })(),
       total_addon: getRollup(props['Total Add-On']) || getFormula(props['Total Add-On']) || 0,
       link_drive: getUrl(props['Link Drive']),
       link_hasil_final: getUrl(props['Link Hasil Final']),
       jumlah_referral: getRollup(props['Jumlah Referral']) || 0,
-	  diskon_referral: props['Diskon Referral']?.number || 0,
-	  kode_akses: getFormula(props['Kode Akses']),
+      diskon_referral: props['Diskon Referral']?.number || 0,
+      kode_akses: getFormula(props['Kode Akses']),
       testimoni_selesai: getCheckbox(props['Testimoni_Selesai']),
+      akses_aktif: aksesAktif,
     });
 
   } catch (err) {

@@ -65,13 +65,11 @@ export default async function handler(req, res) {
     const getDate = p => p?.date?.start || null;
     const getUrl = p => p?.url || null;
 
-    // Cek akses aktif — kalau false, tolak login
+    // Cek akses aktif — skip kalau request dari admin
+    const isAdminRequest = req.query.admin === '1';
     const aksesAktif = getCheckbox(props['Akses_Aktif']);
-    if (!aksesAktif) {
-      return res.status(200).json({
-        found: false,
-        nonaktif: true
-      });
+    if (!aksesAktif && !isAdminRequest) {
+      return res.status(200).json({ found: false, nonaktif: true });
     }
 
     return res.status(200).json({

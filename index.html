@@ -68,6 +68,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .cli-meta{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:2px}
 .logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.75);padding:7px 15px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s}
 .logout-btn:hover{background:rgba(255,255,255,.18);color:#fff}
+.akses-tog-wrap{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .18s}
+.akses-tog-wrap:hover{background:rgba(255,255,255,.13)}
+.akses-tog-wrap.nonaktif{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.35)}
+.akses-tog-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.akses-tog-dot.on{background:#4ade80}.akses-tog-dot.off{background:#f87171}
+.akses-tog-lbl{font-size:12px;font-weight:500;color:rgba(255,255,255,.8)}
+.akses-tog-wrap.nonaktif .akses-tog-lbl{color:#fca5a5}
+.akses-tog{width:28px;height:16px;border-radius:8px;position:relative;pointer-events:none;flex-shrink:0;transition:background .2s}
+.akses-tog.on{background:#16a34a}.akses-tog.off{background:#dc2626}
+.akses-tog-t{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
+.akses-tog.on .akses-tog-t{left:14px}.akses-tog.off .akses-tog-t{left:2px}
 .sbadge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:100px;font-size:12.5px;font-weight:600}
 .sbadge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .s-review{background:#fef9c3;color:#854d0e}.s-antrian{background:#dbeafe;color:#1d4ed8}
@@ -481,6 +492,11 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <div id="d-sbadge" class="sbadge s-default">&#8212;</div>
+      <div id="d-akses-tog-wrap" style="display:none" class="akses-tog-wrap" onclick="toggleAksesClient()">
+        <div id="d-akses-dot" class="akses-tog-dot on"></div>
+        <span id="d-akses-lbl" class="akses-tog-lbl">Akses Aktif</span>
+        <div id="d-akses-tog" class="akses-tog on"><div class="akses-tog-t"></div></div>
+      </div>
       <button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
     </div>
   </div>
@@ -1220,7 +1236,16 @@ async function doLogin(){
     const res=await fetch(`/api/cek-status?kode=${encodeURIComponent(kodeUpper)}`);
     const data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||'Terjadi kesalahan server.');
-    if(!data.found){al.className='al err';al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';return;}
+    if(!data.found){
+      if(data.nonaktif){
+        al.className='al err';
+        al.textContent='Akses portal Anda dinonaktifkan. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.';
+      }else{
+        al.className='al err';
+        al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';
+      }
+      return;
+    }
     window._lastKode=kodeUpper;
     sessionStorage.setItem('amkobar_kode',kodeUpper);
     resetAutoLogout();
@@ -1301,6 +1326,16 @@ function renderDash(d){
   var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
   var logoutBtn=document.getElementById('dash-logout-btn');
   if(logoutBtn)logoutBtn.textContent=fromAdmin==='1'?'\u2190 Kembali':'Keluar';
+  var aksesTogWrap=document.getElementById('d-akses-tog-wrap');
+  if(aksesTogWrap){
+    if(fromAdmin==='1'){
+      aksesTogWrap.style.display='flex';
+      window._dashPageId=d.page_id||null;
+      updateAksesTogUI(d.akses_aktif!==false);
+    }else{
+      aksesTogWrap.style.display='none';
+    }
+  }
   document.getElementById('i-judul').textContent=d.judul||'\u2014';
   document.getElementById('i-layanan').textContent=d.jenis_layanan||'\u2014';
   document.getElementById('i-app').textContent=d.aplikasi||'\u2014';
@@ -1436,6 +1471,42 @@ function verifyRatingSubmit(attempt){
         setTimeout(function(){verifyRatingSubmit(attempt+1);},delays[attempt]);
       }
     });
+}
+
+/* ===== TOGGLE AKSES CLIENT ===== */
+function updateAksesTogUI(aktif){
+  var wrap=document.getElementById('d-akses-tog-wrap');
+  var dot=document.getElementById('d-akses-dot');
+  var lbl=document.getElementById('d-akses-lbl');
+  var tog=document.getElementById('d-akses-tog');
+  if(!wrap)return;
+  if(aktif){
+    wrap.className='akses-tog-wrap';
+    dot.className='akses-tog-dot on';
+    lbl.textContent='Akses Aktif';
+    tog.className='akses-tog on';
+  }else{
+    wrap.className='akses-tog-wrap nonaktif';
+    dot.className='akses-tog-dot off';
+    lbl.textContent='Akses Nonaktif';
+    tog.className='akses-tog off';
+  }
+}
+function toggleAksesClient(){
+  var pageId=window._dashPageId||null;
+  if(!pageId)return;
+  var togEl=document.getElementById('d-akses-tog');
+  var isAktif=togEl&&togEl.classList.contains('on');
+  var newVal=!isAktif;
+  updateAksesTogUI(newVal);
+  fetch('/api/update-akses',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({page_id:pageId,akses_aktif:newVal})
+  }).catch(function(){
+    updateAksesTogUI(isAktif);
+    alert('Gagal update. Coba lagi.');
+  });
 }
 
 /* ===== ADMIN TESTIMONI ===== */

@@ -2107,7 +2107,14 @@ function btRenderCard(t, badgeLabel, kws, isTop) {
   var topBadge = isTop ? '<span class="bt-badge bt-badge-match">Paling relevan</span>' : '';
   var topRel = isTop ? '<div class="bt-relevance"><span class="bt-rel-dot"></span> Judul mencakup kedua variabel pencarian</div>' : '';
   var newBadge = t.is_new ? '<span class="bt-badge bt-badge-new">Baru</span>' : '';
-  var catBadge = badgeLabel ? '<span class="bt-badge bt-badge-cat">' + badgeLabel + '</span>' : '';
+  var tahun = '';
+if (t.tab === 'Variabel') {
+  var matchTahun = t.kutipan.match(/\((\d{4})\)/);
+  tahun = matchTahun ? matchTahun[1] : '';
+}
+var catBadge = t.tab === 'Variabel'
+  ? (tahun ? '<span class="bt-badge bt-badge-cat">' + tahun + '</span>' : '')
+  : (badgeLabel ? '<span class="bt-badge bt-badge-cat">' + badgeLabel + '</span>' : '');
   var tagsHtml = t.tags.map(function(tag) {
     var isHl = kws.some(function(k) { return k && tag.toLowerCase().includes(k); });
     return '<span class="bt-tag' + (isHl ? ' hl' : '') + '">' + tag + '</span>';

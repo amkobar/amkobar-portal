@@ -1989,7 +1989,9 @@ function btRenderKatGrid() {
       + '<div class="bt-cat-count">' + count + ' teori</div>'
       + '</div>';
   }).join('');
-  document.getElementById('bt-cat-grid').innerHTML = html || '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori</div></div>';
+  var elKatGrid = document.getElementById('bt-cat-grid');
+if (!elKatGrid) return;
+elKatGrid.innerHTML = html || '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori</div></div>';
 }
 
 function btOpenKat(kat) {
@@ -2073,7 +2075,9 @@ function btRenderVar() {
         }).join('')
       : '<div class="bt-empty"><div class="ei">🔍</div><div class="et">Tidak ada teori yang cocok</div><div>Coba kata kunci lain.</div></div>';
   } else {
-    document.getElementById('bt-var-count').innerHTML = 'Menampilkan <span>' + filtered.length + '</span> teori';
+    var elVarCount = document.getElementById('bt-var-count');
+if (!elVarCount) return;
+elVarCount.innerHTML = 'Menampilkan <span>' + filtered.length + '</span> teori';
     document.getElementById('bt-var-list').innerHTML = filtered.length
       ? filtered.map(function(t) { return btRenderCard(t, t.kategori, []); }).join('')
       : '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori variabel</div></div>';

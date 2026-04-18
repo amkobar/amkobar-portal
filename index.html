@@ -2047,7 +2047,9 @@ function btRenderAll() {
 function btRenderKatGrid() {
   var karTeori = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik'; });
   // Hitung per kategori (urutan ini tetap)
-  var katOrder = ['Jenis Kelamin', 'Usia', 'Pendidikan', 'Pekerjaan', 'Pendapatan'];
+  var katOrder = [...new Set(karTeori.map(function(t){ return t.kategori; }).filter(Boolean))];
+var defaultKat = ['Jenis Kelamin','Usia','Pendidikan','Pekerjaan','Pendapatan'];
+defaultKat.forEach(function(k){ if(!katOrder.includes(k)) katOrder.push(k); });
   var katCount = {};
   karTeori.forEach(function(t) {
     if (t.kategori) katCount[t.kategori] = (katCount[t.kategori] || 0) + 1;

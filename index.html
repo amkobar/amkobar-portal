@@ -1966,9 +1966,9 @@ function btApplyRandomOrder() {
 }
 
 function btRenderAll() {
-  btRenderKatGrid();
+  if (_btActiveSub === 'kar') btRenderKatGrid();
   btRenderBidangChips();
-  btRenderVar();
+  if (_btActiveSub === 'var') btRenderVar();
 }
 
 function btRenderKatGrid() {

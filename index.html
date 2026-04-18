@@ -409,6 +409,60 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .adm-undo-cancel{padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .15s}
 .adm-undo-cancel:hover{background:rgba(255,255,255,.18)}
 @media(max-width:768px){.adm-testi-split{grid-template-columns:1fr;min-height:auto}.adm-testi-list{max-height:220px;border-right:none;border-bottom:1px solid var(--g200)}.adm-testi-detail{max-height:none}}
+/* ===== BANK TEORI ===== */
+.bt-wrap{font-family:'DM Sans',sans-serif}
+.bt-subtab-row{display:flex;gap:8px;margin-bottom:18px}
+.bt-subtab{padding:7px 18px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--g200);background:#fff;color:var(--g600);transition:all .18s;font-family:'DM Sans',sans-serif}
+.bt-subtab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.bt-section-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:14px}
+.bt-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:20px}
+.bt-cat-card{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:18px 14px;cursor:pointer;text-align:center;transition:all .18s;box-shadow:var(--sh)}
+.bt-cat-card:hover{border-color:#1a6bbd;transform:translateY(-2px);box-shadow:var(--sh2)}
+.bt-cat-icon{font-size:24px;margin-bottom:8px}
+.bt-cat-name{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.bt-cat-count{font-size:11px;color:var(--g400)}
+.bt-back-btn{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--blue);cursor:pointer;margin-bottom:14px;background:none;border:none;padding:0;font-family:'DM Sans',sans-serif}
+.bt-back-btn:hover{text-decoration:underline}
+.bt-cat-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:16px}
+.bt-search-wrap{position:relative;margin-bottom:10px}
+.bt-search-inp{width:100%;padding:11px 16px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;transition:all .2s}
+.bt-search-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,189,.08)}
+.bt-search-hint{font-size:11.5px;color:var(--g400);margin-bottom:12px}
+.bt-search-hint span{color:var(--blue);font-weight:500}
+.bt-bidang-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.bt-chip{padding:5px 13px;border-radius:100px;font-size:11.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--g200);background:#fff;color:var(--g600);transition:all .18s;font-family:'DM Sans',sans-serif}
+.bt-chip:hover{border-color:var(--blue);color:var(--blue)}
+.bt-chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.bt-count{font-size:12px;color:var(--g400);margin-bottom:14px}
+.bt-count span{font-weight:600;color:var(--navy)}
+.bt-list{display:flex;flex-direction:column;gap:12px}
+.bt-card{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:all .18s}
+.bt-card.top-match{border-left:3px solid var(--navy);border-color:var(--blue)}
+.bt-card-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.bt-card-title{font-size:13.5px;font-weight:600;color:var(--navy);flex:1;min-width:0;line-height:1.4}
+.bt-badge{font-size:10.5px;padding:2px 9px;border-radius:100px;white-space:nowrap;font-weight:600}
+.bt-badge-match{background:var(--blue-pale);color:var(--blue)}
+.bt-badge-new{background:#fef3c7;color:#b45309}
+.bt-badge-cat{background:var(--g100);color:var(--g600)}
+.bt-relevance{font-size:11px;color:var(--blue);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.bt-rel-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);display:inline-block;flex-shrink:0}
+.bt-kutipan{font-size:13px;color:var(--g600);font-style:italic;line-height:1.7;margin-bottom:8px;border-left:2px solid var(--blue);padding-left:12px}
+.bt-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.bt-tag{font-size:11.5px;background:var(--g100);color:var(--g600);padding:2px 9px;border-radius:100px}
+.bt-tag.hl{background:#fef3c7;color:#b45309;font-weight:600}
+.bt-sumber{font-size:11.5px;color:var(--g400);margin-bottom:10px}
+.bt-actions{display:flex;gap:8px}
+.bt-salin-btn{padding:6px 14px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g800);cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.bt-salin-btn:hover{border-color:var(--navy);color:var(--navy)}
+.bt-salin-btn.copied{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-border)}
+.bt-sumber-btn{padding:6px 14px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g800);cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif}
+.bt-sumber-btn:hover{border-color:var(--blue);color:var(--blue)}
+.bt-empty{text-align:center;padding:48px 20px;color:var(--g400)}
+.bt-empty .ei{font-size:40px;margin-bottom:12px}
+.bt-empty .et{font-size:14px;font-weight:600;color:var(--g600);margin-bottom:5px}
+.bt-loading{text-align:center;padding:40px;font-size:13px;color:var(--g400)}
+em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-style:normal}
+
 /* ===== ADMIN DASHBOARD ===== */
 .adm-dash{display:none}.adm-dash.on{display:block}
 .adm-header{background:var(--navy);padding:18px 48px 0}
@@ -555,6 +609,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
   </div>
   <div class="dash-tabs">
     <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
+<button class="tab-btn" onclick="switchTab('bank-teori',this)">&#128218; Bank Teori</button>
     <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Cara Baca Hasil</button>
     <button class="tab-btn" onclick="switchTab('faq-in',this)">&#128172; FAQ Sidang</button>
   </div>
@@ -593,6 +648,40 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
         </div>
       </div>
     </div>
+<div id="tc-bank-teori" class="tc">
+      <div class="bt-wrap" id="bt-main">
+        <div class="bt-subtab-row">
+          <button class="bt-subtab on" id="bt-sub-kar" onclick="btSwitchSub('kar')">Karakteristik Responden</button>
+          <button class="bt-subtab" id="bt-sub-var" onclick="btSwitchSub('var')">Teori Variabel</button>
+        </div>
+
+        <!-- Sub: Karakteristik Responden -->
+        <div id="bt-panel-kar">
+          <div id="bt-kar-grid">
+            <div class="bt-section-lbl">Pilih Kategori</div>
+            <div class="bt-cat-grid" id="bt-cat-grid"></div>
+          </div>
+          <div id="bt-kar-detail" style="display:none">
+            <button class="bt-back-btn" onclick="btBackToGrid()">&#8592; Semua Kategori</button>
+            <div class="bt-cat-title" id="bt-cat-title"></div>
+            <div class="bt-count" id="bt-kar-count"></div>
+            <div class="bt-list" id="bt-kar-list"></div>
+          </div>
+        </div>
+
+        <!-- Sub: Teori Variabel -->
+        <div id="bt-panel-var" style="display:none">
+          <div class="bt-search-wrap">
+            <input class="bt-search-inp" type="text" id="bt-search" placeholder="Cari teori atau ketik nama variabel, misal: kepuasan, motivasi..." oninput="btDoSearch(this.value)"/>
+          </div>
+          <div class="bt-search-hint" id="bt-hint">Cari berdasarkan: <span>nama teori</span>, <span>isi kutipan</span>, atau <span>nama variabel</span></div>
+          <div class="bt-bidang-chips" id="bt-bidang-chips"></div>
+          <div class="bt-count" id="bt-var-count"></div>
+          <div class="bt-list" id="bt-var-list"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="tc-cbh" class="tc"><div id="cbh-content"></div></div>
     <div id="tc-faq-in" class="tc">
       <div style="max-width:720px">
@@ -818,8 +907,8 @@ function switchTab(tab,btn){
   document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
   document.getElementById('tc-'+tab).classList.add('on');
+  if(tab==='bank-teori') loadBankTeori();
 }
-
 function toggleAdmAcc(sec){
   var body=document.getElementById('adm-acc-body-'+sec);
   var arr=document.getElementById('adm-acc-arr-'+sec);
@@ -1816,6 +1905,241 @@ function admTestiSetStar2(id,val){
   var el=document.getElementById('adm-testi-ep-stars');
   if(el)el.querySelectorAll('.adm-testi-star-b').forEach(function(b,i){b.classList.toggle('on',i<val);});
 }
+/* ===== BANK TEORI ===== */
+var _btData = { teori: [], bidang: [] };
+var _btLoaded = false;
+var _btActiveSub = 'kar';
+var _btActiveKat = null;
+var _btActiveBidang = 'Semua';
+var _btActiveSearch = '';
+
+var _BT_KAT_META = {
+  'Jenis Kelamin': { icon: '👥' },
+  'Usia':          { icon: '🎂' },
+  'Pendidikan':    { icon: '🎓' },
+  'Pekerjaan':     { icon: '💼' },
+  'Pendapatan':    { icon: '💰' },
+};
+
+function loadBankTeori() {
+  if (_btLoaded) { btRenderAll(); return; }
+  document.getElementById('bt-kar-grid').innerHTML = '<div class="bt-loading">Memuat data...</div>';
+  document.getElementById('bt-var-list').innerHTML = '<div class="bt-loading">Memuat data...</div>';
+  fetch('/api/get-teori')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _btLoaded = true;
+      _btData.teori = data.teori || [];
+      _btData.bidang = data.bidang || [];
+      btApplyRandomOrder();
+      btRenderAll();
+    })
+    .catch(function() {
+      document.getElementById('bt-kar-grid').innerHTML = '<div class="bt-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div><div>Coba refresh halaman.</div></div>';
+    });
+}
+
+function btApplyRandomOrder() {
+  var kode = window._lastKode || 'default';
+  var key = 'teori_order_' + kode;
+  var karTeori = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik'; });
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(key)); } catch(e) {}
+
+  if (saved && Array.isArray(saved) && saved.length === karTeori.length) {
+    // Susun ulang sesuai urutan tersimpan
+    var idToTeori = {};
+    karTeori.forEach(function(t) { idToTeori[t.id] = t; });
+    var ordered = saved.map(function(id) { return idToTeori[id]; }).filter(Boolean);
+    // Replace teori Karakteristik dengan yang sudah terurut
+    var varTeori = _btData.teori.filter(function(t) { return t.tab !== 'Karakteristik'; });
+    _btData.teori = ordered.concat(varTeori);
+  } else {
+    // Random baru, simpan ke localStorage
+    var shuffled = karTeori.slice().sort(function() { return Math.random() - 0.5; });
+    var varTeori = _btData.teori.filter(function(t) { return t.tab !== 'Karakteristik'; });
+    _btData.teori = shuffled.concat(varTeori);
+    try {
+      localStorage.setItem(key, JSON.stringify(shuffled.map(function(t) { return t.id; })));
+    } catch(e) {}
+  }
+}
+
+function btRenderAll() {
+  btRenderKatGrid();
+  btRenderBidangChips();
+  btRenderVar();
+}
+
+function btRenderKatGrid() {
+  var karTeori = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik'; });
+  // Hitung per kategori (urutan ini tetap)
+  var katOrder = ['Jenis Kelamin', 'Usia', 'Pendidikan', 'Pekerjaan', 'Pendapatan'];
+  var katCount = {};
+  karTeori.forEach(function(t) {
+    if (t.kategori) katCount[t.kategori] = (katCount[t.kategori] || 0) + 1;
+  });
+  // Tampilkan kategori yang ada datanya dulu, sisanya tetap tampil (count 0)
+  var html = katOrder.map(function(kat) {
+    var meta = _BT_KAT_META[kat] || { icon: '📚' };
+    var count = katCount[kat] || 0;
+    return '<div class="bt-cat-card" onclick="btOpenKat(\'' + kat + '\')">'
+      + '<div class="bt-cat-icon">' + meta.icon + '</div>'
+      + '<div class="bt-cat-name">' + kat + '</div>'
+      + '<div class="bt-cat-count">' + count + ' teori</div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('bt-cat-grid').innerHTML = html || '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori</div></div>';
+}
+
+function btOpenKat(kat) {
+  _btActiveKat = kat;
+  document.getElementById('bt-kar-grid').style.display = 'none';
+  document.getElementById('bt-kar-detail').style.display = 'block';
+  document.getElementById('bt-cat-title').textContent = kat;
+  var items = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik' && t.kategori === kat; });
+  document.getElementById('bt-kar-count').innerHTML = 'Menampilkan <span>' + items.length + '</span> teori';
+  document.getElementById('bt-kar-list').innerHTML = items.length
+    ? items.map(function(t) { return btRenderCard(t, kat, []); }).join('')
+    : '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori untuk kategori ini</div></div>';
+}
+
+function btBackToGrid() {
+  _btActiveKat = null;
+  document.getElementById('bt-kar-detail').style.display = 'none';
+  document.getElementById('bt-kar-grid').style.display = 'block';
+}
+
+function btRenderBidangChips() {
+  var bidang = ['Semua'].concat(_btData.bidang);
+  document.getElementById('bt-bidang-chips').innerHTML = bidang.map(function(b) {
+    return '<button class="bt-chip' + (b === _btActiveBidang ? ' on' : '') + '" onclick="btSetBidang(this,\'' + b + '\')">' + b + '</button>';
+  }).join('');
+}
+
+function btSetBidang(el, bidang) {
+  _btActiveBidang = bidang;
+  document.querySelectorAll('.bt-chip').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  btRenderVar();
+}
+
+function btDoSearch(val) {
+  _btActiveSearch = val;
+  btRenderVar();
+}
+
+function btScore(item, kws) {
+  if (!kws.length) return 0;
+  var j = item.nama_teori.toLowerCase();
+  var k = item.kutipan.toLowerCase();
+  var t = item.tags.join(' ').toLowerCase();
+  var score = 0; var judulHits = 0;
+  kws.forEach(function(kw) {
+    if (j.includes(kw)) { score += 10; judulHits++; }
+    if (k.includes(kw)) score += 3;
+    if (t.includes(kw)) score += 5;
+  });
+  if (judulHits === kws.length && kws.length > 1) score += 20;
+  return score;
+}
+
+function btRenderVar() {
+  var kws = _btActiveSearch.toLowerCase().trim().split(/\s+/).filter(function(k) { return k.length > 1; });
+  var hint = document.getElementById('bt-hint');
+  if (kws.length >= 2) {
+    hint.innerHTML = 'Menampilkan hasil untuk: <span>' + kws.map(function(k) { return '<b>' + k + '</b>'; }).join(' + ') + '</span> — judul paling relevan di atas';
+  } else {
+    hint.innerHTML = 'Cari berdasarkan: <span>nama teori</span>, <span>isi kutipan</span>, atau <span>nama variabel</span>';
+  }
+
+  var filtered = _btData.teori.filter(function(t) {
+    if (t.tab !== 'Variabel') return false;
+    var bidangOk = _btActiveBidang === 'Semua' || t.kategori === _btActiveBidang;
+    var hay = (t.nama_teori + ' ' + t.kutipan + ' ' + t.tags.join(' ')).toLowerCase();
+    var searchOk = !kws.length || kws.some(function(k) { return hay.includes(k); });
+    return bidangOk && searchOk;
+  });
+
+  var isSearching = kws.length > 0;
+  if (isSearching) {
+    filtered = filtered.map(function(t) { return { t: t, score: btScore(t, kws) }; })
+      .sort(function(a, b) { return b.score - a.score; });
+    document.getElementById('bt-var-count').innerHTML = 'Menampilkan <span>' + filtered.length + '</span> teori';
+    document.getElementById('bt-var-list').innerHTML = filtered.length
+      ? filtered.map(function(item, idx) {
+          var isTop = idx === 0 && item.score >= 20;
+          return btRenderCard(item.t, item.t.kategori, kws, isTop);
+        }).join('')
+      : '<div class="bt-empty"><div class="ei">🔍</div><div class="et">Tidak ada teori yang cocok</div><div>Coba kata kunci lain.</div></div>';
+  } else {
+    document.getElementById('bt-var-count').innerHTML = 'Menampilkan <span>' + filtered.length + '</span> teori';
+    document.getElementById('bt-var-list').innerHTML = filtered.length
+      ? filtered.map(function(t) { return btRenderCard(t, t.kategori, []); }).join('')
+      : '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori variabel</div></div>';
+  }
+}
+
+function btHighlight(text, kws) {
+  if (!kws.length) return text;
+  var r = text;
+  kws.forEach(function(k) {
+    if (k) r = r.replace(new RegExp('(' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<em class="bt-hl">$1</em>');
+  });
+  return r;
+}
+
+function btRenderCard(t, badgeLabel, kws, isTop) {
+  var judulHL = btHighlight(t.nama_teori, kws);
+  var kutipanHL = btHighlight(t.kutipan, kws);
+  var topClass = isTop ? ' top-match' : '';
+  var topBadge = isTop ? '<span class="bt-badge bt-badge-match">Paling relevan</span>' : '';
+  var topRel = isTop ? '<div class="bt-relevance"><span class="bt-rel-dot"></span> Judul mencakup kedua variabel pencarian</div>' : '';
+  var newBadge = t.is_new ? '<span class="bt-badge bt-badge-new">Baru</span>' : '';
+  var catBadge = badgeLabel ? '<span class="bt-badge bt-badge-cat">' + badgeLabel + '</span>' : '';
+  var tagsHtml = t.tags.map(function(tag) {
+    var isHl = kws.some(function(k) { return k && tag.toLowerCase().includes(k); });
+    return '<span class="bt-tag' + (isHl ? ' hl' : '') + '">' + tag + '</span>';
+  }).join('');
+  var sumberBtn = t.link_drive
+    ? '<a class="bt-sumber-btn" href="' + t.link_drive + '" target="_blank">🔗 Lihat Sumber</a>'
+    : '<button class="bt-sumber-btn" disabled style="opacity:.4;cursor:not-allowed">🔗 Lihat Sumber</button>';
+  var safeKutipan = t.kutipan.replace(/`/g, '\\`').replace(/\\/g, '\\\\');
+  return '<div class="bt-card' + topClass + '">'
+    + '<div class="bt-card-head"><div class="bt-card-title">' + judulHL + '</div>' + topBadge + newBadge + catBadge + '</div>'
+    + topRel
+    + '<div class="bt-kutipan">&ldquo;' + kutipanHL + '&rdquo;</div>'
+    + (tagsHtml ? '<div class="bt-tags">' + tagsHtml + '</div>' : '')
+    + (t.sumber ? '<div class="bt-sumber">Sumber: ' + t.sumber + '</div>' : '')
+    + '<div class="bt-actions">'
+    + '<button class="bt-salin-btn" onclick="btSalin(this,`' + safeKutipan + '`)">Salin Kutipan</button>'
+    + sumberBtn
+    + '</div></div>';
+}
+
+function btSalin(btn, teks) {
+  navigator.clipboard.writeText(teks).then(function() {
+    btn.textContent = '✓ Tersalin!';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = 'Salin Kutipan'; btn.classList.remove('copied'); }, 2000);
+  }).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = teks; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = '✓ Tersalin!';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = 'Salin Kutipan'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function btSwitchSub(sub) {
+  _btActiveSub = sub;
+  document.getElementById('bt-sub-kar').classList.toggle('on', sub === 'kar');
+  document.getElementById('bt-sub-var').classList.toggle('on', sub === 'var');
+  document.getElementById('bt-panel-kar').style.display = sub === 'kar' ? 'block' : 'none';
+  document.getElementById('bt-panel-var').style.display = sub === 'var' ? 'block' : 'none';
+}
+/* ===== END BANK TEORI ===== */
+
 function admTestiSaveEdit(id){
   var d=_admTesti.find(function(x){return x.page_id===id;});if(!d)return;
   var nama=document.getElementById('adm-testi-ep-nama').value.trim();

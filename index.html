@@ -814,10 +814,10 @@ function admViewClient(kode){
     .then(function(data){
       if(data.found){
         window._lastKode=kode;
+        document.getElementById('dash').dataset.fromAdmin='1';
         renderDash(data);
         document.getElementById('adm-dash').classList.remove('on');
         document.getElementById('dash').classList.add('on');
-        document.getElementById('dash').dataset.fromAdmin='1';
       }
     }).catch(function(){});
 }

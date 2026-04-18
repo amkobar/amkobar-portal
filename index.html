@@ -2141,6 +2141,8 @@ function btSwitchSub(sub) {
   document.getElementById('bt-sub-var').classList.toggle('on', sub === 'var');
   document.getElementById('bt-panel-kar').style.display = sub === 'kar' ? 'block' : 'none';
   document.getElementById('bt-panel-var').style.display = sub === 'var' ? 'block' : 'none';
+  if (sub === 'kar') btRenderKatGrid();
+  if (sub === 'var') btRenderVar();
 }
 /* ===== END BANK TEORI ===== */
 

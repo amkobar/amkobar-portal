@@ -670,15 +670,15 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         </div>
 
         <!-- Sub: Teori Variabel -->
-        <div id="bt-panel-var" style="display:none">
-          <div class="bt-search-wrap">
-            <input class="bt-search-inp" type="text" id="bt-search" placeholder="Cari teori atau ketik nama variabel, misal: kepuasan, motivasi..." oninput="btDoSearch(this.value)"/>
-          </div>
-          <div class="bt-search-hint" id="bt-hint">Cari berdasarkan: <span>nama teori</span>, <span>isi kutipan</span>, atau <span>nama variabel</span></div>
-          <div class="bt-bidang-chips" id="bt-bidang-chips"></div>
-          <div class="bt-count" id="bt-var-count"></div>
-          <div class="bt-list" id="bt-var-list"></div>
-        </div>
+<div id="bt-panel-var" style="display:none">
+  <div class="bt-search-wrap">
+    <input class="bt-search-inp" type="text" id="bt-search" placeholder="Cari nama variabel atau teori..." oninput="btDoSearch(this.value)"/>
+    <div class="bt-search-hint">Ketik nama variabel dan gunakan <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">+</code> untuk mencari 2 atau lebih variabel. Contoh: <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">motivasi + kinerja + kepuasan</code></div>
+    <div id="bt-pills" style="display:none;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
+  </div>
+  <div class="bt-count" id="bt-var-count"></div>
+  <div class="bt-list" id="bt-var-list"></div>
+</div>
       </div>
     </div>
 
@@ -2028,7 +2028,21 @@ function btSetBidang(el, bidang) {
 
 function btDoSearch(val) {
   _btActiveSearch = val;
+  var inp = document.getElementById('bt-search');
+  if (inp) inp.classList.toggle('bt-search-inp-active', val.includes('+'));
+  btRenderPills(val);
   btRenderVar();
+}
+
+function btRenderPills(val) {
+  var wrap = document.getElementById('bt-pills');
+  if (!wrap) return;
+  var vars = val.split('+').map(function(v){ return v.trim(); }).filter(Boolean);
+  if (vars.length <= 1) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  wrap.innerHTML = vars.map(function(v, i) {
+    return '<div style="background:var(--blue-pale);color:var(--blue);padding:3px 10px;border-radius:100px;font-size:11px;font-weight:500">Variabel '+(i+1)+': '+v+'</div>';
+  }).join('');
 }
 
 function btScore(item, kws) {
@@ -2039,22 +2053,15 @@ function btScore(item, kws) {
   var score = 0; var judulHits = 0;
   kws.forEach(function(kw) {
     if (j.includes(kw)) { score += 10; judulHits++; }
-    if (k.includes(kw)) score += 3;
-    if (t.includes(kw)) score += 5;
+    else if (k.includes(kw)) score += 3;
+    else if (t.includes(kw)) score += 5;
   });
-  if (judulHits === kws.length && kws.length > 1) score += 20;
+  if (judulHits === kws.length && kws.length > 1) score += 20 * kws.length;
   return score;
 }
 
 function btRenderVar() {
-  var kws = _btActiveSearch.toLowerCase().trim().split(/\s+/).filter(function(k) { return k.length > 1; });
-  var hint = document.getElementById('bt-hint');
-  if (kws.length >= 2) {
-    hint.innerHTML = 'Menampilkan hasil untuk: <span>' + kws.map(function(k) { return '<b>' + k + '</b>'; }).join(' + ') + '</span> — judul paling relevan di atas';
-  } else {
-    hint.innerHTML = 'Cari berdasarkan: <span>nama teori</span>, <span>isi kutipan</span>, atau <span>nama variabel</span>';
-  }
-
+  var kws = _btActiveSearch.split('+').map(function(v){ return v.trim().toLowerCase(); }).filter(function(k){ return k.length > 0; });
   var filtered = _btData.teori.filter(function(t) {
     if (t.tab !== 'Variabel') return false;
     var bidangOk = _btActiveBidang === 'Semua' || t.kategori === _btActiveBidang;

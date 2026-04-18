@@ -508,6 +508,80 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
   .adm-table th:nth-child(3),.adm-table td:nth-child(3),
   .adm-table th:nth-child(5),.adm-table td:nth-child(5){display:none}
 }
+/* ===== ADMIN BANK TEORI ===== */
+.abt-wrap{background:#fff;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden}
+.abt-toolbar{padding:11px 14px;border-bottom:1px solid var(--g200);background:var(--g50);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.abt-search{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;transition:all .2s}
+.abt-search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,189,.08)}
+.abt-tab-sel{padding:7px 12px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none}
+.abt-add-btn{padding:7px 16px;border-radius:var(--rs);font-size:12.5px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .18s}
+.abt-add-btn:hover{background:var(--navy-2)}
+.abt-count{font-size:11px;color:var(--g400);padding:7px 14px;border-bottom:1px solid var(--g100)}
+.abt-count span{font-weight:600;color:var(--g800)}
+.abt-split{display:grid;grid-template-columns:260px 1fr;min-height:420px}
+.abt-list{border-right:1px solid var(--g200);overflow-y:auto;max-height:420px}
+.abt-item{padding:10px 12px;border-bottom:1px solid var(--g100);cursor:pointer;display:flex;align-items:flex-start;gap:8px;transition:background .15s}
+.abt-item:last-child{border-bottom:none}
+.abt-item:hover{background:var(--g50)}
+.abt-item.active{background:var(--blue-pale);border-left:2px solid var(--blue)}
+.abt-item-info{flex:1;min-width:0}
+.abt-item-name{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abt-item-sub{font-size:10px;color:var(--g400);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abt-detail{padding:16px;overflow-y:auto;max-height:420px}
+.abt-empty{display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;font-size:12px;color:var(--g400);text-align:center;line-height:1.7}
+.abt-det-name{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.4}
+.abt-det-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.abt-det-lbl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-top:10px;margin-bottom:4px}
+.abt-det-val{font-size:12.5px;color:var(--g600);line-height:1.6}
+.abt-det-kutipan{font-size:12.5px;color:var(--g600);font-style:italic;line-height:1.7;border-left:2px solid var(--blue);padding-left:10px}
+.abt-det-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.abt-det-tag{font-size:11px;background:var(--g100);color:var(--g600);padding:2px 8px;border-radius:100px}
+.abt-det-actions{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--g100)}
+.abt-det-btn{flex:1;padding:8px;border-radius:var(--rs);font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;transition:all .18s}
+.abt-det-btn:hover{border-color:var(--navy);color:var(--navy)}
+.abt-det-btn.pri{background:var(--navy);color:#fff;border-color:var(--navy)}
+.abt-det-btn.pri:hover{background:var(--navy-2)}
+.abt-det-btn.del{border-color:#fecaca;color:var(--err);background:#fff7f7}
+.abt-det-btn.del:hover{background:#fef2f2}
+.abt-confirm{background:#fff7f7;border:1.5px solid #fecaca;border-radius:var(--rs);padding:11px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;display:none}
+.abt-confirm.show{display:flex}
+.abt-confirm-txt{font-size:12px;color:#991b1b;flex:1}
+.abt-confirm-btns{display:flex;gap:6px;flex-shrink:0}
+.abt-confirm-ya{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;border:none;background:var(--err);color:#fff;cursor:pointer}
+.abt-confirm-tidak{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer}
+.abt-form{background:var(--g50);border-top:1px solid var(--g200);padding:16px;display:none}
+.abt-form.show{display:block}
+.abt-form-title{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.abt-form-close{background:none;border:none;font-size:16px;color:var(--g400);cursor:pointer;padding:0;line-height:1}
+.abt-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.abt-form-full{grid-column:1/-1}
+.abt-form-lbl{font-size:10.5px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.abt-form-inp{width:100%;box-sizing:border-box;padding:8px 10px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;transition:border-color .2s}
+.abt-form-inp:focus{border-color:var(--blue);background:#fff}
+.abt-form-ta{width:100%;box-sizing:border-box;padding:8px 10px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;resize:none;height:72px;outline:none;transition:border-color .2s}
+.abt-form-ta:focus{border-color:var(--blue);background:#fff}
+.abt-form-sel{width:100%;box-sizing:border-box;padding:8px 10px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none}
+.abt-form-kat-wrap{position:relative}
+.abt-kat-opts{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-top:none;border-radius:0 0 var(--rs) var(--rs);z-index:10;display:none;max-height:160px;overflow-y:auto}
+.abt-kat-opts.show{display:block}
+.abt-kat-opt{padding:8px 10px;font-size:13px;color:var(--g800);cursor:pointer;transition:background .15s}
+.abt-kat-opt:hover{background:var(--blue-pale);color:var(--blue)}
+.abt-kat-opt.manual{font-style:italic;color:var(--g400)}
+.abt-form-tog-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.abt-form-tog{width:28px;height:16px;border-radius:8px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.abt-form-tog.on{background:var(--navy)}
+.abt-form-tog.off{background:var(--g200)}
+.abt-form-tog-t{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .18s}
+.abt-form-tog.on .abt-form-tog-t{left:14px}
+.abt-form-tog.off .abt-form-tog-t{left:2px}
+.abt-form-tog-lbl{font-size:12.5px;color:var(--g600)}
+.abt-form-btns{display:flex;gap:8px;margin-top:14px}
+.abt-form-save{padding:9px 20px;border-radius:var(--rs);font-size:13px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s}
+.abt-form-save:hover{background:var(--navy-2)}
+.abt-form-cancel{padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer;font-family:'DM Sans',sans-serif}
+.abt-loading{text-align:center;padding:40px;font-size:13px;color:var(--g400)}
+@media(max-width:768px){.abt-split{grid-template-columns:1fr;min-height:auto}.abt-list{max-height:200px;border-right:none;border-bottom:1px solid var(--g200)}.abt-detail{max-height:none}}
+
 </style>
 </head>
 <body>
@@ -924,9 +998,8 @@ function switchAdmTab(tab,btn){
   document.getElementById('adm-tc-'+tab).classList.add('on');
   if(tab==='pricelist') loadAdmPricelist();
   if(tab==='testimoni') loadAdmTestimoni();
-  if(tab==='faq'){
-    loadFaqAdmin();
-  }
+  if(tab==='faq') loadFaqAdmin();
+  if(tab==='bank-teori') loadAdmBankTeori();
 }
 
 function setAdmFilter(f,btn){
@@ -2159,6 +2232,293 @@ function btSwitchSub(sub) {
   if (sub === 'var') btRenderVar();
 }
 /* ===== END BANK TEORI ===== */
+/* ===== ADMIN BANK TEORI ===== */
+var _abtData = [];
+var _abtLoaded = false;
+var _abtSelId = null;
+var _abtEditId = null;
+var _abtIsNew = false;
+var _abtFilterQ = '';
+var _abtFilterTab = '';
+var _abtKatOptions = ['Jenis Kelamin','Usia','Pendidikan','Pekerjaan','Pendapatan'];
+var _abtExtraKat = [];
+
+function loadAdmBankTeori() {
+  if (_abtLoaded) { abtRender(); return; }
+  fetch('/api/teori')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _abtLoaded = true;
+      _abtData = data.teori || [];
+      abtRender();
+    })
+    .catch(function() {
+      document.getElementById('abt-list').innerHTML = '<div class="abt-loading">Gagal memuat data.</div>';
+    });
+}
+
+function abtFiltered() {
+  return _abtData.filter(function(t) {
+    var mq = !_abtFilterQ || t.nama_teori.toLowerCase().includes(_abtFilterQ);
+    var mt = !_abtFilterTab || t.tab === _abtFilterTab;
+    return mq && mt;
+  });
+}
+
+function abtFilter() {
+  _abtFilterQ = (document.getElementById('abt-search').value || '').toLowerCase();
+  _abtFilterTab = document.getElementById('abt-tab-sel').value || '';
+  abtRenderList();
+}
+
+function abtRender() {
+  abtRenderList();
+  abtRenderDetail();
+}
+
+function abtRenderList() {
+  var items = abtFiltered();
+  var countEl = document.getElementById('abt-count');
+  if (countEl) countEl.innerHTML = 'Menampilkan <span>' + items.length + '</span> teori';
+  var listEl = document.getElementById('abt-list');
+  if (!listEl) return;
+  if (!items.length) {
+    listEl.innerHTML = '<div class="abt-loading">Tidak ada teori ditemukan.</div>';
+    return;
+  }
+  listEl.innerHTML = items.map(function(t) {
+    return '<div class="abt-item' + (_abtSelId === t.id ? ' active' : '') + '" onclick="abtSelect(\'' + t.id + '\')">'
+      + '<div class="abt-item-info">'
+      + '<div class="abt-item-name">' + t.nama_teori + '</div>'
+      + '<div class="abt-item-sub">' + t.tab + (t.kategori ? ' · ' + t.kategori : '') + '</div>'
+      + '</div>'
+      + (t.is_new ? '<span class="adm-testi-badge-on" style="flex-shrink:0">Baru</span>' : '')
+      + '</div>';
+  }).join('');
+}
+
+function abtSelect(id) {
+  _abtSelId = id;
+  abtRenderList();
+  abtRenderDetail();
+}
+
+function abtRenderDetail() {
+  var el = document.getElementById('abt-detail');
+  if (!el) return;
+  if (!_abtSelId) {
+    el.innerHTML = '<div class="abt-empty">Pilih teori di sebelah kiri<br>untuk melihat detail &amp; mengedit</div>';
+    return;
+  }
+  var t = _abtData.find(function(x) { return x.id === _abtSelId; });
+  if (!t) { el.innerHTML = ''; return; }
+  var tabBadge = t.tab === 'Variabel'
+    ? '<span class="adm-testi-badge-on">Variabel</span>'
+    : '<span style="background:#EEEDFE;color:#3C3489;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600">Karakteristik</span>';
+  var newBadge = t.is_new ? '<span class="adm-testi-badge-on" style="margin-left:4px">Baru</span>' : '';
+  var tagsHtml = t.tags && t.tags.length
+    ? '<div class="abt-det-tags">' + t.tags.map(function(tg) { return '<span class="abt-det-tag">' + tg + '</span>'; }).join('') + '</div>'
+    : '<div class="abt-det-val" style="color:var(--g400)">Tidak ada tag</div>';
+  var linkHtml = t.link_drive
+    ? '<div class="abt-det-lbl">Link Drive</div><div class="abt-det-val"><a href="' + t.link_drive + '" target="_blank" style="color:var(--blue)">Buka link</a></div>'
+    : '';
+  el.innerHTML =
+    '<div class="abt-det-name">' + t.nama_teori + '</div>'
+    + '<div class="abt-det-badges">' + tabBadge + newBadge
+    + (t.kategori ? '<span style="background:var(--g100);color:var(--g600);padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600;margin-left:4px">' + t.kategori + '</span>' : '')
+    + '</div>'
+    + '<div class="abt-det-lbl">Kutipan</div><div class="abt-det-kutipan">&ldquo;' + t.kutipan + '&rdquo;</div>'
+    + '<div class="abt-det-lbl">Sumber</div><div class="abt-det-val">' + t.sumber + '</div>'
+    + '<div class="abt-det-lbl">Tags</div>' + tagsHtml
+    + linkHtml
+    + '<div class="abt-det-actions">'
+    + '<div class="abt-det-btn pri" onclick="abtShowEditForm(\'' + t.id + '\')">Edit</div>'
+    + '<div class="abt-det-btn del" onclick="abtShowConfirm()">Hapus</div>'
+    + '</div>'
+    + '<div class="abt-confirm" id="abt-confirm">'
+    + '<span class="abt-confirm-txt">Hapus teori ini dari Notion?</span>'
+    + '<div class="abt-confirm-btns">'
+    + '<button class="abt-confirm-tidak" onclick="abtHideConfirm()">Tidak</button>'
+    + '<button class="abt-confirm-ya" onclick="abtDoHapus(\'' + t.id + '\')">Ya, hapus</button>'
+    + '</div></div>';
+}
+
+function abtShowConfirm() {
+  var el = document.getElementById('abt-confirm');
+  if (el) el.classList.add('show');
+}
+
+function abtHideConfirm() {
+  var el = document.getElementById('abt-confirm');
+  if (el) el.classList.remove('show');
+}
+
+function abtDoHapus(id) {
+  var btn = document.querySelector('.abt-confirm-ya');
+  if (btn) { btn.textContent = 'Menghapus...'; btn.disabled = true; }
+  fetch('/api/teori', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'hapus', page_id: id })
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        _abtData = _abtData.filter(function(t) { return t.id !== id; });
+        _abtSelId = null;
+        _abtLoaded = true;
+        abtRender();
+      } else { alert('Gagal menghapus: ' + (res.error || '')); }
+    }).catch(function() { alert('Gagal menghubungi server.'); });
+}
+
+function abtShowForm() {
+  _abtEditId = null;
+  _abtIsNew = false;
+  document.getElementById('abt-form-title-txt').textContent = 'Tambah teori baru';
+  document.getElementById('abt-f-nama').value = '';
+  document.getElementById('abt-f-kutipan').value = '';
+  document.getElementById('abt-f-sumber').value = '';
+  document.getElementById('abt-f-tab').value = 'Karakteristik';
+  document.getElementById('abt-f-kat').value = '';
+  document.getElementById('abt-f-tags').value = '';
+  document.getElementById('abt-f-link').value = '';
+  document.getElementById('abt-f-kat-wrap').style.display = 'block';
+  abtUpdateTogUI();
+  document.getElementById('abt-form').classList.add('show');
+  document.getElementById('abt-f-nama').focus();
+}
+
+function abtShowEditForm(id) {
+  var t = _abtData.find(function(x) { return x.id === id; });
+  if (!t) return;
+  _abtEditId = id;
+  _abtIsNew = t.is_new;
+  document.getElementById('abt-form-title-txt').textContent = 'Edit teori';
+  document.getElementById('abt-f-nama').value = t.nama_teori;
+  document.getElementById('abt-f-kutipan').value = t.kutipan;
+  document.getElementById('abt-f-sumber').value = t.sumber;
+  document.getElementById('abt-f-tab').value = t.tab;
+  document.getElementById('abt-f-kat').value = t.kategori || '';
+  document.getElementById('abt-f-tags').value = t.tags ? t.tags.join(', ') : '';
+  document.getElementById('abt-f-link').value = t.link_drive || '';
+  document.getElementById('abt-f-kat-wrap').style.display = t.tab === 'Variabel' ? 'none' : 'block';
+  abtUpdateTogUI();
+  document.getElementById('abt-form').classList.add('show');
+}
+
+function abtHideForm() {
+  document.getElementById('abt-form').classList.remove('show');
+  document.getElementById('abt-kat-opts').classList.remove('show');
+}
+
+function abtOnTabChange() {
+  var tab = document.getElementById('abt-f-tab').value;
+  document.getElementById('abt-f-kat-wrap').style.display = tab === 'Variabel' ? 'none' : 'block';
+  if (tab === 'Variabel') document.getElementById('abt-f-kat').value = '';
+}
+
+function abtKatInput(val) {
+  var all = _abtKatOptions.concat(_abtExtraKat);
+  var filtered = all.filter(function(k) { return k.toLowerCase().includes(val.toLowerCase()); });
+  abtRenderKatOpts(filtered, val);
+}
+
+function abtKatFocus() {
+  var val = document.getElementById('abt-f-kat').value;
+  var all = _abtKatOptions.concat(_abtExtraKat);
+  var filtered = val ? all.filter(function(k) { return k.toLowerCase().includes(val.toLowerCase()); }) : all;
+  abtRenderKatOpts(filtered, val);
+}
+
+function abtKatBlur() {
+  setTimeout(function() {
+    document.getElementById('abt-kat-opts').classList.remove('show');
+  }, 200);
+}
+
+function abtRenderKatOpts(opts, val) {
+  var el = document.getElementById('abt-kat-opts');
+  var html = opts.map(function(k) {
+    return '<div class="abt-kat-opt" onclick="abtPickKat(\'' + k + '\')">' + k + '</div>';
+  }).join('');
+  if (val && !opts.find(function(k) { return k.toLowerCase() === val.toLowerCase(); })) {
+    html += '<div class="abt-kat-opt manual" onclick="abtPickKat(\'' + val + '\')">Tambah "' + val + '" sebagai kategori baru</div>';
+  }
+  el.innerHTML = html;
+  el.classList.toggle('show', html !== '');
+}
+
+function abtPickKat(val) {
+  document.getElementById('abt-f-kat').value = val;
+  document.getElementById('abt-kat-opts').classList.remove('show');
+  if (!_abtKatOptions.includes(val) && !_abtExtraKat.includes(val)) {
+    _abtExtraKat.push(val);
+  }
+}
+
+function abtTogIsNew() {
+  _abtIsNew = !_abtIsNew;
+  abtUpdateTogUI();
+}
+
+function abtUpdateTogUI() {
+  var tog = document.getElementById('abt-f-isnew-tog');
+  if (!tog) return;
+  tog.className = 'abt-form-tog ' + (_abtIsNew ? 'on' : 'off');
+}
+
+function abtSaveForm() {
+  var nama = document.getElementById('abt-f-nama').value.trim();
+  var kutipan = document.getElementById('abt-f-kutipan').value.trim();
+  var sumber = document.getElementById('abt-f-sumber').value.trim();
+  var tab = document.getElementById('abt-f-tab').value;
+  var kat = tab === 'Variabel' ? '' : document.getElementById('abt-f-kat').value.trim();
+  var tagsRaw = document.getElementById('abt-f-tags').value.trim();
+  var link = document.getElementById('abt-f-link').value.trim();
+  var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(Boolean) : [];
+
+  if (!nama || !kutipan) { alert('Nama teori dan kutipan wajib diisi!'); return; }
+  if (tab === 'Karakteristik' && !kat) { alert('Kategori wajib diisi untuk tab Karakteristik!'); return; }
+
+  var btn = document.getElementById('abt-f-save-btn');
+  if (btn) { btn.textContent = 'Menyimpan...'; btn.disabled = true; }
+
+  var payload = {
+    nama_teori: nama,
+    kutipan: kutipan,
+    sumber: sumber,
+    tab: tab,
+    kategori: kat || tab,
+    tags: tags,
+    link_drive: link || null,
+    is_new: _abtIsNew,
+  };
+
+  if (_abtEditId) {
+    payload.action = 'edit';
+    payload.page_id = _abtEditId;
+  } else {
+    payload.action = 'tambah';
+  }
+
+  fetch('/api/teori', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success || res.id) {
+        _abtLoaded = false;
+        abtHideForm();
+        loadAdmBankTeori();
+      } else { alert('Gagal menyimpan: ' + (res.error || '')); }
+    }).catch(function() { alert('Gagal menghubungi server.'); })
+    .finally(function() {
+      if (btn) { btn.textContent = 'Simpan ke Notion'; btn.disabled = false; }
+    });
+}
+/* ===== END ADMIN BANK TEORI ===== */
+
 
 function admTestiSaveEdit(id){
   var d=_admTesti.find(function(x){return x.page_id===id;});if(!d)return;
@@ -2213,6 +2573,7 @@ function admTestiSaveEdit(id){
     <button class="adm-tab-btn" onclick="switchAdmTab('faq',this)">&#128172; FAQ</button>
     <button class="adm-tab-btn" onclick="switchAdmTab('testimoni',this)">&#9733; Testimoni</button>
     <button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">&#128196; Pricelist</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('bank-teori',this)">&#128218; Bank Teori</button>
   </div>
   <div class="adm-body">
 
@@ -2358,6 +2719,84 @@ function admTestiSaveEdit(id){
           </div>
           <div class="adm-testi-detail" id="adm-testi-detail">
             <div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br>untuk lihat detail &amp; edit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Tab Bank Teori -->
+    <div id="adm-tc-bank-teori" class="adm-tc">
+      <div class="abt-wrap">
+        <div class="abt-toolbar">
+          <input class="abt-search" id="abt-search" type="text" placeholder="Cari nama teori..." oninput="abtFilter()"/>
+          <select class="abt-tab-sel" id="abt-tab-sel" onchange="abtFilter()">
+            <option value="">Semua Tab</option>
+            <option value="Karakteristik">Karakteristik</option>
+            <option value="Variabel">Variabel</option>
+          </select>
+          <button class="abt-add-btn" onclick="abtShowForm()">&#43; Tambah Teori</button>
+        </div>
+        <div class="abt-count" id="abt-count">Memuat teori...</div>
+        <div class="abt-split">
+          <div class="abt-list" id="abt-list">
+            <div class="abt-loading">Memuat...</div>
+          </div>
+          <div class="abt-detail" id="abt-detail">
+            <div class="abt-empty">Pilih teori di sebelah kiri<br>untuk melihat detail &amp; mengedit</div>
+          </div>
+        </div>
+        <div class="abt-form" id="abt-form">
+          <div class="abt-form-title">
+            <span id="abt-form-title-txt">Tambah teori baru</span>
+            <button class="abt-form-close" onclick="abtHideForm()">&#10005;</button>
+          </div>
+          <div class="abt-form-grid">
+            <div class="abt-form-full">
+              <div class="abt-form-lbl">Nama Teori</div>
+              <input class="abt-form-inp" id="abt-f-nama" placeholder="Contoh: Pengaruh Kualitas Produk terhadap Keputusan Pembelian"/>
+            </div>
+            <div class="abt-form-full">
+              <div class="abt-form-lbl">Kutipan</div>
+              <textarea class="abt-form-ta" id="abt-f-kutipan" placeholder="Menurut X (tahun), ..."></textarea>
+            </div>
+            <div class="abt-form-full">
+              <div class="abt-form-lbl">Sumber</div>
+              <input class="abt-form-inp" id="abt-f-sumber" placeholder="Nama, A. (tahun). Judul Buku. Penerbit."/>
+            </div>
+            <div>
+              <div class="abt-form-lbl">Tab</div>
+              <select class="abt-form-sel" id="abt-f-tab" onchange="abtOnTabChange()">
+                <option value="Karakteristik">Karakteristik</option>
+                <option value="Variabel">Variabel</option>
+              </select>
+            </div>
+            <div id="abt-f-kat-wrap">
+              <div class="abt-form-lbl">Kategori</div>
+              <div class="abt-form-kat-wrap">
+                <input class="abt-form-inp" id="abt-f-kat" placeholder="Pilih atau ketik kategori..." autocomplete="off" oninput="abtKatInput(this.value)" onfocus="abtKatFocus()" onblur="abtKatBlur()"/>
+                <div class="abt-kat-opts" id="abt-kat-opts"></div>
+              </div>
+            </div>
+            <div class="abt-form-full">
+              <div class="abt-form-lbl">Tags Variabel (pisahkan dengan koma)</div>
+              <input class="abt-form-inp" id="abt-f-tags" placeholder="kepuasan konsumen, loyalitas, kualitas layanan"/>
+            </div>
+            <div class="abt-form-full">
+              <div class="abt-form-lbl">Link Google Drive (opsional)</div>
+              <input class="abt-form-inp" id="abt-f-link" placeholder="https://drive.google.com/..."/>
+            </div>
+            <div class="abt-form-full">
+              <div class="abt-form-tog-row">
+                <div class="abt-form-tog off" id="abt-f-isnew-tog" onclick="abtTogIsNew()">
+                  <div class="abt-form-tog-t"></div>
+                </div>
+                <span class="abt-form-tog-lbl">Tandai sebagai teori baru (badge &#8220;Baru&#8221;)</span>
+              </div>
+            </div>
+          </div>
+          <div class="abt-form-btns">
+            <button class="abt-form-cancel" onclick="abtHideForm()">Batal</button>
+            <button class="abt-form-save" id="abt-f-save-btn" onclick="abtSaveForm()">Simpan ke Notion</button>
           </div>
         </div>
       </div>

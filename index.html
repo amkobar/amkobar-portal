@@ -380,9 +380,9 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .adm-status-card.on{display:block}
 .adm-status-ttl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--g400);margin-bottom:12px}
 .adm-status-pills{display:flex;gap:6px;flex-wrap:wrap}
-.adm-status-pill{padding:5px 12px;border-radius:100px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;opacity:.45;transition:all .18s;font-family:'DM Sans',sans-serif}
-.adm-status-pill:hover{opacity:.75}
-.adm-status-pill.on{opacity:1;border-color:currentColor}
+.adm-status-pill{padding:4px 11px;border-radius:100px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid transparent;opacity:.5;transition:all .18s;font-family:'DM Sans',sans-serif}
+.adm-status-pill:hover{opacity:.8}
+.adm-status-pill.on{opacity:1;border-color:rgba(255,255,255,.5)}
 .asp-refund{background:#fef2f2;color:#991b1b}
 .asp-review{background:#ede9fe;color:#5b21b6}
 .asp-antrian{background:#dbeafe;color:#1d4ed8}
@@ -391,7 +391,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .asp-pendampingan{background:#f3e8ff;color:#7e22ce}
 .asp-selesai{background:#d1fae5;color:#065f46}
 .asp-batal{background:#fee2e2;color:#b91c1c}
-.adm-status-saving{font-size:11px;color:var(--g400);margin-top:8px;display:none}
+.adm-status-saving{font-size:11px;color:rgba(255,255,255,.6);display:none}
 @media(max-width:768px){.adm-testi-split{grid-template-columns:1fr;min-height:auto}.adm-testi-list{max-height:220px;border-right:none;border-bottom:1px solid var(--g200)}.adm-testi-detail{max-height:none}}
 /* ===== ADMIN DASHBOARD ===== */
 .adm-dash{display:none}.adm-dash.on{display:block}
@@ -502,7 +502,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 </div>
 
 <div id="dash" class="dash">
-  <div class="dash-hdr">
+  <div class="dash-hdr" id="dash-hdr">
     <div class="cli-info">
       <div class="cli-av" id="d-av">A</div>
       <div><div class="cli-name" id="d-nama">&#8212;</div><div class="cli-meta" id="d-meta">&#8212;</div></div>
@@ -516,6 +516,20 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
       </div>
       <button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
     </div>
+  </div>
+  <div id="adm-status-row" style="display:none;background:var(--navy-2);padding:8px 48px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)">
+    <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Status:</span>
+    <div class="adm-status-pills" id="adm-status-pills">
+      <div class="adm-status-pill asp-refund" onclick="pickStatus('Refund',this)">Refund</div>
+      <div class="adm-status-pill asp-review" onclick="pickStatus('Menunggu Review',this)">Menunggu Review</div>
+      <div class="adm-status-pill asp-antrian" onclick="pickStatus('Antrian',this)">Antrian</div>
+      <div class="adm-status-pill asp-diproses" onclick="pickStatus('Diproses',this)">Diproses</div>
+      <div class="adm-status-pill asp-pelunasan" onclick="pickStatus('Menunggu Pelunasan',this)">Menunggu Pelunasan</div>
+      <div class="adm-status-pill asp-pendampingan" onclick="pickStatus('Pendampingan',this)">Pendampingan</div>
+      <div class="adm-status-pill asp-selesai" onclick="pickStatus('Selesai',this)">Selesai</div>
+      <div class="adm-status-pill asp-batal" onclick="pickStatus('Dibatalkan',this)">Dibatalkan</div>
+    </div>
+    <span id="adm-status-saving" class="adm-status-saving"></span>
   </div>
   <div class="dash-tabs">
     <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
@@ -534,20 +548,6 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
             <div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">&#8212;</div></div>
             <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">&#8212;</div></div>
             <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">&#8212;</div></div>
-          </div>
-          <div class="adm-status-card" id="adm-status-card">
-            <div class="adm-status-ttl">Ubah Status Project</div>
-            <div class="adm-status-pills" id="adm-status-pills">
-              <div class="adm-status-pill asp-refund" onclick="pickStatus('Refund',this)">Refund</div>
-              <div class="adm-status-pill asp-review" onclick="pickStatus('Menunggu Review',this)">Menunggu Review</div>
-              <div class="adm-status-pill asp-antrian" onclick="pickStatus('Antrian',this)">Antrian</div>
-              <div class="adm-status-pill asp-diproses" onclick="pickStatus('Diproses',this)">Diproses</div>
-              <div class="adm-status-pill asp-pelunasan" onclick="pickStatus('Menunggu Pelunasan',this)">Menunggu Pelunasan</div>
-              <div class="adm-status-pill asp-pendampingan" onclick="pickStatus('Pendampingan',this)">Pendampingan</div>
-              <div class="adm-status-pill asp-selesai" onclick="pickStatus('Selesai',this)">Selesai</div>
-              <div class="adm-status-pill asp-batal" onclick="pickStatus('Dibatalkan',this)">Dibatalkan</div>
-            </div>
-            <div class="adm-status-saving" id="adm-status-saving">Menyimpan...</div>
           </div>
           <div id="ref-wrap" style="display:none"></div>
         </div>
@@ -1363,13 +1363,13 @@ function renderDash(d){
       aksesTogWrap.style.display='flex';
       window._dashPageId=d.page_id||null;
       updateAksesTogUI(d.akses_aktif!==false);
-      var statusCard=document.getElementById('adm-status-card');
-      if(statusCard)statusCard.classList.add('on');
+      var statusRow=document.getElementById('adm-status-row');
+      if(statusRow)statusRow.style.display='flex';
       setStatusPillActive(d.status_project||'');
     }else{
       aksesTogWrap.style.display='none';
-      var statusCard=document.getElementById('adm-status-card');
-      if(statusCard)statusCard.classList.remove('on');
+      var statusRow=document.getElementById('adm-status-row');
+      if(statusRow)statusRow.style.display='none';
     }
   }
   document.getElementById('i-judul').textContent=d.judul||'\u2014';

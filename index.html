@@ -481,7 +481,7 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <div id="d-sbadge" class="sbadge s-default">&#8212;</div>
-      <button class="logout-btn" onclick="doLogout()">Keluar</button>
+      <button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
     </div>
   </div>
   <div class="dash-tabs">
@@ -1222,6 +1222,8 @@ async function doLogin(){
     if(!res.ok||data.error)throw new Error(data.error||'Terjadi kesalahan server.');
     if(!data.found){al.className='al err';al.textContent='Kode akses tidak ditemukan. Pastikan kode yang kamu masukkan benar.';return;}
     window._lastKode=kodeUpper;
+    sessionStorage.setItem('amkobar_kode',kodeUpper);
+    resetAutoLogout();
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
@@ -1229,7 +1231,53 @@ async function doLogin(){
   finally{btn.disabled=false;btn.textContent='Masuk →';}
 }
 document.getElementById('kode-inp').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
+
+/* ===== SESSION STORAGE — persist login saat refresh ===== */
+(function(){
+  var savedKode=sessionStorage.getItem('amkobar_kode');
+  if(!savedKode)return;
+  fetch('/api/cek-status?kode='+encodeURIComponent(savedKode))
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.found){
+        window._lastKode=savedKode;
+        resetAutoLogout();
+        renderDash(data);
+        document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+        document.getElementById('dash').classList.add('on');
+      }else{
+        sessionStorage.removeItem('amkobar_kode');
+      }
+    }).catch(function(){sessionStorage.removeItem('amkobar_kode');});
+})();
+
+/* ===== AUTO LOGOUT 30 MENIT ===== */
+var _autoLogoutTimer=null;
+var _AUTO_LOGOUT_MS=30*60*1000;
+function resetAutoLogout(){
+  if(_autoLogoutTimer)clearTimeout(_autoLogoutTimer);
+  _autoLogoutTimer=setTimeout(function(){
+    var dashVisible=document.getElementById('dash').classList.contains('on');
+    if(!dashVisible)return;
+    var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
+    if(fromAdmin==='1')return;
+    doLogout();
+    var al=document.getElementById('login-al');
+    if(al){al.className='al err';al.textContent='Sesi Anda telah berakhir karena tidak aktif selama 30 menit. Silakan login kembali.';}
+  },_AUTO_LOGOUT_MS);
+}
+function resetAutoLogoutOnActivity(){
+  var dashVisible=document.getElementById('dash').classList.contains('on');
+  var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
+  if(dashVisible&&fromAdmin!=='1')resetAutoLogout();
+}
+['click','scroll','keypress','touchstart'].forEach(function(ev){
+  document.addEventListener(ev,resetAutoLogoutOnActivity,{passive:true});
+});
+
 function doLogout(){
+  if(_autoLogoutTimer)clearTimeout(_autoLogoutTimer);
+  sessionStorage.removeItem('amkobar_kode');
   var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
   document.getElementById('dash').classList.remove('on');
   document.getElementById('dash').dataset.fromAdmin='';
@@ -1250,6 +1298,9 @@ function renderDash(d){
   document.getElementById('d-nama').textContent=nama;
   document.getElementById('d-meta').textContent=[d.nim,d.universitas].filter(Boolean).join(' \u00b7 ');
   const sb=document.getElementById('d-sbadge');sb.textContent=d.status_project||'\u2014';sb.className='sbadge '+statusClass(d.status_project);
+  var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
+  var logoutBtn=document.getElementById('dash-logout-btn');
+  if(logoutBtn)logoutBtn.textContent=fromAdmin==='1'?'\u2190 Kembali':'Keluar';
   document.getElementById('i-judul').textContent=d.judul||'\u2014';
   document.getElementById('i-layanan').textContent=d.jenis_layanan||'\u2014';
   document.getElementById('i-app').textContent=d.aplikasi||'\u2014';
@@ -1357,22 +1408,34 @@ function openRatingModal(){
     window.Tally.openPopup(TALLY_RATING_FORM_ID,{
       layout:'modal',width:500,
       hiddenFields:{'nim':window._clientNim||''},
-      onSubmit:function(){window.Tally.closePopup(TALLY_RATING_FORM_ID);setTimeout(verifyRatingSubmit,5000);}
+      onSubmit:function(){
+        window.Tally.closePopup(TALLY_RATING_FORM_ID);
+        setTimeout(function(){verifyRatingSubmit(1);},5000);
+      }
     });
   }
 }
-function verifyRatingSubmit(){
+function verifyRatingSubmit(attempt){
   const kode=window._lastKode||'';if(!kode)return;
-  fetch(`/api/cek-status?kode=${encodeURIComponent(kode)}`)
-    .then(r=>r.json())
-    .then(data=>{
+  fetch('/api/cek-status?kode='+encodeURIComponent(kode))
+    .then(function(r){return r.json();})
+    .then(function(data){
       if(data.found&&data.testimoni_selesai){
         const ab=document.getElementById('akses-box');const rb=document.getElementById('rating-btn');
+        if(!ab)return;
         ab.className='akses-box permanen';
-        ab.innerHTML=`<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
-        ab.style.display='block';rb.style.display='none';
+        ab.innerHTML='<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>';
+        ab.style.display='block';if(rb)rb.style.display='none';
+      }else if(attempt<3){
+        var delays=[0,10000,15000];
+        setTimeout(function(){verifyRatingSubmit(attempt+1);},delays[attempt]);
       }
-    }).catch(function(){});
+    }).catch(function(){
+      if(attempt<3){
+        var delays=[0,10000,15000];
+        setTimeout(function(){verifyRatingSubmit(attempt+1);},delays[attempt]);
+      }
+    });
 }
 
 /* ===== ADMIN TESTIMONI ===== */

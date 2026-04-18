@@ -1923,8 +1923,8 @@ var _BT_KAT_META = {
 
 function loadBankTeori() {
   if (_btLoaded) { btRenderAll(); return; }
-  document.getElementById('bt-kar-grid').innerHTML = '<div class="bt-loading">Memuat data...</div>';
-  document.getElementById('bt-var-list').innerHTML = '<div class="bt-loading">Memuat data...</div>';
+  document.getElementById('bt-cat-grid').innerHTML = '<div class="bt-loading">Memuat data...</div>';
+  document.getElementById('bt-cat-grid').innerHTML = '<div class="bt-loading">Memuat data...</div>';
   fetch('/api/teori')
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -1935,7 +1935,7 @@ function loadBankTeori() {
       setTimeout(function() { btRenderAll(); }, 50);
     })
     .catch(function() {
-      document.getElementById('bt-kar-grid').innerHTML = '<div class="bt-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div><div>Coba refresh halaman.</div></div>';
+      document.getElementById('bt-cat-grid').innerHTML = '<div class="bt-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div><div>Coba refresh halaman.</div></div>';
     });
 }
 

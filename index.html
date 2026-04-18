@@ -392,6 +392,15 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
 .asp-selesai{background:#d1fae5;color:#065f46}
 .asp-batal{background:#fee2e2;color:#b91c1c}
 .adm-status-saving{font-size:11px;color:rgba(255,255,255,.6);display:none}
+.adm-undo-bar{display:none;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:6px 12px;margin-top:6px;flex-wrap:wrap;width:100%}
+.adm-undo-bar.on{display:flex}
+.adm-undo-txt{font-size:11px;color:rgba(255,255,255,.8);flex:1;white-space:nowrap}
+.adm-undo-txt span{color:#fff;font-weight:600}
+.adm-undo-progress{flex:1;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;min-width:50px}
+.adm-undo-bar-inner{height:100%;background:#f0a500;border-radius:2px;transition:width .1s linear}
+.adm-undo-count{font-size:11px;color:rgba(255,255,255,.5);min-width:12px;text-align:center}
+.adm-undo-cancel{padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .15s}
+.adm-undo-cancel:hover{background:rgba(255,255,255,.18)}
 @media(max-width:768px){.adm-testi-split{grid-template-columns:1fr;min-height:auto}.adm-testi-list{max-height:220px;border-right:none;border-bottom:1px solid var(--g200)}.adm-testi-detail{max-height:none}}
 /* ===== ADMIN DASHBOARD ===== */
 .adm-dash{display:none}.adm-dash.on{display:block}
@@ -530,6 +539,12 @@ footer{text-align:center;padding:28px 48px;font-size:12.5px;color:var(--g400);bo
       <div class="adm-status-pill asp-batal" onclick="pickStatus('Dibatalkan',this)">Dibatalkan</div>
     </div>
     <span id="adm-status-saving" class="adm-status-saving"></span>
+  </div>
+  <div class="adm-undo-bar" id="adm-undo-bar">
+    <span class="adm-undo-txt">Status diubah ke <span id="adm-undo-lbl">—</span></span>
+    <div class="adm-undo-progress"><div class="adm-undo-bar-inner" id="adm-undo-progress" style="width:100%"></div></div>
+    <span class="adm-undo-count" id="adm-undo-count">5</span>
+    <button class="adm-undo-cancel" onclick="cancelStatusUndo()">Batalkan</button>
   </div>
   <div class="dash-tabs">
     <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
@@ -1545,6 +1560,10 @@ function toggleAksesClient(){
   });
 }
 
+var _undoTimer=null;
+var _undoInterval=null;
+var _undoPrevStatus=null;
+
 function setStatusPillActive(status){
   var pills=document.querySelectorAll('#adm-status-pills .adm-status-pill');
   pills.forEach(function(p){
@@ -1555,23 +1574,70 @@ function setStatusPillActive(status){
 function pickStatus(status,el){
   var pageId=window._dashPageId||null;
   if(!pageId)return;
+  var sb=document.getElementById('d-sbadge');
+  var prevStatus=sb?sb.textContent.trim():null;
+  if(status===prevStatus)return;
+  if(_undoTimer){clearTimeout(_undoTimer);clearInterval(_undoInterval);}
   document.querySelectorAll('#adm-status-pills .adm-status-pill').forEach(function(p){p.classList.remove('on');});
   el.classList.add('on');
-  var sb=document.getElementById('d-sbadge');
   if(sb){sb.textContent=status;sb.className='sbadge '+statusClass(status);}
-  var saving=document.getElementById('adm-status-saving');
-  if(saving){saving.style.display='block';saving.textContent='Menyimpan...';}
+  _undoPrevStatus=prevStatus;
+  var lbl=document.getElementById('adm-undo-lbl');
+  var bar=document.getElementById('adm-undo-progress');
+  var count=document.getElementById('adm-undo-count');
+  var undoBar=document.getElementById('adm-undo-bar');
+  if(lbl)lbl.textContent=status;
+  if(bar)bar.style.width='100%';
+  if(count)count.textContent='5';
+  if(undoBar)undoBar.classList.add('on');
+  var secs=5;
+  _undoInterval=setInterval(function(){
+    secs--;
+    if(count)count.textContent=secs;
+    if(bar)bar.style.width=(secs/5*100)+'%';
+  },1000);
+  _undoTimer=setTimeout(function(){
+    clearInterval(_undoInterval);
+    if(undoBar)undoBar.classList.remove('on');
+    if(count)count.textContent='5';
+    if(bar)bar.style.width='100%';
+    doSaveStatus(pageId,status);
+  },5000);
+}
+
+function cancelStatusUndo(){
+  if(_undoTimer)clearTimeout(_undoTimer);
+  if(_undoInterval)clearInterval(_undoInterval);
+  var undoBar=document.getElementById('adm-undo-bar');
+  var bar=document.getElementById('adm-undo-progress');
+  var count=document.getElementById('adm-undo-count');
+  if(undoBar)undoBar.classList.remove('on');
+  if(bar)bar.style.width='100%';
+  if(count)count.textContent='5';
+  var prev=_undoPrevStatus||'';
+  var sb=document.getElementById('d-sbadge');
+  if(sb&&prev){sb.textContent=prev;sb.className='sbadge '+statusClass(prev);}
+  setStatusPillActive(prev);
+  _undoPrevStatus=null;
+}
+
+function doSaveStatus(pageId,status){
   fetch('/api/update-status',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({page_id:pageId,status:status})
   }).then(function(r){return r.json();}).then(function(res){
-    if(saving){
-      if(res.success){saving.textContent='Tersimpan \u2713';setTimeout(function(){saving.style.display='none';},2000);}
-      else{saving.textContent='Gagal menyimpan';setTimeout(function(){saving.style.display='none';},2000);}
+    if(!res.success){
+      var sb=document.getElementById('d-sbadge');
+      if(sb&&_undoPrevStatus){sb.textContent=_undoPrevStatus;sb.className='sbadge '+statusClass(_undoPrevStatus);}
+      setStatusPillActive(_undoPrevStatus||'');
+      alert('Gagal menyimpan status. Coba lagi.');
     }
   }).catch(function(){
-    if(saving){saving.textContent='Gagal menyimpan';setTimeout(function(){saving.style.display='none';},2000);}
+    var sb=document.getElementById('d-sbadge');
+    if(sb&&_undoPrevStatus){sb.textContent=_undoPrevStatus;sb.className='sbadge '+statusClass(_undoPrevStatus);}
+    setStatusPillActive(_undoPrevStatus||'');
+    alert('Gagal menghubungi server. Coba lagi.');
   });
 }
 

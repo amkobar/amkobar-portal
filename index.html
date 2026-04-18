@@ -825,7 +825,7 @@ function renderAdmTable(){
 
 function admViewClient(kode){
   if(!kode)return;
-  fetch('/api/cek-status?kode='+encodeURIComponent(kode))
+  fetch('/api/cek-status?kode='+encodeURIComponent(kode)+'&admin=1')
     .then(function(r){return r.json();})
     .then(function(data){
       if(data.found){

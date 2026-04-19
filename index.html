@@ -683,6 +683,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
   </div>
   <div class="dash-tabs">
     <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
+<button class="tab-btn" onclick="switchTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
 <button class="tab-btn" onclick="switchTab('bank-teori',this)">&#128218; Bank Teori</button>
     <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Cara Baca Hasil</button>
     <button class="tab-btn" onclick="switchTab('faq-in',this)">&#128172; FAQ Sidang</button>
@@ -722,6 +723,24 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         </div>
       </div>
     </div>
+<div id="tc-contoh" class="tc">
+      <div id="acr-client-wrap">
+        <div id="acr-client-bc" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g400);margin-bottom:14px;flex-wrap:wrap"></div>
+        <div id="acr-client-title" style="font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:16px;display:none"></div>
+        <div id="acr-client-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px"></div>
+      </div>
+      <div id="acr-client-preview" style="display:none;margin-top:16px;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden">
+        <div style="padding:10px 14px;background:var(--g50);border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)" id="acr-preview-name"></div>
+          <button onclick="acrClientClosePreview()" style="font-size:12px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">&#10005; Tutup</button>
+        </div>
+        <iframe id="acr-preview-frame" style="width:100%;height:480px;border:none;" allowfullscreen></iframe>
+        <div style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
+          <a id="acr-preview-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0">&#128279; Buka di Google Drive</a>
+        </div>
+      </div>
+    </div>
+
 <div id="tc-bank-teori" class="tc">
       <div class="bt-wrap" id="bt-main">
         <div class="bt-subtab-row">
@@ -982,6 +1001,10 @@ function switchTab(tab,btn){
   btn.classList.add('on');
   document.getElementById('tc-'+tab).classList.add('on');
   if(tab==='bank-teori') loadBankTeori();
+  if(tab==='contoh'){
+    var kat=sessionStorage.getItem('amkobar_kat')||'';
+    loadClientContoh(kat);
+  }
 }
 function toggleAdmAcc(sec){
   var body=document.getElementById('adm-acc-body-'+sec);
@@ -1000,6 +1023,7 @@ function switchAdmTab(tab,btn){
   if(tab==='testimoni') loadAdmTestimoni();
   if(tab==='faq') loadFaqAdmin();
   if(tab==='bank-teori') loadAdmBankTeori();
+  if(tab==='contoh') loadAdmContoh();
 }
 
 function setAdmFilter(f,btn){
@@ -1463,6 +1487,7 @@ async function doLogin(){
     }
     window._lastKode=kodeUpper;
     sessionStorage.setItem('amkobar_kode',kodeUpper);
+    sessionStorage.setItem('amkobar_kat', data.kategori_harga || '');
     resetAutoLogout();
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -2234,6 +2259,397 @@ function btSwitchSub(sub) {
   if (sub === 'var') btRenderVar();
 }
 /* ===== END BANK TEORI ===== */
+
+/* ===== CONTOH & REFERENSI ===== */
+var _acrData = [];
+var _acrLoaded = false;
+var _acrPath = [];
+var _acrSelId = null;
+var _acrEditId = null;
+var _acrFormType = null;
+var _acrFilterQ = '';
+
+var ACR_ICON_MAP = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄', folder:'📁', subfolder:'📂' };
+var ACR_AKSES_CLASS = { Semua:'adm-testi-badge-off', KHK:'adm-testi-badge-on', KHU:'adm-testi-badge-on' };
+
+function loadAdmContoh() {
+  if (_acrLoaded) { acrRender(); return; }
+  fetch('/api/contoh')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _acrLoaded = true;
+      _acrData = data.items || [];
+      acrRender();
+    })
+    .catch(function() {
+      document.getElementById('acr-list').innerHTML = '<div class="abt-loading">Gagal memuat data.</div>';
+    });
+}
+
+function acrBuildTree(items, parentId) {
+  parentId = parentId || '';
+  return items
+    .filter(function(i) { return (i.parent_id || '') === parentId; })
+    .sort(function(a, b) { return (a.urutan || 0) - (b.urutan || 0); });
+}
+
+function acrGetCurrentItems() {
+  var parentId = _acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1];
+  var items = acrBuildTree(_acrData, parentId);
+  if (_acrFilterQ) {
+    items = items.filter(function(i) { return i.nama.toLowerCase().includes(_acrFilterQ); });
+  }
+  return items;
+}
+
+function acrFilter() {
+  _acrFilterQ = (document.getElementById('acr-search').value || '').toLowerCase();
+  acrRenderList();
+}
+
+function acrRender() { acrRenderBc(); acrRenderList(); acrRenderDetail(); }
+
+function acrRenderBc() {
+  var bc = '<span style="color:var(--g600);cursor:pointer;font-weight:500" onclick="acrGoLevel(0)">Contoh &amp; Referensi</span>';
+  for (var i = 0; i < _acrPath.length; i++) {
+    var item = _acrData.find(function(x) { return x.id === _acrPath[i]; });
+    var isLast = i === _acrPath.length - 1;
+    bc += '<span style="color:var(--g400);margin:0 4px">›</span>';
+    bc += '<span style="color:' + (isLast ? 'var(--g800)' : 'var(--g600)') + ';font-weight:' + (isLast ? '600' : '400') + ';cursor:pointer" onclick="acrGoLevel(' + (i + 1) + ')">' + (item ? item.nama : '') + '</span>';
+  }
+  var el = document.getElementById('acr-bc');
+  if (el) el.innerHTML = bc;
+}
+
+function acrRenderList() {
+  var items = acrGetCurrentItems();
+  var countEl = document.getElementById('acr-count');
+  if (countEl) countEl.innerHTML = 'Menampilkan <span>' + items.length + '</span> item';
+  var listEl = document.getElementById('acr-list');
+  if (!listEl) return;
+  if (!items.length) {
+    listEl.innerHTML = '<div class="abt-loading">Kosong — tambah folder atau file baru.</div>';
+    return;
+  }
+  listEl.innerHTML = items.map(function(item) {
+    var icon = item.tipe === 'Folder' ? (_acrPath.length > 0 ? '📂' : '📁') : (ACR_ICON_MAP[item.tipe_file] || '📄');
+    var sub = item.tipe === 'Folder'
+      ? acrBuildTree(_acrData, item.id).length + ' item'
+      : (item.tipe_file || '');
+    return '<div class="abt-item' + (_acrSelId === item.id ? ' active' : '') + '" onclick="acrSelectItem(\'' + item.id + '\')">'
+      + '<span style="font-size:16px;flex-shrink:0">' + icon + '</span>'
+      + '<div class="abt-item-info">'
+      + '<div class="abt-item-name">' + item.nama + '</div>'
+      + '<div class="abt-item-sub">' + sub + (item.akses !== 'Semua' ? ' · ' + item.akses : '') + '</div>'
+      + '</div>'
+      + (item.akses !== 'Semua' ? '<span class="adm-testi-badge-on" style="flex-shrink:0;font-size:9px">' + item.akses + '</span>' : '')
+      + '</div>';
+  }).join('');
+}
+
+function acrSelectItem(id) {
+  _acrSelId = id;
+  acrRenderList();
+  acrRenderDetail();
+}
+
+function acrRenderDetail() {
+  var el = document.getElementById('acr-detail');
+  if (!el) return;
+  if (!_acrSelId) {
+    el.innerHTML = '<div class="abt-empty">Pilih folder atau file di sebelah kiri<br>untuk melihat detail</div>';
+    return;
+  }
+  var item = _acrData.find(function(x) { return x.id === _acrSelId; });
+  if (!item) return;
+  var icon = item.tipe === 'Folder' ? '📁' : (ACR_ICON_MAP[item.tipe_file] || '📄');
+  var childCount = item.tipe === 'Folder' ? acrBuildTree(_acrData, item.id).length : 0;
+  var extraHtml = '';
+  if (item.tipe === 'Folder') {
+    extraHtml += '<div class="abt-det-lbl">Isi</div><div class="abt-det-val">' + childCount + ' item</div>';
+    if (item.deskripsi) extraHtml += '<div class="abt-det-lbl">Deskripsi</div><div class="abt-det-val">' + item.deskripsi + '</div>';
+    extraHtml += '<div style="margin-top:10px"><button class="abt-form-cancel" onclick="acrOpenFolder(\'' + item.id + '\')">Buka Folder →</button></div>';
+  } else {
+    if (item.deskripsi) extraHtml += '<div class="abt-det-lbl">Deskripsi</div><div class="abt-det-val">' + item.deskripsi + '</div>';
+    extraHtml += '<div class="abt-det-lbl">Tipe File</div><div class="abt-det-val">' + (item.tipe_file || '—') + '</div>';
+    extraHtml += '<div class="abt-det-lbl">Link Google Drive</div>';
+    extraHtml += item.link_drive
+      ? '<div style="font-size:12px;color:var(--blue);word-break:break-all"><a href="' + item.link_drive + '" target="_blank" style="color:var(--blue)">' + item.link_drive + '</a></div>'
+      : '<div class="abt-det-val" style="font-style:italic;color:var(--g400)">Belum ada link</div>';
+  }
+  el.innerHTML =
+    '<div style="font-size:28px;text-align:center;margin-bottom:8px">' + icon + '</div>'
+    + '<div class="abt-det-name">' + item.nama + '</div>'
+    + '<div class="abt-det-badges">'
+    + '<span class="adm-testi-badge-' + (item.tipe === 'Folder' ? 'off' : 'on') + '">' + item.tipe + '</span>'
+    + '<span class="adm-testi-badge-' + (item.akses === 'Semua' ? 'off' : 'on') + '" style="margin-left:4px">' + item.akses + '</span>'
+    + '</div>'
+    + extraHtml
+    + '<div class="abt-det-actions">'
+    + '<div class="abt-det-btn pri" onclick="acrShowEditForm(\'' + item.id + '\')">Edit</div>'
+    + '<div class="abt-det-btn del" onclick="acrShowConfirm()">Hapus</div>'
+    + '</div>'
+    + '<div class="abt-confirm" id="acr-confirm">'
+    + '<span class="abt-confirm-txt">Hapus "' + item.nama + '"?</span>'
+    + '<div class="abt-confirm-btns">'
+    + '<button class="abt-confirm-tidak" onclick="acrHideConfirm()">Tidak</button>'
+    + '<button class="abt-confirm-ya" onclick="acrDoHapus(\'' + item.id + '\')">Ya, hapus</button>'
+    + '</div></div>';
+}
+
+function acrOpenFolder(id) { _acrPath.push(id); _acrSelId = null; acrRender(); }
+function acrGoLevel(level) { _acrPath = _acrPath.slice(0, level); _acrSelId = null; acrRender(); }
+function acrShowConfirm() { var el = document.getElementById('acr-confirm'); if (el) el.classList.add('show'); }
+function acrHideConfirm() { var el = document.getElementById('acr-confirm'); if (el) el.classList.remove('show'); }
+
+function acrDoHapus(id) {
+  var btn = document.querySelector('.abt-confirm-ya');
+  if (btn) { btn.textContent = 'Menghapus...'; btn.disabled = true; }
+  fetch('/api/contoh', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'hapus', page_id: id })
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        _acrData = _acrData.filter(function(i) { return i.id !== id; });
+        _acrSelId = null;
+        acrRender();
+      } else { alert('Gagal hapus: ' + (res.error || '')); }
+    }).catch(function() { alert('Gagal menghubungi server.'); });
+}
+
+function acrShowForm(type) {
+  _acrFormType = type;
+  _acrEditId = null;
+  var parentId = _acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1];
+  var parentItem = parentId ? _acrData.find(function(x) { return x.id === parentId; }) : null;
+  var locLabel = parentItem ? parentItem.nama : 'Root';
+  document.getElementById('acr-form-title-txt').textContent = type === 'folder' ? 'Tambah Folder Baru' : 'Tambah File Baru';
+  acrBuildFormFields(type, null, locLabel);
+  document.getElementById('acr-form').classList.add('show');
+}
+
+function acrShowEditForm(id) {
+  var item = _acrData.find(function(x) { return x.id === id; });
+  if (!item) return;
+  _acrEditId = id;
+  _acrFormType = item.tipe === 'Folder' ? 'folder' : 'file';
+  document.getElementById('acr-form-title-txt').textContent = 'Edit ' + (item.tipe === 'Folder' ? 'Folder' : 'File');
+  acrBuildFormFields(_acrFormType, item, null);
+  document.getElementById('acr-form').classList.add('show');
+}
+
+function acrBuildFormFields(type, item, locLabel) {
+  var hint = locLabel ? '<div class="abt-form-full"><div class="abt-form-hint">📍 Lokasi: <b>' + locLabel + '</b></div></div>' : '';
+  var fields = '';
+  if (type === 'folder') {
+    fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama Folder</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: PPT Sempro"/></div>'
+      + '<div><div class="abt-form-lbl">Akses</div><select class="abt-form-sel" id="acr-f-akses"><option' + ((!item||item.akses==='Semua')?' selected':'') + '>Semua</option><option' + (item&&item.akses==='KHK'?' selected':'') + '>KHK</option><option' + (item&&item.akses==='KHU'?' selected':'') + '>KHU</option></select></div>'
+      + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
+      + hint;
+  } else {
+    fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama File</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: Contoh PPT Sempro — SPSS"/></div>'
+      + '<div><div class="abt-form-lbl">Tipe File</div><select class="abt-form-sel" id="acr-f-tipe-file"><option' + (!item||item.tipe_file==='PPT'?' selected':'') + '>PPT</option><option' + (item&&item.tipe_file==='DOCX'?' selected':'') + '>DOCX</option><option' + (item&&item.tipe_file==='PDF'?' selected':'') + '>PDF</option><option' + (item&&item.tipe_file==='Excel'?' selected':'') + '>Excel</option><option' + (item&&item.tipe_file==='Image'?' selected':'') + '>Image</option><option' + (item&&item.tipe_file==='Lainnya'?' selected':'') + '>Lainnya</option></select></div>'
+      + '<div><div class="abt-form-lbl">Akses</div><select class="abt-form-sel" id="acr-f-akses"><option' + ((!item||item.akses==='Semua')?' selected':'') + '>Semua</option><option' + (item&&item.akses==='KHK'?' selected':'') + '>KHK</option><option' + (item&&item.akses==='KHU'?' selected':'') + '>KHU</option></select></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Link Google Drive</div><input class="abt-form-inp" id="acr-f-link" value="' + (item ? item.link_drive : '') + '" placeholder="https://drive.google.com/file/d/.../preview"/></div>'
+      + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
+      + hint;
+  }
+  document.getElementById('acr-form-fields').innerHTML = fields;
+}
+
+function acrHideForm() { document.getElementById('acr-form').classList.remove('show'); }
+
+function acrSaveForm() {
+  var nama = (document.getElementById('acr-f-nama') || {}).value || '';
+  var akses = (document.getElementById('acr-f-akses') || {}).value || 'Semua';
+  var urutan = parseInt((document.getElementById('acr-f-urutan') || {}).value || 0);
+  var deskripsi = (document.getElementById('acr-f-deskripsi') || {}).value || '';
+  var tipe_file = _acrFormType === 'file' ? ((document.getElementById('acr-f-tipe-file') || {}).value || 'PPT') : '';
+  var link_drive = _acrFormType === 'file' ? ((document.getElementById('acr-f-link') || {}).value || '') : '';
+  var parentId = _acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1];
+
+  if (!nama.trim()) { alert('Nama wajib diisi!'); return; }
+
+  var btn = document.getElementById('acr-f-save-btn');
+  if (btn) { btn.textContent = 'Menyimpan...'; btn.disabled = true; }
+
+  var payload = {
+    action: _acrEditId ? 'edit' : 'tambah',
+    nama: nama.trim(),
+    tipe: _acrFormType === 'folder' ? 'Folder' : 'File',
+    akses: akses,
+    urutan: urutan,
+    deskripsi: deskripsi,
+    parent_id: parentId,
+  };
+
+  if (_acrEditId) payload.page_id = _acrEditId;
+  if (_acrFormType === 'file') {
+    payload.tipe_file = tipe_file;
+    payload.link_drive = link_drive || null;
+  }
+
+  fetch('/api/contoh', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success || res.id) {
+        _acrLoaded = false;
+        acrHideForm();
+        loadAdmContoh();
+      } else { alert('Gagal simpan: ' + (res.error || '')); }
+    }).catch(function() { alert('Gagal menghubungi server.'); })
+    .finally(function() {
+      if (btn) { btn.textContent = 'Simpan ke Notion'; btn.disabled = false; }
+    });
+}
+
+/* ===== CONTOH & REFERENSI — PORTAL CLIENT ===== */
+var _acrClientData = [];
+var _acrClientLoaded = false;
+var _acrClientPath = [];
+var _acrClientKat = '';
+
+function loadClientContoh(kategoriHarga) {
+  _acrClientKat = (kategoriHarga || '').toLowerCase();
+  if (_acrClientLoaded) { acrClientRender(); return; }
+  var listEl = document.getElementById('acr-client-grid');
+  if (listEl) listEl.innerHTML = '<div class="bt-loading">Memuat data...</div>';
+  fetch('/api/contoh')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _acrClientLoaded = true;
+      _acrClientData = data.items || [];
+      acrClientRender();
+    })
+    .catch(function() {
+      var el = document.getElementById('acr-client-grid');
+      if (el) el.innerHTML = '<div class="bt-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div></div>';
+    });
+}
+
+function acrClientCanAccess(item) {
+  var akses = (item.akses || '').toLowerCase();
+  if (akses === 'semua') return true;
+  if (akses === 'khk' && (_acrClientKat === 'khk' || _acrClientKat === 'kerjasama')) return true;
+  if (akses === 'khu' && (_acrClientKat === 'khu' || _acrClientKat === 'umum')) return true;
+  return false;
+}
+
+function acrClientBuildTree(parentId) {
+  parentId = parentId || '';
+  return _acrClientData
+    .filter(function(i) { return (i.parent_id || '') === parentId && acrClientCanAccess(i); })
+    .sort(function(a, b) { return (a.urutan || 0) - (b.urutan || 0); });
+}
+
+function acrClientRender() {
+  acrClientRenderBc();
+  acrClientRenderGrid();
+}
+
+function acrClientRenderBc() {
+  var bc = document.getElementById('acr-client-bc');
+  if (!bc) return;
+  var html = '<span style="color:var(--blue);cursor:pointer;font-weight:500" onclick="acrClientGoLevel(0)">Contoh &amp; Referensi</span>';
+  for (var i = 0; i < _acrClientPath.length; i++) {
+    var item = _acrClientData.find(function(x) { return x.id === _acrClientPath[i]; });
+    html += '<span style="color:var(--g400);margin:0 4px">›</span>';
+    var isLast = i === _acrClientPath.length - 1;
+    html += '<span style="color:' + (isLast ? 'var(--g800)' : 'var(--blue)') + ';font-weight:' + (isLast ? '600' : '400') + ';cursor:pointer" onclick="acrClientGoLevel(' + (i + 1) + ')">' + (item ? item.nama : '') + '</span>';
+  }
+  bc.innerHTML = html;
+
+  var titleEl = document.getElementById('acr-client-title');
+  if (titleEl) {
+    if (_acrClientPath.length > 0) {
+      var cur = _acrClientData.find(function(x) { return x.id === _acrClientPath[_acrClientPath.length - 1]; });
+      titleEl.textContent = cur ? cur.nama : '';
+      titleEl.style.display = 'block';
+    } else {
+      titleEl.style.display = 'none';
+    }
+  }
+}
+
+function acrClientRenderGrid() {
+  var parentId = _acrClientPath.length === 0 ? '' : _acrClientPath[_acrClientPath.length - 1];
+  var items = acrClientBuildTree(parentId);
+  var grid = document.getElementById('acr-client-grid');
+  if (!grid) return;
+
+  if (!items.length) {
+    grid.innerHTML = '<div class="bt-empty"><div class="ei">📁</div><div class="et">Tidak ada file tersedia</div></div>';
+    return;
+  }
+
+  var ACR_ICON = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄' };
+  var ACR_BG = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
+
+  grid.innerHTML = items.map(function(item) {
+    var isFolder = item.tipe === 'Folder';
+    var icon = isFolder ? (_acrClientPath.length > 0 ? '📂' : '📁') : (ACR_ICON[item.tipe_file] || '📄');
+    var bg = isFolder ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
+    var sub = isFolder ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
+    return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
+      + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
+      + '<div class="cbh-body">'
+      + '<div class="cbh-ttl" style="font-size:13px">' + item.nama + '</div>'
+      + '<div style="font-size:11px;color:var(--g400)">' + sub + '</div>'
+      + '</div></div>';
+  }).join('');
+}
+
+function acrClientClick(id) {
+  var item = _acrClientData.find(function(x) { return x.id === id; });
+  if (!item) return;
+  if (item.tipe === 'Folder') {
+    _acrClientPath.push(id);
+    acrClientClosePreview();
+    acrClientRender();
+  } else {
+    acrClientOpenPreview(item);
+  }
+}
+
+function acrClientGoLevel(level) {
+  _acrClientPath = _acrClientPath.slice(0, level);
+  acrClientClosePreview();
+  acrClientRender();
+}
+
+function acrClientOpenPreview(item) {
+  var nameEl = document.getElementById('acr-preview-name');
+  var frame = document.getElementById('acr-preview-frame');
+  var linkEl = document.getElementById('acr-preview-link');
+  var preview = document.getElementById('acr-client-preview');
+  if (!nameEl || !frame || !preview) return;
+  nameEl.textContent = item.nama;
+  if (item.link_drive) {
+    var embedUrl = item.link_drive.replace('/view', '/preview').replace('/edit', '/preview');
+    frame.src = embedUrl;
+    if (linkEl) linkEl.href = item.link_drive;
+  } else {
+    frame.src = '';
+  }
+  preview.style.display = 'block';
+  preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function acrClientClosePreview() {
+  var preview = document.getElementById('acr-client-preview');
+  var frame = document.getElementById('acr-preview-frame');
+  if (preview) preview.style.display = 'none';
+  if (frame) frame.src = '';
+}
+/* ===== END CONTOH & REFERENSI ===== */
+
 /* ===== ADMIN BANK TEORI ===== */
 var _abtData = [];
 var _abtLoaded = false;
@@ -2576,6 +2992,7 @@ function admTestiSaveEdit(id){
     <button class="adm-tab-btn" onclick="switchAdmTab('testimoni',this)">&#9733; Testimoni</button>
     <button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">&#128196; Pricelist</button>
 <button class="adm-tab-btn" onclick="switchAdmTab('bank-teori',this)">&#128218; Bank Teori</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
   </div>
   <div class="adm-body">
 
@@ -2721,6 +3138,40 @@ function admTestiSaveEdit(id){
           </div>
           <div class="adm-testi-detail" id="adm-testi-detail">
             <div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br>untuk lihat detail &amp; edit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Tab Contoh & Referensi -->
+    <div id="adm-tc-contoh" class="adm-tc">
+      <div class="abt-wrap">
+        <div class="abt-toolbar">
+          <input class="abt-search" id="acr-search" type="text" placeholder="Cari nama folder atau file..." oninput="acrFilter()"/>
+          <button class="abt-add-btn" style="background:var(--blue);margin-right:6px" onclick="acrShowForm('folder')">&#128193; + Folder</button>
+          <button class="abt-add-btn" onclick="acrShowForm('file')">&#43; Tambah File</button>
+        </div>
+        <div class="abt-count" id="acr-bc" style="font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--g100)">
+          <span style="color:var(--g600);cursor:pointer;font-weight:500" onclick="acrGoLevel(0)">Contoh &amp; Referensi</span>
+        </div>
+        <div class="abt-count" id="acr-count">Memuat...</div>
+        <div class="abt-split">
+          <div class="abt-list" id="acr-list">
+            <div class="abt-loading">Memuat...</div>
+          </div>
+          <div class="abt-detail" id="acr-detail">
+            <div class="abt-empty">Pilih folder atau file di sebelah kiri<br>untuk melihat detail</div>
+          </div>
+        </div>
+        <div class="abt-form" id="acr-form">
+          <div class="abt-form-title">
+            <span id="acr-form-title-txt">Tambah Folder</span>
+            <button class="abt-form-close" onclick="acrHideForm()">&#10005;</button>
+          </div>
+          <div class="abt-form-grid" id="acr-form-fields"></div>
+          <div class="abt-form-btns">
+            <button class="abt-form-cancel" onclick="acrHideForm()">Batal</button>
+            <button class="abt-form-save" id="acr-f-save-btn" onclick="acrSaveForm()">Simpan ke Notion</button>
           </div>
         </div>
       </div>

@@ -800,10 +800,41 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         <div>
           <div class="card">
             <div class="card-ttl">Informasi Project</div>
-            <div class="irow"><div class="ilabel">Judul Penelitian</div><div class="ival judul" id="i-judul">&#8212;</div></div>
+            <div class="irow">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div class="ilabel">Judul Penelitian</div>
+    <button id="edit-btn-judul" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer" onclick="editInfo('judul')">Edit</button>
+  </div>
+  <div class="ival judul" id="i-judul">&#8212;</div>
+  <div id="edit-wrap-judul" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
+    <input id="edit-judul-inp" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px" placeholder="Masukkan judul penelitian..."/>
+    <div style="display:flex;gap:7px">
+      <button onclick="editInfo('judul')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
+      <button id="edit-save-judul" onclick="saveInfo('judul')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
+    </div>
+  </div>
+</div>
             <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">&#8212;</div></div>
             <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">&#8212;</div></div>
-            <div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">&#8212;</div></div>
+            <div class="irow">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div class="ilabel">Jumlah Variabel</div>
+    <button id="edit-btn-variabel" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer" onclick="editInfo('variabel')">Edit</button>
+  </div>
+  <div class="ival" id="i-variabel">&#8212;</div>
+  <div id="edit-wrap-variabel" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
+    <select id="edit-variabel-sel" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px">
+      <option value="">-- Pilih --</option>
+      <option value="2 Variabel">2 Variabel</option>
+      <option value="3 Variabel">3 Variabel</option>
+      <option value="4 Variabel">4 Variabel</option>
+    </select>
+    <div style="display:flex;gap:7px">
+      <button onclick="editInfo('variabel')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
+      <button id="edit-save-variabel" onclick="saveInfo('variabel')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
+    </div>
+  </div>
+</div>
             <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">&#8212;</div></div>
             <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">&#8212;</div></div>
           </div>
@@ -1684,6 +1715,10 @@ function renderDash(d){
   if(aksesTogWrap){
     if(fromAdmin==='1'){
       aksesTogWrap.style.display='flex';
+var editBtnJudul = document.getElementById('edit-btn-judul');
+var editBtnVariabel = document.getElementById('edit-btn-variabel');
+if (editBtnJudul) editBtnJudul.style.display = 'block';
+if (editBtnVariabel) editBtnVariabel.style.display = 'block';
       window._dashPageId=d.page_id||null;
       updateAksesTogUI(d.akses_aktif!==false);
       var statusRow=document.getElementById('adm-status-row');
@@ -1691,6 +1726,10 @@ function renderDash(d){
       setStatusPillActive(d.status_project||'');
     }else{
       aksesTogWrap.style.display='none';
+var editBtnJudul = document.getElementById('edit-btn-judul');
+var editBtnVariabel = document.getElementById('edit-btn-variabel');
+if (editBtnJudul) editBtnJudul.style.display = 'none';
+if (editBtnVariabel) editBtnVariabel.style.display = 'none';
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='none';
     }
@@ -2068,6 +2107,47 @@ function verifyRatingSubmit(attempt){
         setTimeout(function(){verifyRatingSubmit(attempt+1);},delays[attempt]);
       }
     });
+}
+function editInfo(field) {
+  if (document.getElementById('dash').dataset.fromAdmin !== '1') return;
+  var pageId = window._dashPageId || null;
+  if (!pageId) return;
+  var wrapId = field === 'judul' ? 'edit-wrap-judul' : 'edit-wrap-variabel';
+  var wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+function saveInfo(field) {
+  var pageId = window._dashPageId || null;
+  if (!pageId) return;
+  var payload = { action: 'update_info', page_id: pageId };
+  if (field === 'judul') {
+    var val = document.getElementById('edit-judul-inp').value.trim();
+    payload.judul = val;
+  } else {
+    var val = document.getElementById('edit-variabel-sel').value;
+    payload.jumlah_variabel = val;
+  }
+  var btn = document.getElementById('edit-save-' + field);
+  if (btn) { btn.textContent = 'Menyimpan...'; btn.disabled = true; }
+  fetch('/api/update-client', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); }).then(function(res) {
+    if (res.success) {
+      if (field === 'judul') {
+        document.getElementById('i-judul').textContent = payload.judul || '—';
+      } else {
+        document.getElementById('i-variabel').textContent = payload.jumlah_variabel || '—';
+      }
+      document.getElementById('edit-wrap-' + (field === 'judul' ? 'judul' : 'variabel')).style.display = 'none';
+    } else { alert('Gagal menyimpan.'); }
+  }).catch(function() { alert('Gagal menghubungi server.'); })
+  .finally(function() {
+    if (btn) { btn.textContent = 'Simpan'; btn.disabled = false; }
+  });
 }
 
 /* ===== TOGGLE AKSES CLIENT ===== */

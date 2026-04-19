@@ -793,15 +793,9 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="5" fill="#22c55e"/><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
         </div>
       </div>
-      <div class="mob-ref-compact" id="mob-ref-compact" style="display:none">
-        <div class="mob-ref-info">
-          <div class="mob-ref-ttl" id="mob-ref-ttl">Referral · 0/3</div>
-          <div class="mob-ref-url" id="mob-ref-url"></div>
-        </div>
-        <button class="mob-ref-btn" id="mob-ref-btn">Salin</button>
-      </div>
-      <!-- END MOBILE ONLY -->
+      <div class="mob-ref-compact" id="mob-ref-compact" style="display:none"></div>      
 
+<!-- END MOBILE ONLY -->
       <div class="sg">
         <div>
           <div class="card">
@@ -1935,10 +1929,29 @@ function mobRenderReferral(d) {
   var ttlEl = document.getElementById('mob-ref-ttl');
   var urlEl = document.getElementById('mob-ref-url');
   var btnEl = document.getElementById('mob-ref-btn');
-  if (ttlEl) ttlEl.textContent = 'Referral · ' + Math.min(j, 3) + '/3';
-  if (urlEl) urlEl.textContent = refLink.replace('https://','');
-  if (btnEl) btnEl.onclick = function() { window._refLinkToCopy = refLink; document.getElementById('ref-popup-overlay').style.display = 'flex'; };
-  el.style.display = 'flex';
+  var sudahCukup = j >= 3;
+el.style.background = sudahCukup ? '#f0fdf4' : '#FAEEDA';
+el.style.borderColor = sudahCukup ? '#86efac' : '#FAC775';
+
+var dots = [0,1,2].map(function(i) {
+  return '<div style="flex:1;height:4px;border-radius:100px;background:'+(i<j?(sudahCukup?'#16a34a':'#BA7517'):'rgba(0,0,0,.12)')+'"></div>';
+}).join('');
+
+var hint = sudahCukup
+  ? '<div style="font-size:10px;color:#16a34a;font-weight:600;margin-bottom:8px">Syarat terpenuhi! Diskon sedang diproses.</div>'
+  : '<div style="font-size:10px;color:#854F0B;margin-bottom:8px;line-height:1.4">Ajak '+(3-j)+' orang lagi \u2192 dapat diskon Rp 50.000\u2013100.000</div>';
+
+el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+  + '<span style="font-size:10px;font-weight:600;color:'+(sudahCukup?'#166534':'#633806')+';text-transform:uppercase;letter-spacing:.4px">Referral Saya</span>'
+  + '<span style="font-size:11px;font-weight:600;color:'+(sudahCukup?'#16a34a':'#854F0B')+';background:'+(sudahCukup?'#dcfce7':'#FAC775')+';border-radius:100px;padding:2px 8px">'+Math.min(j,3)+' / 3</span>'
+  + '</div>'
+  + '<div style="display:flex;gap:4px;margin-bottom:8px">'+dots+'</div>'
+  + hint
+  + '<div style="background:rgba(0,0,0,.06);border-radius:6px;padding:5px 8px;font-size:9px;color:'+(sudahCukup?'#166534':'#633806')+';word-break:break-all;margin-bottom:8px">'+refLink.replace('https://','')+'</div>'
+  + '<button onclick="(function(){window._refLinkToCopy=\''+refLink+'\';document.getElementById(\'ref-popup-overlay\').style.display=\'flex\';})()" style="width:100%;padding:8px;background:'+(sudahCukup?'#16a34a':'#BA7517')+';color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer">Salin Link Referral</button>';
+
+el.style.display = 'flex';
+el.style.flexDirection = 'column';
 }
 
 function mobRenderDash(d) {

@@ -2115,7 +2115,18 @@ function editInfo(field) {
   var wrapId = field === 'judul' ? 'edit-wrap-judul' : 'edit-wrap-variabel';
   var wrap = document.getElementById(wrapId);
   if (!wrap) return;
-  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+  if (wrap.style.display === 'none') {
+  wrap.style.display = 'block';
+  if (field === 'judul') {
+    var current = document.getElementById('i-judul').textContent;
+    document.getElementById('edit-judul-inp').value = current === '—' ? '' : current;
+  } else {
+    var current = document.getElementById('i-variabel').textContent;
+    document.getElementById('edit-variabel-sel').value = current === '—' ? '' : current;
+  }
+} else {
+  wrap.style.display = 'none';
+}
 }
 
 function saveInfo(field) {

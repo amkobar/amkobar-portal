@@ -2558,8 +2558,25 @@ function acrClientCanAccess(item) {
 function acrClientBuildTree(parentId) {
   parentId = parentId || '';
   return _acrClientData
-    .filter(function(i) { return (i.parent_id || '') === parentId && acrClientCanAccess(i); })
+    .filter(function(i) {
+      if ((i.parent_id || '') !== parentId) return false;
+      if (!acrClientCanAccess(i)) return false;
+      if (i.tipe === 'Folder') {
+        return acrClientHasAccessibleContent(i.id);
+      }
+      return true;
+    })
     .sort(function(a, b) { return (a.urutan || 0) - (b.urutan || 0); });
+}
+
+function acrClientHasAccessibleContent(folderId) {
+  var children = _acrClientData.filter(function(i) { return (i.parent_id || '') === folderId; });
+  for (var i = 0; i < children.length; i++) {
+    if (!acrClientCanAccess(children[i])) continue;
+    if (children[i].tipe === 'File') return true;
+    if (children[i].tipe === 'Folder' && acrClientHasAccessibleContent(children[i].id)) return true;
+  }
+  return false;
 }
 
 function acrClientRender() {

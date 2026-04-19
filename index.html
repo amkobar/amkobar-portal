@@ -2428,6 +2428,7 @@ function acrShowForm(type) {
   document.getElementById('acr-form-title-txt').textContent = type === 'folder' ? 'Tambah Folder Baru' : 'Tambah File Baru';
   acrBuildFormFields(type, null, locLabel);
   document.getElementById('acr-form').classList.add('show');
+setTimeout(function(){ document.getElementById('acr-form').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
 }
 
 function acrShowEditForm(id) {
@@ -2438,6 +2439,7 @@ function acrShowEditForm(id) {
   document.getElementById('acr-form-title-txt').textContent = 'Edit ' + (item.tipe === 'Folder' ? 'Folder' : 'File');
   acrBuildFormFields(_acrFormType, item, null);
   document.getElementById('acr-form').classList.add('show');
+setTimeout(function(){ document.getElementById('acr-form').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
 }
 
 function acrBuildFormFields(type, item, locLabel) {

@@ -790,6 +790,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         <div class="mob-sisa">
           <div><div class="mob-sisa-lbl">Sisa Pembayaran</div><div class="mob-sisa-val" id="mob-sisa-amt">&#8212;</div></div>
           <span style="font-size:18px">&#128176;</span>
+<div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="5" fill="#22c55e"/><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
         </div>
       </div>
       <div class="mob-ref-compact" id="mob-ref-compact" style="display:none">
@@ -1904,6 +1905,10 @@ function mobRenderPayment(d) {
       + '</div>';
   }).join('');
   if (sisaEl) sisaEl.textContent = d.sisa_pembayaran != null ? fmtRp(d.sisa_pembayaran) : '—';
+var sisaIcEl = document.querySelector('.mob-sisa span');
+if (sisaIcEl) sisaIcEl.style.display = d.sisa_pembayaran === 0 ? 'none' : '';
+var lunasEl = document.getElementById('mob-lunas-badge');
+if (lunasEl) lunasEl.style.display = d.sisa_pembayaran === 0 ? 'flex' : 'none';
 }
 
 function mobRenderReferral(d) {

@@ -1890,6 +1890,7 @@ function mobRenderPayment(d) {
 }
 
 function mobRenderReferral(d) {
+  if (window.innerWidth > 768) return;
   var el = document.getElementById('mob-ref-compact');
   if (!el) return;
   var j = d.jumlah_referral || 0;

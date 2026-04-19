@@ -1598,14 +1598,7 @@ async function doLogin(){
   finally{btn.disabled=false;btn.textContent='Masuk →';}
 }
 document.getElementById('kode-inp').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('kode-inp').addEventListener('focus', function() {
-  setTimeout(function() {
-    document.getElementById('kode-inp').scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'center' 
-    });
-  }, 300);
-});
+
 /* ===== SESSION STORAGE — persist login saat refresh ===== */
 (function(){
   var savedKode=sessionStorage.getItem('amkobar_kode');

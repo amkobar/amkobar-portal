@@ -1711,6 +1711,10 @@ function renderDash(d){
   document.getElementById('sisa-amt').textContent=d.sisa_pembayaran!=null?fmtRp(d.sisa_pembayaran):'\u2014';
 var sisaIcDesktop = document.getElementById('sisa-ic');
 if (sisaIcDesktop) {
+  sisaIcDesktop.style.background = d.sisa_pembayaran === 0 ? 'none' : '';
+  sisaIcDesktop.style.width = d.sisa_pembayaran === 0 ? 'auto' : '';
+  sisaIcDesktop.style.height = d.sisa_pembayaran === 0 ? 'auto' : '';
+  sisaIcDesktop.style.borderRadius = d.sisa_pembayaran === 0 ? '0' : '';
   sisaIcDesktop.innerHTML = d.sisa_pembayaran === 0
     ? '<div style="display:flex;align-items:center;gap:5px;background:#14532d;border-radius:100px;padding:5px 12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" fill="#22c55e"/><polyline points="3,6 5,8 9,4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:11px;font-weight:600;color:#4ade80">Lunas</span></div>'
     : '&#128176;';

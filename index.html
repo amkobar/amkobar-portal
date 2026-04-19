@@ -1719,10 +1719,10 @@ function toggleAksesClient(){
   var isAktif=togEl&&togEl.classList.contains('on');
   var newVal=!isAktif;
   updateAksesTogUI(newVal);
-  fetch('/api/update-akses',{
+  fetch('/api/update-client',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({page_id:pageId,akses_aktif:newVal})
+    body:JSON.stringify({action:'update_akses',page_id:pageId,akses_aktif:newVal})
   }).catch(function(){
     updateAksesTogUI(isAktif);
     alert('Gagal update. Coba lagi.');
@@ -1791,10 +1791,10 @@ function cancelStatusUndo(){
 }
 
 function doSaveStatus(pageId,status){
-  fetch('/api/update-status',{
+  fetch('/api/update-client',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({page_id:pageId,status:status})
+    body:JSON.stringify({action:'update_status',page_id:pageId,status:status})
   }).then(function(r){return r.json();}).then(function(res){
     if(!res.success){
       var sb=document.getElementById('d-sbadge');

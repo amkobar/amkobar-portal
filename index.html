@@ -624,9 +624,9 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 .mob-step-line.done{background:#22c55e}
 .mob-step-line.pending{background:#e2e8f0}
 .mob-step:last-child .mob-step-line{display:none}
-.mob-step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-bottom:4px;position:relative;z-index:1;flex-shrink:0}
+.mob-step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-bottom:5px;position:relative;z-index:1;flex-shrink:0}
 .mob-step-dot.done{background:#22c55e;color:#fff}
-.mob-step-dot.active{background:#1a6bbd;color:#fff}
+.mob-step-dot.active{background:#0d2144;color:#fff;box-shadow:0 0 0 3px #bfdbfe}
 .mob-step-dot.pending{background:#e2e8f0;color:#94a3b8}
 .mob-step-lbl{font-size:8px;text-align:center;line-height:1.2}
 .mob-step-lbl.done{color:#16a34a;font-weight:500}
@@ -1825,7 +1825,9 @@ function mobRenderSteps(status) {
     var s2 = i + 1;
     var cls = s2 < activeStep ? 'done' : (s2 === activeStep ? 'active' : 'pending');
     var lineCls = s2 < activeStep ? 'done' : 'pending';
-    var icon = s2 < activeStep ? '✓' : s2;
+    var icon = s2 < activeStep
+      ? '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2.5,6.5 5,9 10.5,3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      : (s2 === activeStep ? s2 : s2);
     html += '<div class="mob-step">'
       + '<div class="mob-step-dot ' + cls + '">' + icon + '</div>'
       + '<div class="mob-step-lbl ' + cls + '">' + MOB_STEPS[i] + '</div>'

@@ -2615,7 +2615,7 @@ function acrClientRenderGrid() {
   if (!grid) return;
 
   if (!items.length) {
-    grid.innerHTML = '<div class="bt-empty"><div class="ei">📁</div><div class="et">Tidak ada file tersedia</div></div>';
+    grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia untuk akun Anda</div></div>'
     return;
   }
 

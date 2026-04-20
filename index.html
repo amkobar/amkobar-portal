@@ -1879,8 +1879,8 @@ function mobRenderSteps(status) {
   var html = '';
   for (var i = 0; i < 4; i++) {
     var s2 = i + 1;
-    var cls = s2 < activeStep ? 'done' : (s2 === activeStep ? 'active' : 'pending');
-    var lineCls = s2 < activeStep ? 'done' : 'pending';
+    var cls = s2 <= activeStep ? 'done' : 'pending';
+var lineCls = s2 <= activeStep ? 'done' : 'pending';
     var icon = s2 <= activeStep
   ? '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2.5,6.5 5,9 10.5,3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   : s2;

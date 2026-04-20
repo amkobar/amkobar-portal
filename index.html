@@ -31,7 +31,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .nav-links a:hover{color:#fff;background:rgba(255,255,255,.1)}
 .nav-links a.on{color:#fff;background:var(--blue)}
 .pg{display:none}.pg.on{display:block}
-.hero{background:linear-gradient(140deg,var(--navy) 0%,var(--navy-2) 55%,#1e4a8a 100%);padding:72px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero{background:linear-gradient(140deg,var(--navy) 0%,var(--navy-2) 55%,#1e4a8a 100%);min-height:calc(100vh - 62px);padding:40px 48px;text-align:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center}
 .hero::before{content:'';position:absolute;top:-120px;right:-120px;width:420px;height:420px;background:radial-gradient(circle,rgba(26,107,189,.25) 0%,transparent 70%);pointer-events:none}
 .hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(240,165,0,.08) 0%,transparent 70%);pointer-events:none}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:5px 16px;font-size:12px;color:rgba(255,255,255,.75);margin-bottom:22px;backdrop-filter:blur(8px)}

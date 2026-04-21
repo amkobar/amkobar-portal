@@ -963,7 +963,7 @@ function loadFaqPublik(){
     document.getElementById('faq-pub').innerHTML=items.map(function(f){
       return '<div class="faq-item" onclick="toggleFaq(this)">'
         +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
-        +'<div class="faq-a">'+f.jawaban+'</div></div>';
+        +'<div class="faq-a">'+f.jawaban.replace(/\n/g,'<br>')+'</div></div>';
     }).join('');
   }).catch(function(){buildFaq('faq-pub',FAQ_PUB);});
 }
@@ -975,7 +975,7 @@ function loadFaqSidang(){
     document.getElementById('faq-in').innerHTML=items.map(function(f){
       return '<div class="faq-item" onclick="toggleFaq(this)">'
         +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'
-        +'<div class="faq-a">'+f.jawaban+'</div></div>';
+        +'<div class="faq-a">'+f.jawaban.replace(/\n/g,'<br>')+'</div></div>';
     }).join('');
   }).catch(function(){buildFaq('faq-in',FAQ_IN);});
 }
@@ -988,7 +988,7 @@ function toggleFaq(el){
   if(!isOpen)el.classList.add('open');
 }
 function buildFaq(id,data){
-  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a}</div></div>`).join('');
+  document.getElementById(id).innerHTML=data.map(f=>`<div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">${f.q}<div class="faq-arr">&#9660;</div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}</div></div>`).join('');
 }
 function buildCBH(){
   const el=document.getElementById('cbh-content');let html='';
@@ -1307,7 +1307,42 @@ function renderFaqSection(sec,items,kat){
   }).join('');
 }
 
-
+function faqInsert(id,before,after){
+  var ta=document.getElementById('faq-edit-a-'+id);
+  if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  var sel=ta.value.substring(start,end);
+  ta.value=ta.value.substring(0,start)+before+sel+after+ta.value.substring(end);
+  ta.selectionStart=start+before.length;
+  ta.selectionEnd=start+before.length+sel.length;
+  ta.focus();
+}
+function faqInsertNewline(id){
+  var ta=document.getElementById('faq-edit-a-'+id);
+  if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  ta.value=ta.value.substring(0,start)+'\n'+ta.value.substring(end);
+  ta.selectionStart=ta.selectionEnd=start+1;
+  ta.focus();
+}
+function faqInsertTab(id){
+  var ta=document.getElementById('faq-edit-a-'+id);
+  if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  ta.value=ta.value.substring(0,start)+'    '+ta.value.substring(end);
+  ta.selectionStart=ta.selectionEnd=start+4;
+  ta.focus();
+}
+function faqInsertColor(id,color){
+  if(!color)return;
+  var ta=document.getElementById('faq-edit-a-'+id);
+  if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  var sel=ta.value.substring(start,end)||'teks';
+  var tag='<span style="color:'+color+'">'+sel+'</span>';
+  ta.value=ta.value.substring(0,start)+tag+ta.value.substring(end);
+  ta.focus();
+}
 function editFaqRowBtn(btn){
   var id=btn.dataset.id;
   var q=btn.dataset.q;
@@ -1331,7 +1366,24 @@ function editFaqRow(id,q,a,urutan,kat){
   form.id='faq-edit-form-'+id;
   form.innerHTML='<div class="faq-crud-form-ttl">&#9998; Edit Pertanyaan</div>'
     +'<input class="faq-crud-inp" id="faq-edit-q-'+id+'" value="'+q+'"/>'
-    +'<textarea class="faq-crud-ta" id="faq-edit-a-'+id+'">'+a+'</textarea>'
+    '<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:10px">'
++'<div style="background:var(--g50);border-bottom:1px solid var(--g200);padding:5px 8px;display:flex;align-items:center;justify-content:space-between">'
++'<span style="font-size:10px;color:var(--g400)">Format teks</span>'
++'<div style="display:flex;gap:4px">'
++'<button type="button" onclick="faqInsert(&quot;'+id+'&quot;,&quot;<b>&quot;,&quot;</b>&quot;)" style="padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;border:1px solid var(--g200);background:#fff;cursor:pointer">B</button>'
++'<button type="button" onclick="faqInsert(&quot;'+id+'&quot;,&quot;<i>&quot;,&quot;</i>&quot;)" style="padding:3px 8px;border-radius:5px;font-size:11px;font-style:italic;border:1px solid var(--g200);background:#fff;cursor:pointer">I</button>'
++'<button type="button" onclick="faqInsertNewline(&quot;'+id+'&quot;)" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">↵</button>'
++'<button type="button" onclick="faqInsertTab(&quot;'+id+'&quot;)" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">⇥</button>'
++'<select onchange="faqInsertColor(&quot;'+id+'&quot;,this.value);this.value=&quot;&quot;" style="font-size:10px;border:1px solid var(--g200);border-radius:5px;padding:2px 4px;background:#fff;cursor:pointer">'
++'<option value="">Warna teks</option>'
++'<option value="#dc2626">Merah</option>'
++'<option value="#16a34a">Hijau</option>'
++'<option value="#1a6bbd">Biru</option>'
++'<option value="#f0a500">Kuning</option>'
++'</select>'
++'</div></div>'
++'<textarea class="faq-crud-ta" id="faq-edit-a-'+id+'" style="border:none;border-radius:0;margin-bottom:0">'+a+'</textarea>'
++'</div>'
     +'<input class="faq-crud-inp" id="faq-edit-urutan-'+id+'" type="number" value="'+urutan+'" placeholder="Urutan"/>'
     +'<div class="faq-crud-form-btns">'
     +'<button class="faq-crud-cancel" onclick="cancelEditFaq(&quot;'+id+'&quot;)">Batal</button>'

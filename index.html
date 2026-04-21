@@ -1366,7 +1366,7 @@ function editFaqRow(id,q,a,urutan,kat){
   form.id='faq-edit-form-'+id;
   form.innerHTML='<div class="faq-crud-form-ttl">&#9998; Edit Pertanyaan</div>'
     +'<input class="faq-crud-inp" id="faq-edit-q-'+id+'" value="'+q+'"/>'
-    +'<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:10px">'
+    '<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:10px">'
 +'<div style="background:var(--g50);border-bottom:1px solid var(--g200);padding:5px 8px;display:flex;align-items:center;justify-content:space-between">'
 +'<span style="font-size:10px;color:var(--g400)">Format teks</span>'
 +'<div style="display:flex;gap:4px">'
@@ -1688,6 +1688,8 @@ async function doLogin(){
     window._lastKode=kodeUpper;
     sessionStorage.setItem('amkobar_kode',kodeUpper);
     sessionStorage.setItem('amkobar_kat', data.kategori_harga || '');
+    sessionStorage.setItem('amkobar_aplikasi', data.aplikasi || '');
+    sessionStorage.setItem('amkobar_aplikasi', data.aplikasi || '');
     resetAutoLogout();
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -3055,10 +3057,17 @@ function loadClientContoh(kategoriHarga) {
 
 function acrClientCanAccess(item) {
   var akses = (item.akses || '').toLowerCase();
-  if (akses === 'semua') return true;
-  if (akses === 'khk' && (_acrClientKat === 'khk' || _acrClientKat === 'kerjasama')) return true;
-  if (akses === 'khu' && (_acrClientKat === 'khu' || _acrClientKat === 'umum')) return true;
-  return false;
+  var aplikasiClient = (sessionStorage.getItem('amkobar_aplikasi') || '').toLowerCase();
+  var aplikasiItem = (item.aplikasi || 'semua').toLowerCase();
+
+  if (akses !== 'semua') {
+    if (akses === 'khk' && _acrClientKat !== 'khk' && _acrClientKat !== 'kerjasama') return false;
+    if (akses === 'khu' && _acrClientKat !== 'khu' && _acrClientKat !== 'umum') return false;
+  }
+
+  if (aplikasiItem !== 'semua' && aplikasiClient && aplikasiItem !== aplikasiClient) return false;
+
+  return true;
 }
 
 function acrClientBuildTree(parentId) {

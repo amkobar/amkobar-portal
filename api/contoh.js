@@ -61,16 +61,17 @@ export default async function handler(req, res) {
         };
 
         return {
-          id: p.id,
-          nama: getText('Name'),
-          tipe: getSelect('Tipe'),
-          tipe_file: getSelect('Tipe_File'),
-          parent_id: getText('Parent_ID'),
-          akses: getSelect('Akses'),
-          link_drive: props['Link_Drive']?.url || '',
-          deskripsi: getText('Deskripsi'),
-          urutan: props['Urutan']?.number || 0,
-        };
+  id: p.id,
+  nama: getText('Name'),
+  tipe: getSelect('Tipe'),
+  tipe_file: getSelect('Tipe_File'),
+  parent_id: getText('Parent_ID'),
+  akses: getSelect('Akses'),
+  aplikasi: getSelect('Aplikasi'),
+  link_drive: props['Link_Drive']?.url || '',
+  deskripsi: getText('Deskripsi'),
+  urutan: props['Urutan']?.number || 0,
+};
       }).filter(t => t.nama);
 
       return res.status(200).json({ items });
@@ -83,7 +84,7 @@ export default async function handler(req, res) {
   // ===== POST: tambah / edit / hapus =====
   if (req.method === 'POST') {
     try {
-      const { action, page_id, nama, tipe, tipe_file, parent_id, akses, link_drive, deskripsi, urutan } = req.body || {};
+      const { action, page_id, nama, tipe, tipe_file, parent_id, akses, aplikasi, link_drive, deskripsi, urutan } = req.body || {};
 
       // --- TAMBAH ---
       if (action === 'tambah') {
@@ -100,6 +101,7 @@ export default async function handler(req, res) {
         };
 
         if (tipe_file) properties['Tipe_File'] = { select: { name: tipe_file } };
+if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (link_drive) properties['Link_Drive'] = { url: link_drive };
         if (parent_id) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };
 
@@ -131,6 +133,7 @@ export default async function handler(req, res) {
         if (tipe !== undefined) properties['Tipe'] = { select: { name: tipe } };
         if (tipe_file !== undefined) properties['Tipe_File'] = tipe_file ? { select: { name: tipe_file } } : { select: null };
         if (akses !== undefined) properties['Akses'] = { select: { name: akses } };
+if (aplikasi !== undefined) properties['Aplikasi'] = aplikasi ? { select: { name: aplikasi } } : { select: null };
         if (link_drive !== undefined) properties['Link_Drive'] = { url: link_drive || null };
         if (deskripsi !== undefined) properties['Deskripsi'] = { rich_text: [{ text: { content: deskripsi } }] };
         if (urutan !== undefined) properties['Urutan'] = { number: urutan };

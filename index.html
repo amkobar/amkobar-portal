@@ -1186,7 +1186,7 @@ window.addEventListener('resize',function(){if(_testimoniFiltered.length)buildCa
 /* ===== NAVIGASI ===== */
 
 /* ===== ADMIN ===== */
-const ADMIN_PW='bob4d4nm4yo';
+const ADMIN_PW='amkobar2026admin';
 var _admClients=[];
 var _admFilter='Semua';
 var _admLoaded=false;
@@ -1365,7 +1365,37 @@ function renderFaqSection(sec,items,kat){
       +'</div>';
   }).join('');
 }
-
+function faqModalInsert(id,before,after){
+  var ta=document.getElementById(id);if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  var sel=ta.value.substring(start,end);
+  ta.value=ta.value.substring(0,start)+before+sel+after+ta.value.substring(end);
+  ta.selectionStart=start+before.length;
+  ta.selectionEnd=start+before.length+sel.length;
+  ta.focus();
+}
+function faqModalNewline(id){
+  var ta=document.getElementById(id);if(!ta)return;
+  var start=ta.selectionStart;
+  ta.value=ta.value.substring(0,start)+'\n'+ta.value.substring(start);
+  ta.selectionStart=ta.selectionEnd=start+1;
+  ta.focus();
+}
+function faqModalTab(id){
+  var ta=document.getElementById(id);if(!ta)return;
+  var start=ta.selectionStart;
+  ta.value=ta.value.substring(0,start)+'    '+ta.value.substring(start);
+  ta.selectionStart=ta.selectionEnd=start+4;
+  ta.focus();
+}
+function faqModalColor(id,color){
+  if(!color)return;
+  var ta=document.getElementById(id);if(!ta)return;
+  var start=ta.selectionStart,end=ta.selectionEnd;
+  var sel=ta.value.substring(start,end)||'teks';
+  ta.value=ta.value.substring(0,start)+'<span style="color:'+color+'">'+sel+'</span>'+ta.value.substring(end);
+  ta.focus();
+}
 function faqInsert(id,before,after){
   var ta=document.getElementById('faq-edit-a-'+id);
   if(!ta)return;
@@ -3850,11 +3880,11 @@ function admTestiSaveEdit(id){
       </div>
     </div>
     <!-- Modal Tambah FAQ -->
-    <div class="faq-modal-overlay" id="faq-modal-overlay" onclick="if(event.target===this)closeFaqModal()">
+    <div class="faq-modal-overlay" id="faq-modal-overlay">
       <div class="faq-modal">
         <div class="faq-modal-hdr">
           <div class="faq-modal-ttl">&#43; Tambah Pertanyaan</div>
-          <div class="faq-modal-close" onclick="closeFaqModal()">&#10005;</div>
+         
         </div>
         <div class="faq-modal-lbl">Kategori</div>
         <div class="faq-modal-cats">
@@ -3865,7 +3895,25 @@ function admTestiSaveEdit(id){
         <div class="faq-modal-lbl">Pertanyaan</div>
         <input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
         <div class="faq-modal-lbl">Jawaban</div>
-        <textarea class="faq-crud-ta" id="faq-modal-a" placeholder="Tulis jawaban lengkap di sini..."></textarea>
+<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:14px">
+  <div style="background:var(--g50);border-bottom:1px solid var(--g200);padding:5px 8px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:10px;color:var(--g400)">Format teks</span>
+    <div style="display:flex;gap:4px">
+      <button type="button" onclick="faqModalInsert('faq-modal-a','<b>','</b>')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;border:1px solid var(--g200);background:#fff;cursor:pointer">B</button>
+      <button type="button" onclick="faqModalInsert('faq-modal-a','<i>','</i>')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-style:italic;border:1px solid var(--g200);background:#fff;cursor:pointer">I</button>
+      <button type="button" onclick="faqModalNewline('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">↵</button>
+      <button type="button" onclick="faqModalTab('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">⇥</button>
+      <select onchange="faqModalColor('faq-modal-a',this.value);this.value=''" style="font-size:10px;border:1px solid var(--g200);border-radius:5px;padding:2px 4px;background:#fff;cursor:pointer">
+        <option value="">Warna teks</option>
+        <option value="#dc2626">Merah</option>
+        <option value="#16a34a">Hijau</option>
+        <option value="#1a6bbd">Biru</option>
+        <option value="#f0a500">Kuning</option>
+      </select>
+    </div>
+  </div>
+  <textarea id="faq-modal-a" style="width:100%;padding:8px 10px;border:none;border-radius:0;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;resize:none;height:100px;outline:none;display:block;box-sizing:border-box" placeholder="Tulis jawaban lengkap di sini..."></textarea>
+</div>
         <div class="faq-modal-lbl">Aplikasi</div>
 <select class="faq-crud-inp" id="faq-modal-aplikasi" style="cursor:pointer">
   <option value="Semua">Semua</option>

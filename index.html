@@ -2612,7 +2612,8 @@ function mpCanAccess(item){
 
 function mpGetRootFolder(name){
   return _mpData.find(function(i){
-    return i.tipe==='Folder'&&(i.parent_id||'')===''}&&i.nama===name);
+    return i.tipe==='Folder'&&(i.parent_id||'')===''&&i.nama===name;
+  });
 }
 
 function mpGetChildren(parentId){

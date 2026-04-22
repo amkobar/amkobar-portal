@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   if (!NOTION_TOKEN) return res.status(500).json({ error: 'Konfigurasi server tidak lengkap.' });
 
-  const { action, id, pertanyaan, jawaban, kategori, urutan, aplikasi } = req.body;
+  const { action, id, pertanyaan, jawaban, kategori, urutan } = req.body;
 
   try {
     // TAMBAH — buat halaman baru di Notion
@@ -30,8 +30,7 @@ export default async function handler(req, res) {
             'Jawaban': { rich_text: [{ text: { content: jawaban || '' } }] },
             'Kategori': { select: { name: kategori || 'Publik' } },
             'Urutan': { number: urutan || 0 },
-            'Aktif': { checkbox: true },
-'Aplikasi': { select: { name: aplikasi || 'Semua' } }
+            'Aktif': { checkbox: true }
           }
         })
       });
@@ -56,7 +55,6 @@ export default async function handler(req, res) {
             'Jawaban': { rich_text: [{ text: { content: jawaban || '' } }] },
             'Kategori': { select: { name: kategori || 'Publik' } },
             'Urutan': { number: urutan || 0 },
-'Aplikasi': { select: { name: aplikasi || 'Semua' } }
           }
         })
       });

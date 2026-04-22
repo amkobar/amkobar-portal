@@ -1018,7 +1018,12 @@ function loadFaqPublik(){
 
 function loadFaqSidang(){
   fetch('/api/get-faq').then(function(r){return r.json();}).then(function(data){
-    var items=data.filter(function(f){return f.kategori==='Sidang';});
+    var appClient=(sessionStorage.getItem('amkobar_aplikasi')||'').toLowerCase();
+    var items=data.filter(function(f){
+      if(f.kategori!=='Sidang')return false;
+      var appFaq=(f.aplikasi||'Semua').toLowerCase();
+      return appFaq==='semua'||appFaq===appClient;
+    });
     if(!items.length){buildFaq('faq-in',FAQ_IN);return;}
     document.getElementById('faq-in').innerHTML=items.map(function(f){
       return '<div class="faq-item" onclick="toggleFaq(this)">'

@@ -1542,8 +1542,7 @@ function saveFaqTambah(){
   fetch('/api/update-faq',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    var aplikasi=document.getElementById('faq-modal-aplikasi').value||'Semua';
-body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aplikasi:aplikasi})
+body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aplikasi:(document.getElementById('faq-modal-aplikasi').value||'Semua')})
   }).then(function(r){return r.json();}).then(function(data){
     if(data.success){
       _faqData.push({id:data.id,pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aktif:true});

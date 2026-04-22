@@ -30,8 +30,7 @@ export default async function handler(req, res) {
             'Jawaban': { rich_text: [{ text: { content: jawaban || '' } }] },
             'Kategori': { select: { name: kategori || 'Publik' } },
             'Urutan': { number: urutan || 0 },
-            'Aktif': { checkbox: true },
-'Aplikasi': { select: { name: aplikasi || 'Semua' } }
+            'Aktif': { checkbox: true }
           }
         })
       });

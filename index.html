@@ -662,6 +662,35 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 .mob-ref-btn{background:#BA7517;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
 /* ===== END MOBILE DASHBOARD ===== */
 
+/* ===== MATERI & PANDUAN ===== */
+.mp-subtab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;color:var(--g600);background:none;transition:all .2s}
+.mp-subtab.on{background:var(--navy);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(13,33,68,.18)}
+.mp-subtab:hover:not(.on){background:var(--g100);color:var(--navy)}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.mp-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--g200);box-shadow:var(--sh);transition:all .2s;cursor:pointer}
+.mp-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:#bfdbfe}
+.mp-card-top{height:72px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.mp-card-top.spss{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.mp-card-top.smartpls{background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
+.mp-card-top.lisrel{background:linear-gradient(135deg,#fef9c3,#fef08a)}
+.mp-card-top.eviews{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.mp-card-top.amos{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+.mp-card-top.warppls{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
+.mp-card-top.semua{background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+.mp-card-body{padding:12px 14px}
+.mp-card-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px;line-height:1.3}
+.mp-card-sub{font-size:11px;color:var(--g400);margin-bottom:6px}
+.mp-card-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px}
+.mp-tag-spss{background:#dbeafe;color:#1d4ed8}
+.mp-tag-smartpls{background:#ede9fe;color:#6d28d9}
+.mp-tag-lisrel{background:#fef9c3;color:#854d0e}
+.mp-tag-eviews{background:#fce7f3;color:#9d174d}
+.mp-tag-amos{background:#dcfce7;color:#166534}
+.mp-tag-warppls{background:#ffedd5;color:#9a3412}
+.mp-tag-semua{background:#dcfce7;color:#166534}
+.mp-empty{text-align:center;padding:48px 20px;color:var(--g400)}
+.mp-empty .ei{font-size:40px;margin-bottom:12px}
+.mp-empty .et{font-size:14px;font-weight:600;color:var(--g600);margin-bottom:5px}
 
 </style>
 </head>
@@ -2531,38 +2560,6 @@ function admTestiSetStar2(id,val){
   var el=document.getElementById('adm-testi-ep-stars');
   if(el)el.querySelectorAll('.adm-testi-star-b').forEach(function(b,i){b.classList.toggle('on',i<val);});
 }
-/* ===== MATERI & PANDUAN ===== */
-.mp-subtab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;color:var(--g600);background:none;transition:all .2s}
-.mp-subtab.on{background:var(--navy);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(13,33,68,.18)}
-.mp-subtab:hover:not(.on){background:var(--g100);color:var(--navy)}
-.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-.mp-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--g200);box-shadow:var(--sh);transition:all .2s;cursor:pointer}
-.mp-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:#bfdbfe}
-.mp-card-top{height:72px;display:flex;align-items:center;justify-content:center;font-size:28px}
-.mp-card-top.spss{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
-.mp-card-top.smartpls{background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
-.mp-card-top.lisrel{background:linear-gradient(135deg,#fef9c3,#fef08a)}
-.mp-card-top.eviews{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
-.mp-card-top.amos{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
-.mp-card-top.warppls{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
-.mp-card-top.semua{background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
-.mp-card-body{padding:12px 14px}
-.mp-card-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px;line-height:1.3}
-.mp-card-sub{font-size:11px;color:var(--g400);margin-bottom:6px}
-.mp-card-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px}
-.mp-tag-spss{background:#dbeafe;color:#1d4ed8}
-.mp-tag-smartpls{background:#ede9fe;color:#6d28d9}
-.mp-tag-lisrel{background:#fef9c3;color:#854d0e}
-.mp-tag-eviews{background:#fce7f3;color:#9d174d}
-.mp-tag-amos{background:#dcfce7;color:#166534}
-.mp-tag-warppls{background:#ffedd5;color:#9a3412}
-.mp-tag-semua{background:#dcfce7;color:#166534}
-.mp-empty{text-align:center;padding:48px 20px;color:var(--g400)}
-.mp-empty .ei{font-size:40px;margin-bottom:12px}
-.mp-empty .et{font-size:14px;font-weight:600;color:var(--g600);margin-bottom:5px}
-
-
-/* ===== MATERI & PANDUAN ===== */
 var _mpLoaded=false;
 var _mpData=[];
 var _mpActiveSub='modul';

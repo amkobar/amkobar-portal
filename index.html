@@ -1543,7 +1543,8 @@ function saveFaqTambah(){
   fetch('/api/update-faq',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan})
+    var aplikasi=document.getElementById('faq-modal-aplikasi').value||'Semua';
+body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aplikasi:aplikasi})
   }).then(function(r){return r.json();}).then(function(data){
     if(data.success){
       _faqData.push({id:data.id,pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aktif:true});
@@ -3863,7 +3864,19 @@ function admTestiSaveEdit(id){
         <input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
         <div class="faq-modal-lbl">Jawaban</div>
         <textarea class="faq-crud-ta" id="faq-modal-a" placeholder="Tulis jawaban lengkap di sini..."></textarea>
-        <div class="faq-modal-lbl">Urutan Tampil</div>
+        <div class="faq-modal-lbl">Aplikasi</div>
+<select class="faq-crud-inp" id="faq-modal-aplikasi" style="cursor:pointer">
+  <option value="Semua">Semua</option>
+  <option value="SPSS">SPSS</option>
+  <option value="SmartPLS">SmartPLS</option>
+  <option value="Lisrel">Lisrel</option>
+  <option value="AMOS">AMOS</option>
+  <option value="WarpPLS">WarpPLS</option>
+  <option value="Eviews">Eviews</option>
+</select>
+<div class="faq-modal-lbl">Urutan Tampil</div>
+<input class="faq-crud-inp" id="faq-modal-urutan" type="number" placeholder="Contoh: 9"/>
+<div class="faq-modal-lbl">Urutan Tampil</div>
         <input class="faq-crud-inp" id="faq-modal-urutan" type="number" placeholder="Contoh: 9"/>
         <div class="faq-modal-btns">
           <button class="faq-modal-cancel" onclick="closeFaqModal()">Batal</button>

@@ -2829,8 +2829,10 @@ function btBackToGrid() {
 }
 
 function btRenderBidangChips() {
+  var el = document.getElementById('bt-bidang-chips');
+  if (!el) return;
   var bidang = ['Semua'].concat(_btData.bidang);
-  document.getElementById('bt-bidang-chips').innerHTML = bidang.map(function(b) {
+  el.innerHTML = bidang.map(function(b) {
     return '<button class="bt-chip' + (b === _btActiveBidang ? ' on' : '') + '" onclick="btSetBidang(this,\'' + b + '\')">' + b + '</button>';
   }).join('');
 }

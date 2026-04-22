@@ -769,7 +769,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
     <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
 <button class="tab-btn" onclick="switchTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
 <button class="tab-btn" onclick="switchTab('bank-teori',this)">&#128218; Bank Teori</button>
-    <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Cara Baca Hasil</button>
+    <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Materi &amp; Panduan</button>
     <button class="tab-btn" onclick="switchTab('faq-in',this)">&#128172; FAQ Sidang</button>
   </div>
   <div class="dash-body">
@@ -915,7 +915,26 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
       </div>
     </div>
 
-    <div id="tc-cbh" class="tc"><div id="cbh-content"></div></div>
+    <div id="tc-cbh" class="tc">
+  <div id="mp-app-banner" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,#1a3560 0%,#1a6bbd 100%);border-radius:12px;padding:12px 16px;margin-bottom:20px">
+    <div style="width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📖</div>
+    <div style="flex:1">
+      <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:#fff;margin-bottom:1px">Materi &amp; Panduan</div>
+      <div style="font-size:11.5px;color:rgba(255,255,255,.6)">Konten disesuaikan dengan aplikasi yang kamu gunakan</div>
+    </div>
+    <div id="mp-app-tag" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:100px;font-size:11.5px;font-weight:600"></div>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:5px;border-radius:12px;border:1px solid var(--g200);width:fit-content">
+    <button class="mp-subtab on" id="mp-sub-modul" onclick="mpSwitchSub('modul',this)">📄 Modul</button>
+    <button class="mp-subtab" id="mp-sub-cbh" onclick="mpSwitchSub('cbh',this)">🎬 Cara Baca Hasil</button>
+  </div>
+  <div id="mp-panel-modul">
+    <div id="mp-modul-grid" class="mp-grid"></div>
+  </div>
+  <div id="mp-panel-cbh" style="display:none">
+    <div id="cbh-content"></div>
+  </div>
+</div>
     <div id="tc-faq-in" class="tc">
       <div style="max-width:720px">
         <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">FAQ Pertanyaan Sidang</h2>
@@ -1149,7 +1168,8 @@ function switchTab(tab,btn){
   btn.classList.add('on');
   document.getElementById('tc-'+tab).classList.add('on');
   if(tab==='bank-teori') loadBankTeori();
-  if(tab==='contoh'){
+if(tab==='cbh') loadMateriPanduan();
+if(tab==='contoh'){
     var kat=sessionStorage.getItem('amkobar_kat')||'';
     loadClientContoh(kat);
   }
@@ -2082,9 +2102,9 @@ function setDashBottomNav() {
     + '<span class="bottom-tab-ic">&#128218;</span>'
     + '<span class="bottom-tab-lbl">Bank Teori</span>'
     + '</button>'
-    + '<button class="bottom-tab" id="bt-dash-cbh" onclick="switchTabMob(\'cbh\',this)">'
+    +'<button class="bottom-tab" id="bt-dash-cbh" onclick="switchTabMob(\'cbh\',this)">'
     + '<span class="bottom-tab-ic">&#128214;</span>'
-    + '<span class="bottom-tab-lbl">Cara Baca</span>'
+    + '<span class="bottom-tab-lbl">Materi</span>'
     + '</button>'
     + '<button class="bottom-tab" id="bt-dash-faq-in" onclick="switchTabMob(\'faq-in\',this)">'
     + '<span class="bottom-tab-ic">&#128172;</span>'
@@ -2511,6 +2531,196 @@ function admTestiSetStar2(id,val){
   var el=document.getElementById('adm-testi-ep-stars');
   if(el)el.querySelectorAll('.adm-testi-star-b').forEach(function(b,i){b.classList.toggle('on',i<val);});
 }
+/* ===== MATERI & PANDUAN ===== */
+.mp-subtab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;color:var(--g600);background:none;transition:all .2s}
+.mp-subtab.on{background:var(--navy);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(13,33,68,.18)}
+.mp-subtab:hover:not(.on){background:var(--g100);color:var(--navy)}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.mp-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--g200);box-shadow:var(--sh);transition:all .2s;cursor:pointer}
+.mp-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:#bfdbfe}
+.mp-card-top{height:72px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.mp-card-top.spss{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.mp-card-top.smartpls{background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
+.mp-card-top.lisrel{background:linear-gradient(135deg,#fef9c3,#fef08a)}
+.mp-card-top.eviews{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.mp-card-top.amos{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+.mp-card-top.warppls{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
+.mp-card-top.semua{background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+.mp-card-body{padding:12px 14px}
+.mp-card-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px;line-height:1.3}
+.mp-card-sub{font-size:11px;color:var(--g400);margin-bottom:6px}
+.mp-card-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px}
+.mp-tag-spss{background:#dbeafe;color:#1d4ed8}
+.mp-tag-smartpls{background:#ede9fe;color:#6d28d9}
+.mp-tag-lisrel{background:#fef9c3;color:#854d0e}
+.mp-tag-eviews{background:#fce7f3;color:#9d174d}
+.mp-tag-amos{background:#dcfce7;color:#166534}
+.mp-tag-warppls{background:#ffedd5;color:#9a3412}
+.mp-tag-semua{background:#dcfce7;color:#166534}
+.mp-empty{text-align:center;padding:48px 20px;color:var(--g400)}
+.mp-empty .ei{font-size:40px;margin-bottom:12px}
+.mp-empty .et{font-size:14px;font-weight:600;color:var(--g600);margin-bottom:5px}
+
+
+/* ===== MATERI & PANDUAN ===== */
+var _mpLoaded=false;
+var _mpData=[];
+var _mpActiveSub='modul';
+
+function loadMateriPanduan(){
+  var banner=document.getElementById('mp-app-banner');
+  var tag=document.getElementById('mp-app-tag');
+  var app=sessionStorage.getItem('amkobar_aplikasi')||'';
+  if(banner){banner.style.display='flex';}
+  if(tag){tag.textContent=app||'Semua';}
+  if(_mpLoaded){mpRender();return;}
+  var grid=document.getElementById('mp-modul-grid');
+  if(grid)grid.innerHTML='<div class="bt-loading">Memuat data...</div>';
+  fetch('/api/contoh')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      _mpLoaded=true;
+      _mpData=data.items||[];
+      mpRender();
+    })
+    .catch(function(){
+      var g=document.getElementById('mp-modul-grid');
+      if(g)g.innerHTML='<div class="mp-empty"><div class="ei">⚠️</div><div class="et">Gagal memuat data</div></div>';
+    });
+}
+
+function mpSwitchSub(sub,btn){
+  _mpActiveSub=sub;
+  document.querySelectorAll('.mp-subtab').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('mp-panel-modul').style.display=sub==='modul'?'block':'none';
+  document.getElementById('mp-panel-cbh').style.display=sub==='cbh'?'block':'none';
+}
+
+function mpCanAccess(item){
+  var kat=(sessionStorage.getItem('amkobar_kat')||'').toLowerCase();
+  var appClient=(sessionStorage.getItem('amkobar_aplikasi')||'').toLowerCase();
+  var akses=(item.akses||'').toLowerCase();
+  var appItem=(item.aplikasi||'semua').toLowerCase();
+  if(akses!=='semua'){
+    if(akses==='khk'&&kat!=='khk'&&kat!=='kerjasama')return false;
+    if(akses==='khu'&&kat!=='khu'&&kat!=='umum')return false;
+  }
+  if(appItem!=='semua'&&appClient&&appItem!==appClient)return false;
+  return true;
+}
+
+function mpGetRootFolder(name){
+  return _mpData.find(function(i){
+    return i.tipe==='Folder'&&(i.parent_id||'')===''}&&i.nama===name);
+}
+
+function mpGetChildren(parentId){
+  return _mpData.filter(function(i){
+    return (i.parent_id||'')===parentId&&mpCanAccess(i);
+  }).sort(function(a,b){return(a.urutan||0)-(b.urutan||0);});
+}
+
+function mpGetAppClass(app){
+  var a=(app||'').toLowerCase().replace(/\s/g,'');
+  var map={spss:'spss',smartpls:'smartpls',lisrel:'lisrel',eviews:'eviews',amos:'amos',warppls:'warppls'};
+  return map[a]||'semua';
+}
+
+function mpRender(){
+  mpRenderModul();
+  buildCBH();
+}
+
+function mpRenderModul(){
+  var grid=document.getElementById('mp-modul-grid');
+  if(!grid)return;
+  var folder=_mpData.find(function(i){
+    return i.tipe==='Folder'&&(i.parent_id||'')==='';
+  });
+  // cari folder root bernama "Modul"
+  var modulFolder=_mpData.find(function(i){
+    return i.tipe==='Folder'&&(i.parent_id||'')===''&&i.nama==='Modul';
+  });
+  if(!modulFolder){
+    grid.innerHTML='<div class="mp-empty"><div class="ei">📄</div><div class="et">Belum ada modul tersedia</div><div>Modul akan segera ditambahkan.</div></div>';
+    return;
+  }
+  var items=mpGetChildren(modulFolder.id);
+  if(!items.length){
+    grid.innerHTML='<div class="mp-empty"><div class="ei">📄</div><div class="et">Belum ada modul untuk aplikasi ini</div></div>';
+    return;
+  }
+  grid.innerHTML=items.map(function(item){
+    var appCls=mpGetAppClass(item.aplikasi);
+    var tagCls='mp-tag-'+appCls;
+    var appLabel=item.aplikasi||'Semua Aplikasi';
+    var icon=item.tipe==='Folder'?'📁':'📄';
+    return '<div class="mp-card" onclick="mpOpenItem(\''+item.id+'\')">'
+      +'<div class="mp-card-top '+appCls+'">'+icon+'</div>'
+      +'<div class="mp-card-body">'
+      +'<div class="mp-card-ttl">'+item.nama+'</div>'
+      +'<div class="mp-card-sub">'+(item.tipe_file||item.tipe)+(item.deskripsi?' · '+item.deskripsi:'')+'</div>'
+      +'<div class="mp-card-tag '+tagCls+'">'+appLabel+'</div>'
+      +'</div></div>';
+  }).join('');
+}
+
+function mpOpenItem(id){
+  var item=_mpData.find(function(x){return x.id===id;});
+  if(!item)return;
+  if(item.tipe==='File'&&item.link_drive){
+    // buka preview seperti di Contoh & Referensi
+    var preview=document.getElementById('acr-client-preview');
+    var frame=document.getElementById('acr-preview-frame');
+    var nameEl=document.getElementById('acr-preview-name');
+    var linkEl=document.getElementById('acr-preview-link');
+    if(!preview||!frame)return;
+    if(nameEl)nameEl.textContent=item.nama;
+    var embedUrl=item.link_drive.replace('/view','/preview').replace('/edit','/preview');
+    frame.src=embedUrl;
+    if(linkEl)linkEl.href=item.link_drive;
+    // switch ke panel modul dulu pastikan visible
+    var panelModul=document.getElementById('mp-panel-modul');
+    if(panelModul){
+      // inject preview ke dalam panel modul
+      var existPreview=document.getElementById('mp-file-preview');
+      if(!existPreview){
+        var div=document.createElement('div');
+        div.id='mp-file-preview';
+        div.style.marginTop='16px';
+        div.style.border='1px solid var(--g200)';
+        div.style.borderRadius='var(--r)';
+        div.style.overflow='hidden';
+        div.innerHTML='<div style="padding:10px 14px;background:var(--g50);border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between">'
+          +'<div style="font-size:13px;font-weight:600;color:var(--navy)" id="mp-preview-name"></div>'
+          +'<button onclick="mpClosePreview()" style="font-size:12px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">✕ Tutup</button>'
+          +'</div>'
+          +'<iframe id="mp-preview-frame" style="width:100%;height:480px;border:none" allowfullscreen></iframe>'
+          +'<div style="padding:10px 14px;border-top:1px solid var(--g200)">'
+          +'<a id="mp-preview-link" href="#" target="_blank" class="drive-btn" style="margin-top:0">🔗 Buka di Google Drive</a>'
+          +'</div>';
+        panelModul.appendChild(div);
+      }
+      var pName=document.getElementById('mp-preview-name');
+      var pFrame=document.getElementById('mp-preview-frame');
+      var pLink=document.getElementById('mp-preview-link');
+      if(pName)pName.textContent=item.nama;
+      if(pFrame)pFrame.src=embedUrl;
+      if(pLink)pLink.href=item.link_drive;
+      document.getElementById('mp-file-preview').style.display='block';
+      document.getElementById('mp-file-preview').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
+}
+
+function mpClosePreview(){
+  var el=document.getElementById('mp-file-preview');
+  var frame=document.getElementById('mp-preview-frame');
+  if(el)el.style.display='none';
+  if(frame)frame.src='';
+}
+/* ===== END MATERI & PANDUAN ===== */
 /* ===== BANK TEORI ===== */
 var _btData = { teori: [], bidang: [] };
 var _btLoaded = false;
@@ -2957,7 +3167,7 @@ function acrBuildFormFields(type, item, locLabel) {
     fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama Folder</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: PPT Sempro"/></div>'
       + '<div><div class="abt-form-lbl">Akses</div><select class="abt-form-sel" id="acr-f-akses"><option' + ((!item||item.akses==='Semua')?' selected':'') + '>Semua</option><option' + (item&&item.akses==='KHK'?' selected':'') + '>KHK</option><option' + (item&&item.akses==='KHU'?' selected':'') + '>KHU</option></select></div>'
 + '<div><div class="abt-form-lbl">Aplikasi</div><select class="abt-form-sel" id="acr-f-aplikasi"><option'+((!item||!item.aplikasi||item.aplikasi==='Semua')?' selected':'')+'>Semua</option><option'+(item&&item.aplikasi==='SPSS'?' selected':'')+'>SPSS</option><option'+(item&&item.aplikasi==='SmartPLS'?' selected':'')+'>SmartPLS</option><option'+(item&&item.aplikasi==='Lisrel'?' selected':'')+'>Lisrel</option><option'+(item&&item.aplikasi==='AMOS'?' selected':'')+'>AMOS</option><option'+(item&&item.aplikasi==='WarpPLS'?' selected':'')+'>WarpPLS</option><option'+(item&&item.aplikasi==='Eviews'?' selected':'')+'>Eviews</option></select></div>'
-+ '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
++ '<div><div class="abt-form-lbl">Urutan</div>
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
       + hint;
   } else {

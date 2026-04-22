@@ -1026,7 +1026,10 @@ function loadFaqSidang(){
       if(!aplikasiClient)return true;
       return appItem===aplikasiClient;
     });
-    if(!items.length){buildFaq('faq-in',FAQ_IN);return;}
+    if(!items.length){
+  document.getElementById('faq-in').innerHTML='<div class="empty-state"><div class="ei">📋</div><div class="et">FAQ Sidang sedang dipersiapkan</div><div style="font-size:13.5px">Materi pertanyaan sidang untuk aplikasi kamu akan segera tersedia.</div></div>';
+  return;
+}
     document.getElementById('faq-in').innerHTML=items.map(function(f){
       return '<div class="faq-item" onclick="toggleFaq(this)">'
         +'<div class="faq-q">'+f.pertanyaan+'<div class="faq-arr">&#9660;</div></div>'

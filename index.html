@@ -1018,12 +1018,7 @@ function loadFaqPublik(){
 
 function loadFaqSidang(){
   fetch('/api/get-faq').then(function(r){return r.json();}).then(function(data){
-    var appClient=(sessionStorage.getItem('amkobar_aplikasi')||'').toLowerCase();
-    var items=data.filter(function(f){
-      if(f.kategori!=='Sidang')return false;
-      var appFaq=(f.aplikasi||'Semua').toLowerCase();
-      return appFaq==='semua'||appFaq===appClient;
-    });
+    var items=data.filter(function(f){return f.kategori==='Sidang';});
     if(!items.length){buildFaq('faq-in',FAQ_IN);return;}
     document.getElementById('faq-in').innerHTML=items.map(function(f){
       return '<div class="faq-item" onclick="toggleFaq(this)">'
@@ -1514,7 +1509,6 @@ function openFaqModal(kat){
   document.getElementById('faq-modal-q').value='';
   document.getElementById('faq-modal-a').value='';
   document.getElementById('faq-modal-urutan').value='';
-  document.getElementById('faq-modal-aplikasi').value='Semua';
   document.querySelectorAll('.faq-modal-cat').forEach(function(c){c.classList.remove('on');});
   var map={'Publik':'pub','Sidang':'sid','CBH':'cbh'};
   var active=document.querySelector('.faq-modal-cat.'+map[kat]);
@@ -1542,7 +1536,7 @@ function saveFaqTambah(){
   fetch('/api/update-faq',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aplikasi:(document.getElementById('faq-modal-aplikasi').value||'Semua')})
+    body:JSON.stringify({action:'tambah',pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan})
   }).then(function(r){return r.json();}).then(function(data){
     if(data.success){
       _faqData.push({id:data.id,pertanyaan:q,jawaban:a,kategori:_faqModalKat,urutan:urutan,aktif:true});
@@ -3862,16 +3856,6 @@ function admTestiSaveEdit(id){
         <input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
         <div class="faq-modal-lbl">Jawaban</div>
         <textarea class="faq-crud-ta" id="faq-modal-a" placeholder="Tulis jawaban lengkap di sini..."></textarea>
-        <div class="faq-modal-lbl">Aplikasi</div>
-<select class="faq-crud-inp" id="faq-modal-aplikasi">
-  <option value="Semua">Semua Aplikasi</option>
-  <option value="SPSS">SPSS</option>
-  <option value="SmartPLS">SmartPLS</option>
-  <option value="Lisrel">Lisrel</option>
-  <option value="AMOS">AMOS</option>
-  <option value="WarpPLS">WarpPLS</option>
-  <option value="Eviews">Eviews</option>
-</select>
         <div class="faq-modal-lbl">Urutan Tampil</div>
         <input class="faq-crud-inp" id="faq-modal-urutan" type="number" placeholder="Contoh: 9"/>
         <div class="faq-modal-btns">

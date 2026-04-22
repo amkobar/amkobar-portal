@@ -38,6 +38,7 @@ export default async function handler(req, res) {
       kategori: page.properties['Kategori']?.select?.name || '',
       urutan: page.properties['Urutan']?.number || 0,
       aktif: page.properties['Aktif']?.checkbox || false,
+      aplikasi: page.properties['Aplikasi']?.select?.name || 'Semua',
     }));
 
     return res.status(200).json(items);

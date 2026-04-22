@@ -3165,7 +3165,7 @@ function acrBuildFormFields(type, item, locLabel) {
     fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama Folder</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: PPT Sempro"/></div>'
       + '<div><div class="abt-form-lbl">Akses</div><select class="abt-form-sel" id="acr-f-akses"><option' + ((!item||item.akses==='Semua')?' selected':'') + '>Semua</option><option' + (item&&item.akses==='KHK'?' selected':'') + '>KHK</option><option' + (item&&item.akses==='KHU'?' selected':'') + '>KHU</option></select></div>'
 + '<div><div class="abt-form-lbl">Aplikasi</div><select class="abt-form-sel" id="acr-f-aplikasi"><option'+((!item||!item.aplikasi||item.aplikasi==='Semua')?' selected':'')+'>Semua</option><option'+(item&&item.aplikasi==='SPSS'?' selected':'')+'>SPSS</option><option'+(item&&item.aplikasi==='SmartPLS'?' selected':'')+'>SmartPLS</option><option'+(item&&item.aplikasi==='Lisrel'?' selected':'')+'>Lisrel</option><option'+(item&&item.aplikasi==='AMOS'?' selected':'')+'>AMOS</option><option'+(item&&item.aplikasi==='WarpPLS'?' selected':'')+'>WarpPLS</option><option'+(item&&item.aplikasi==='Eviews'?' selected':'')+'>Eviews</option></select></div>'
-+ '<div><div class="abt-form-lbl">Urutan</div>
++ '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
       + hint;
   } else {

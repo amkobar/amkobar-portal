@@ -692,6 +692,30 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 .mp-empty .ei{font-size:40px;margin-bottom:12px}
 .mp-empty .et{font-size:14px;font-weight:600;color:var(--g600);margin-bottom:5px}
 
+/* ===== CONTOH & REFERENSI — GROUPED VIEW ===== */
+.acr-section{margin-bottom:28px}
+.acr-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--g200)}
+.acr-section-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.acr-section-ttl{font-size:15px;font-weight:500;color:var(--g800)}
+.acr-section-cnt{font-size:12px;color:var(--g400);margin-left:auto}
+/* Mobile list view */
+@media(max-width:768px){
+  #acr-client-grid{display:block}
+  .acr-section-grid{display:flex;flex-direction:column;gap:8px}
+  .acr-list-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:0.5px solid var(--g200);border-radius:10px;cursor:pointer}
+  .acr-list-thumb{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .acr-list-info{flex:1;min-width:0}
+  .acr-list-title{font-size:13px;font-weight:500;color:var(--g800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .acr-list-desc{font-size:11px;color:var(--g400);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .acr-list-badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:100px;flex-shrink:0}
+  .acr-list-badge.spss{background:#dbeafe;color:#1d4ed8}
+  .acr-list-badge.smartpls{background:#ede9fe;color:#6d28d9}
+  .acr-list-badge.semua{background:#f1f5f9;color:#475569}
+}
+/* Desktop grid */
+@media(min-width:769px){
+  .acr-section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+}
 </style>
 </head>
 <body>
@@ -3376,33 +3400,103 @@ function acrClientRenderBc() {
 }
 
 function acrClientRenderGrid() {
-  var parentId = _acrClientPath.length === 0 ? '' : _acrClientPath[_acrClientPath.length - 1];
-  var items = acrClientBuildTree(parentId);
   var grid = document.getElementById('acr-client-grid');
   if (!grid) return;
 
-  if (!items.length) {
-    grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>'
+  // Kalau sedang di dalam subfolder, tampilkan flat grid seperti biasa
+  if (_acrClientPath.length > 0) {
+    var parentId = _acrClientPath[_acrClientPath.length - 1];
+    var items = acrClientBuildTree(parentId);
+    if (!items.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
+      return;
+    }
+    var ACR_ICON = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄' };
+    var ACR_BG = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
+    grid.innerHTML = '<div class="acr-section-grid">' + items.map(function(item) {
+      var isFolder = item.tipe === 'Folder';
+      var icon = isFolder ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
+      var bg = isFolder ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
+      var sub = isFolder ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
+      return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
+        + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
+        + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px">' + item.nama + '</div>'
+        + '<div style="font-size:11px;color:var(--g400)">' + sub + '</div></div></div>';
+    }).join('') + '</div>';
+    return;
+  }
+
+  // Root level — tampilkan grouped per folder root
+  var rootFolders = acrClientBuildTree('');
+  if (!rootFolders.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
     return;
   }
 
   var ACR_ICON = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄' };
-  var ACR_BG = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
+  var ACR_BG = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#f1f5f9' };
+  var SECTION_COLORS = {
+    'Bisnis':'#EAF3DE', 'Pemasaran':'#EEEDFE', 'MSDM':'#FAEEDA',
+    'Keuangan':'#FCEBEB', 'Default':'#E6F1FB'
+  };
+  var SECTION_ICONS = {
+    'Bisnis':'📊', 'Pemasaran':'📣', 'MSDM':'👥', 'Keuangan':'💰', 'Default':'📁'
+  };
+  var isMobile = window.innerWidth <= 768;
 
-  grid.innerHTML = items.map(function(item) {
-    var isFolder = item.tipe === 'Folder';
-    var icon = isFolder ? (_acrClientPath.length > 0 ? '📂' : '📁') : (ACR_ICON[item.tipe_file] || '📄');
-    var bg = isFolder ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
-    var sub = isFolder ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
-    return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
-      + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
-      + '<div class="cbh-body">'
-      + '<div class="cbh-ttl" style="font-size:13px">' + item.nama + '</div>'
-      + '<div style="font-size:11px;color:var(--g400)">' + sub + '</div>'
-      + '</div></div>';
+  grid.innerHTML = rootFolders.map(function(folder) {
+    var children = acrClientBuildTree(folder.id).slice(0, 6);
+    if (!children.length) return '';
+    var sectionColor = SECTION_COLORS[folder.nama] || SECTION_COLORS['Default'];
+    var sectionIcon = SECTION_ICONS[folder.nama] || SECTION_ICONS['Default'];
+
+    var itemsHtml = '';
+    if (isMobile) {
+      // List view untuk mobile
+      itemsHtml = children.map(function(item) {
+        var isFolder = item.tipe === 'Folder';
+        var icon = isFolder ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
+        var bg = isFolder ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
+        var desc = item.deskripsi || (isFolder ? acrClientBuildTree(item.id).length + ' item' : item.tipe_file || '');
+        var appLower = (item.aplikasi || 'semua').toLowerCase().replace(/\s/g, '');
+        var appClass = ['spss','smartpls'].includes(appLower) ? appLower : 'semua';
+        var appLabel = item.aplikasi && item.aplikasi !== 'Semua' ? item.aplikasi : '';
+        return '<div class="acr-list-item" onclick="acrClientClick(\'' + item.id + '\')">'
+          + '<div class="acr-list-thumb" style="background:' + bg + '">' + icon + '</div>'
+          + '<div class="acr-list-info">'
+          + '<div class="acr-list-title">' + item.nama + '</div>'
+          + (desc ? '<div class="acr-list-desc">' + desc + '</div>' : '')
+          + '</div>'
+          + (appLabel ? '<span class="acr-list-badge ' + appClass + '">' + appLabel + '</span>' : '')
+          + '</div>';
+      }).join('');
+    } else {
+      // Grid view untuk desktop
+      itemsHtml = children.map(function(item) {
+        var isFolder = item.tipe === 'Folder';
+        var icon = isFolder ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
+        var bg = isFolder ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
+        var sub = isFolder ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
+        return '<div class="cbh-card" style="cursor:pointer;position:relative" onclick="acrClientClick(\'' + item.id + '\')">'
+          + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;background:' + bg + ';border-bottom:1px solid var(--g100);position:relative">' + icon
+          + (item.aplikasi && item.aplikasi !== 'Semua' ? '<span style="position:absolute;top:6px;right:6px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:100px;background:' + (item.aplikasi === 'SPSS' ? '#dbeafe' : '#ede9fe') + ';color:' + (item.aplikasi === 'SPSS' ? '#1d4ed8' : '#6d28d9') + '">' + item.aplikasi + '</span>' : '')
+          + '</div>'
+          + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:12px">' + item.nama + '</div>'
+          + (item.deskripsi ? '<div style="font-size:10px;color:var(--g400);line-height:1.4;margin-top:2px">' + item.deskripsi + '</div>' : '')
+          + '<div style="font-size:10px;color:var(--g400);margin-top:3px">' + sub + '</div></div></div>';
+      }).join('');
+    }
+
+    return '<div class="acr-section">'
+      + '<div class="acr-section-hdr">'
+      + '<div class="acr-section-ic" style="background:' + sectionColor + '">' + sectionIcon + '</div>'
+      + '<div class="acr-section-ttl">' + folder.nama + '</div>'
+      + '<div class="acr-section-cnt">' + children.length + ' file</div>'
+      + '</div>'
+      + '<div class="acr-section-grid">' + itemsHtml + '</div>'
+      + '</div>';
   }).join('');
 }
-
 function acrClientClick(id) {
   var item = _acrClientData.find(function(x) { return x.id === id; });
   if (!item) return;

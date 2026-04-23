@@ -3229,6 +3229,12 @@ function acrBuildFormFields(type, item, locLabel) {
     fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama Folder</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: PPT Sempro"/></div>'
       + '<div><div class="abt-form-lbl">Akses</div><select class="abt-form-sel" id="acr-f-akses"><option' + ((!item||item.akses==='Semua')?' selected':'') + '>Semua</option><option' + (item&&item.akses==='KHK'?' selected':'') + '>KHK</option><option' + (item&&item.akses==='KHU'?' selected':'') + '>KHU</option></select></div>'
 + '<div><div class="abt-form-lbl">Aplikasi</div><select class="abt-form-sel" id="acr-f-aplikasi"><option'+((!item||!item.aplikasi||item.aplikasi==='Semua')?' selected':'')+'>Semua</option><option'+(item&&item.aplikasi==='SPSS'?' selected':'')+'>SPSS</option><option'+(item&&item.aplikasi==='SmartPLS'?' selected':'')+'>SmartPLS</option><option'+(item&&item.aplikasi==='Lisrel'?' selected':'')+'>Lisrel</option><option'+(item&&item.aplikasi==='AMOS'?' selected':'')+'>AMOS</option><option'+(item&&item.aplikasi==='WarpPLS'?' selected':'')+'>WarpPLS</option><option'+(item&&item.aplikasi==='Eviews'?' selected':'')+'>Eviews</option></select></div>'
++ '<div class="abt-form-full"><div class="abt-form-lbl">Pindah ke Folder</div><select class="abt-form-sel" id="acr-f-parent">'
++ '<option value="">-- Root (tidak dipindah) --</option>'
++ _acrData.filter(function(x){return x.tipe==='Folder';}).map(function(f){
+    return '<option value="'+f.id+'"'+(item&&item.parent_id===f.id?' selected':'')+'>'+f.nama+'</option>';
+  }).join('')
++ '</select></div>'
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
       + hint;
@@ -3266,7 +3272,8 @@ var aplikasi = (document.getElementById('acr-f-aplikasi') || {}).value || 'Semua
   var tipe_file = _acrFormType === 'file' ? ((document.getElementById('acr-f-tipe-file') || {}).value || 'PPT') : '';
   var link_raw = _acrFormType === 'file' ? ((document.getElementById('acr-f-link') || {}).value || '') : '';
   var link_drive = link_raw ? acrConvertToPreview(link_raw, tipe_file) : '';
-  var parentId = _acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1];
+  var parentSel = document.getElementById('acr-f-parent');
+var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1]);
 
   if (!nama.trim()) { alert('Nama wajib diisi!'); return; }
 

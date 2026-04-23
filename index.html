@@ -2165,6 +2165,10 @@ el.innerHTML = '<div style="display:flex;align-items:center;justify-content:spac
   + '<div style="display:flex;gap:4px;margin-bottom:8px">'+dots+'</div>'
   + hint
   + '<button onclick="(function(){window._refLinkToCopy=\''+refLink+'\';document.getElementById(\'ref-popup-overlay\').style.display=\'flex\';})()" style="width:100%;padding:8px;background:'+(sudahCukup?'#16a34a':'#0d2144')+';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Salin Link Referral</button>';
+if (window.innerWidth <= 768) {
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+}
 }
 
 function mobRenderDash(d) {

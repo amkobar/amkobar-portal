@@ -929,8 +929,9 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         </div>
         <iframe id="acr-preview-frame" style="width:100%;height:480px;border:none;" allowfullscreen></iframe>
         <div style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
-          <a id="acr-preview-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0">&#128279; Buka di Google Drive</a>
-        </div>
+  <a id="acr-preview-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0">&#128279; Buka di Google Drive</a>
+  <a id="acr-download-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0;background:#e8f2fc;color:#1a6bbd;border-color:#bfdbfe">&#11015; Download</a>
+</div>
       </div>
     </div>
 
@@ -3599,6 +3600,12 @@ function acrClientOpenPreview(item) {
     var embedUrl = item.link_drive.replace('/view', '/preview').replace('/edit', '/preview');
     frame.src = embedUrl;
     if (linkEl) linkEl.href = item.link_drive;
+var dlEl = document.getElementById('acr-download-link');
+if (dlEl) {
+  var m = item.link_drive.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  var fileId = m ? m[1] : '';
+  dlEl.href = fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : item.link_drive;
+}
   } else {
     frame.src = '';
   }

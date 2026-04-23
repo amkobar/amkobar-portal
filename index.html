@@ -600,9 +600,6 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 .mob-notif{display:none}
 .mob-pay-card{display:none}
 .mob-ref-compact{display:none}
-@media(max-width:768px){
-  .mob-ref-compact{display:flex !important}
-}
 #mob-notif{display:none;align-items:center;gap:12px;background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:10px;padding:12px 16px;margin-bottom:14px}
 #mob-notif.blue{background:#E6F1FB;border-color:#85B7EB}
 #mob-notif.red{background:#FCEBEB;border-color:#F09595}
@@ -623,12 +620,11 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
   .mob-notif.blue .mob-notif-txt{color:#0C447C}
   .mob-notif.red .mob-notif-txt{color:#A32D2D}
   .mob-pay-card{display:block;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--g100);margin-bottom:10px;box-shadow:var(--sh)}
-  .mob-ref-compact{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#FAEEDA;border-radius:10px;padding:10px 12px;border:0.5px solid #FAC775;margin-bottom:10px}
+  .mob-ref-compact{display:flex;flex-direction:column;background:#FAEEDA;border-radius:12px;padding:12px;border:0.5px solid #FAC775;margin-bottom:10px}
   .sg{grid-template-columns:1fr}
   .card{display:none}
   .ref-card-right{display:none !important}
 }
-
 /* mob steps */
 .mob-steps{display:flex;align-items:flex-start;position:relative;margin-bottom:12px}
 .mob-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1}
@@ -2163,14 +2159,12 @@ var hint = sudahCukup
   : '<div style="font-size:10px;color:#854F0B;margin-bottom:8px;line-height:1.4">Ajak '+(3-j)+' orang lagi \u2192 dapat diskon Rp 50.000\u2013100.000</div>';
 
 el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
-  + '<span style="font-size:10px;font-weight:600;color:'+(sudahCukup?'#166534':'#633806')+';text-transform:uppercase;letter-spacing:.4px">Referral Saya</span>'
-  + '<span style="font-size:11px;font-weight:600;color:'+(sudahCukup?'#16a34a':'#854F0B')+';background:'+(sudahCukup?'#dcfce7':'#FAC775')+';border-radius:100px;padding:2px 8px">'+Math.min(j,3)+' / 3</span>'
+  + '<span style="font-size:10px;font-weight:500;color:#633806;text-transform:uppercase;letter-spacing:.4px">Referral Saya</span>'
+  + '<span style="font-size:11px;font-weight:600;color:#854F0B;background:#FAC775;border-radius:100px;padding:2px 8px">'+Math.min(j,3)+' / 3</span>'
   + '</div>'
   + '<div style="display:flex;gap:4px;margin-bottom:8px">'+dots+'</div>'
   + hint
-  + '<div style="background:rgba(0,0,0,.06);border-radius:6px;padding:5px 8px;font-size:9px;color:'+(sudahCukup?'#166534':'#633806')+';word-break:break-all;margin-bottom:8px">'+refLink.replace('https://','')+'</div>'
-  + '<button onclick="(function(){window._refLinkToCopy=\''+refLink+'\';document.getElementById(\'ref-popup-overlay\').style.display=\'flex\';})()" style="width:100%;padding:8px;background:'+(sudahCukup?'#16a34a':'#0d2144')+';color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer">Salin Link Referral</button>';
-el.style.display = 'flex';
+  + '<button onclick="(function(){window._refLinkToCopy=\''+refLink+'\';document.getElementById(\'ref-popup-overlay\').style.display=\'flex\';})()" style="width:100%;padding:8px;background:'+(sudahCukup?'#16a34a':'#0d2144')+';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Salin Link Referral</button>';
 }
 
 function mobRenderDash(d) {

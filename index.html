@@ -3235,6 +3235,9 @@ function acrBuildFormFields(type, item, locLabel) {
     return '<option value="'+f.id+'"'+(item&&item.parent_id===f.id?' selected':'')+'>'+f.nama+'</option>';
   }).join('')
 + '</select></div>'
++ '<div class="abt-form-full"><div class="abt-form-lbl">Pindah ke Folder</div><select class="abt-form-sel" id="acr-f-parent"><option value="">-- Tidak dipindah --</option>'
++ _acrData.filter(function(x){return x.tipe==='Folder';}).map(function(f){return '<option value="'+f.id+'"'+(item&&item.parent_id===f.id?' selected':'')+'>'+f.nama+'</option>';}).join('')
++ '</select></div>'
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
       + hint;

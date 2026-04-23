@@ -3424,6 +3424,18 @@ function acrClientRenderGrid() {
     return;
   }
 
+  // Auto-enter jika root hanya punya 1 folder
+  if (_acrClientPath.length === 0 && children.length === 1 && children[0].tipe === 'Folder') {
+    _acrClientPath.push(children[0].id);
+    acrClientRenderBc();
+    parentId = _acrClientPath[_acrClientPath.length - 1];
+    children = acrClientBuildTree(parentId);
+    if (!children.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
+      return;
+    }
+  }
+
   var subFolders = children.filter(function(i){ return i.tipe==='Folder'; });
   var directFiles = children.filter(function(i){ return i.tipe==='File'; });
 

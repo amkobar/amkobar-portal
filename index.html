@@ -848,7 +848,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="5" fill="#22c55e"/><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
         </div>
       </div>
-      <div class="mob-ref-compact" id="mob-ref-compact" style="display:none"></div>      
+      <div class="mob-ref-compact" id="mob-ref-compact"></div>      
 
 <!-- END MOBILE ONLY -->
       <div class="sg">
@@ -2165,10 +2165,6 @@ el.innerHTML = '<div style="display:flex;align-items:center;justify-content:spac
   + '<div style="display:flex;gap:4px;margin-bottom:8px">'+dots+'</div>'
   + hint
   + '<button onclick="(function(){window._refLinkToCopy=\''+refLink+'\';document.getElementById(\'ref-popup-overlay\').style.display=\'flex\';})()" style="width:100%;padding:8px;background:'+(sudahCukup?'#16a34a':'#0d2144')+';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Salin Link Referral</button>';
-if (window.innerWidth <= 768) {
-  el.style.display = 'flex';
-  el.style.flexDirection = 'column';
-}
 }
 
 function mobRenderDash(d) {

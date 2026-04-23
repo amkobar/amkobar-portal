@@ -3411,153 +3411,137 @@ function acrClientRenderGrid() {
   if (!grid) return;
 
   var ACR_ICON = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄' };
-  var ACR_BG = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
+  var ACR_BG_FLAT = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
   var SECTION_COLORS = { 'Bisnis':'#EAF3DE','Pemasaran':'#EEEDFE','MSDM':'#FAEEDA','Keuangan':'#FCEBEB' };
   var SECTION_ICONS = { 'Bisnis':'📊','Pemasaran':'📣','MSDM':'👥','Keuangan':'💰' };
   var isMobile = window.innerWidth <= 768;
 
-  // Kalau sudah masuk subfolder dalam (level 2+), tampilkan flat grid
-  if (_acrClientPath.length >= 2) {
-    var parentId = _acrClientPath[_acrClientPath.length - 1];
-    var items = acrClientBuildTree(parentId);
-    if (!items.length) {
-      grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
-      return;
-    }
-    grid.innerHTML = '<div class="acr-section-grid">' + items.map(function(item) {
-      var icon = item.tipe === 'Folder' ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
-      var bg = item.tipe === 'Folder' ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
-      var sub = item.tipe === 'Folder' ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
-      return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
-        + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
-        + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:12px">' + item.nama + '</div>'
-        + '<div style="font-size:10px;color:var(--g400);margin-top:2px">' + sub + '</div></div></div>';
-    }).join('') + '</div>';
-    return;
-  }
-
-  // Level 0 (root) — tampilkan folder utama sebagai card biasa
-  if (_acrClientPath.length === 0) {
-    var rootFolders = acrClientBuildTree('');
-    if (!rootFolders.length) {
-      grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
-      return;
-    }
-    grid.innerHTML = '<div class="acr-section-grid">' + rootFolders.map(function(folder) {
-      var count = acrClientBuildTree(folder.id).length;
-      return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + folder.id + '\')">'
-        + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#E6F1FB;border-bottom:1px solid var(--g100)">📁</div>'
-        + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px">' + folder.nama + '</div>'
-        + '<div style="font-size:11px;color:var(--g400)">' + count + ' item</div></div></div>';
-    }).join('') + '</div>';
-    return;
-  }
-
-  // Level 1 — ini dia yang tampil grouped per bidang
-  var parentId = _acrClientPath[_acrClientPath.length - 1];
+  var parentId = _acrClientPath.length === 0 ? '' : _acrClientPath[_acrClientPath.length - 1];
   var children = acrClientBuildTree(parentId);
-
-  // Pisahkan folder dan file langsung
-  var subFolders = children.filter(function(i) { return i.tipe === 'Folder'; });
-  var directFiles = children.filter(function(i) { return i.tipe === 'File'; });
 
   if (!children.length) {
     grid.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
     return;
   }
 
-  // Kalau tidak ada subfolder, tampilkan flat
-  if (!subFolders.length) {
-    grid.innerHTML = '<div class="acr-section-grid">' + directFiles.map(function(item) {
-      var icon = ACR_ICON[item.tipe_file] || '📄';
-      var bg = ACR_BG[item.tipe_file] || '#f1f5f9';
-      return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
-        + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
-        + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:12px">' + item.nama + '</div>'
-        + (item.deskripsi ? '<div style="font-size:10px;color:var(--g400);line-height:1.4;margin-top:2px">' + item.deskripsi + '</div>' : '')
-        + '</div></div>';
-    }).join('') + '</div>';
+  var subFolders = children.filter(function(i){ return i.tipe==='Folder'; });
+  var directFiles = children.filter(function(i){ return i.tipe==='File'; });
+
+  // Ada subfolder = tampilkan grouped
+  if (subFolders.length) {
+    var html = subFolders.map(function(folder) {
+      var files = acrClientBuildTree(folder.id).slice(0, 6);
+      if (!files.length) return '';
+      var sectionColor = SECTION_COLORS[folder.nama] || '#E6F1FB';
+      var sectionIcon = SECTION_ICONS[folder.nama] || '📁';
+      var itemsHtml = '';
+
+      if (isMobile) {
+        itemsHtml = files.map(function(item) {
+          var icon = item.tipe==='Folder' ? '📂' : (ACR_ICON[item.tipe_file]||'📄');
+          var bg = item.tipe==='Folder' ? '#E6F1FB' : (ACR_BG_FLAT[item.tipe_file]||'#f1f5f9');
+          var desc = item.deskripsi || (item.tipe==='Folder' ? acrClientBuildTree(item.id).length+' item' : item.tipe_file||'');
+          var appLower = (item.aplikasi||'').toLowerCase().replace(/\s/g,'');
+          var appClass = ['spss','smartpls'].includes(appLower) ? appLower : 'semua';
+          var appLabel = item.aplikasi && item.aplikasi!=='Semua' ? item.aplikasi : '';
+          return '<div class="acr-list-item" onclick="acrClientClick(\''+item.id+'\')">'
+            +'<div class="acr-list-thumb" style="background:'+bg+'">'+icon+'</div>'
+            +'<div class="acr-list-info">'
+            +'<div class="acr-list-title">'+item.nama+'</div>'
+            +(desc?'<div class="acr-list-desc">'+desc+'</div>':'')
+            +'</div>'
+            +(appLabel?'<span class="acr-list-badge '+appClass+'">'+appLabel+'</span>':'')
+            +'</div>';
+        }).join('');
+      } else {
+        itemsHtml = files.map(function(item) {
+          var icon = item.tipe==='Folder' ? '📂' : (ACR_ICON[item.tipe_file]||'📄');
+          var cardBg = SECTION_COLORS[folder.nama] || '#E6F1FB';
+          var sub = item.tipe==='Folder' ? acrClientBuildTree(item.id).length+' item' : (item.tipe_file||'');
+          var appLabel = item.aplikasi && item.aplikasi!=='Semua' ? item.aplikasi : '';
+          var appBg = item.aplikasi==='SPSS' ? '#dbeafe' : '#ede9fe';
+          var appClr = item.aplikasi==='SPSS' ? '#1d4ed8' : '#6d28d9';
+          return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\''+item.id+'\')">'
+            +'<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+cardBg+';border-bottom:1px solid var(--g100);position:relative">'+icon
+            +(appLabel?'<span style="position:absolute;top:6px;right:6px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:100px;background:'+appBg+';color:'+appClr+'">'+appLabel+'</span>':'')
+            +'</div>'
+            +'<div class="cbh-body">'
+            +'<div class="cbh-ttl" style="font-size:13px">'+item.nama+'</div>'
+            +(item.deskripsi?'<div style="font-size:11px;color:var(--g600);line-height:1.4;margin-bottom:4px">'+item.deskripsi+'</div>':'')
+            +'<div style="font-size:11px;color:var(--g400)">'+sub+'</div>'
+            +'</div></div>';
+        }).join('');
+      }
+
+      return '<div class="acr-section">'
+        +'<div class="acr-section-hdr">'
+        +'<div class="acr-section-ic" style="background:'+sectionColor+'">'+sectionIcon+'</div>'
+        +'<div class="acr-section-ttl">'+folder.nama+'</div>'
+        +'<div class="acr-section-cnt">'+files.length+' file</div>'
+        +'</div>'
+        +'<div class="acr-section-grid">'+itemsHtml+'</div>'
+        +'</div>';
+    }).join('');
+
+    // File langsung di luar subfolder
+    if (directFiles.length) {
+      var extraHtml = isMobile
+        ? directFiles.map(function(item){
+            var icon = ACR_ICON[item.tipe_file]||'📄';
+            var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
+            return '<div class="acr-list-item" onclick="acrClientClick(\''+item.id+'\')">'
+              +'<div class="acr-list-thumb" style="background:'+bg+'">'+icon+'</div>'
+              +'<div class="acr-list-info"><div class="acr-list-title">'+item.nama+'</div>'
+              +(item.deskripsi?'<div class="acr-list-desc">'+item.deskripsi+'</div>':'')
+              +'</div></div>';
+          }).join('')
+        : directFiles.map(function(item){
+            var icon = ACR_ICON[item.tipe_file]||'📄';
+            var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
+            return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\''+item.id+'\')">'
+              +'<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+bg+';border-bottom:1px solid var(--g100)">'+icon+'</div>'
+              +'<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px">'+item.nama+'</div></div></div>';
+          }).join('');
+      html += '<div class="acr-section">'
+        +'<div class="acr-section-hdr"><div class="acr-section-ic" style="background:#f1f5f9">📄</div>'
+        +'<div class="acr-section-ttl">Lainnya</div>'
+        +'<div class="acr-section-cnt">'+directFiles.length+' file</div></div>'
+        +'<div class="acr-section-grid">'+extraHtml+'</div></div>';
+    }
+
+    grid.innerHTML = html;
     return;
   }
 
-  // Ada subfolder — tampilkan grouped per bidang
-  var html = subFolders.map(function(folder) {
-    var files = acrClientBuildTree(folder.id).slice(0, 6);
-    if (!files.length) return '';
-    var sectionColor = SECTION_COLORS[folder.nama] || '#E6F1FB';
-    var sectionIcon = SECTION_ICONS[folder.nama] || '📁';
-
-    var itemsHtml = '';
-    if (isMobile) {
-      itemsHtml = files.map(function(item) {
-        var icon = item.tipe === 'Folder' ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
-        var bg = item.tipe === 'Folder' ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
-        var desc = item.deskripsi || (item.tipe_file || '');
-        var appLower = (item.aplikasi || '').toLowerCase().replace(/\s/g, '');
+  // Tidak ada subfolder = flat grid/list
+  var flatHtml = isMobile
+    ? directFiles.map(function(item){
+        var icon = ACR_ICON[item.tipe_file]||'📄';
+        var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
+        var appLower = (item.aplikasi||'').toLowerCase().replace(/\s/g,'');
         var appClass = ['spss','smartpls'].includes(appLower) ? appLower : 'semua';
-        var appLabel = item.aplikasi && item.aplikasi !== 'Semua' ? item.aplikasi : '';
-        return '<div class="acr-list-item" onclick="acrClientClick(\'' + item.id + '\')">'
-          + '<div class="acr-list-thumb" style="background:' + bg + '">' + icon + '</div>'
-          + '<div class="acr-list-info">'
-          + '<div class="acr-list-title">' + item.nama + '</div>'
-          + (desc ? '<div class="acr-list-desc">' + desc + '</div>' : '')
-          + '</div>'
-          + (appLabel ? '<span class="acr-list-badge ' + appClass + '">' + appLabel + '</span>' : '')
-          + '</div>';
+        var appLabel = item.aplikasi && item.aplikasi!=='Semua' ? item.aplikasi : '';
+        return '<div class="acr-list-item" onclick="acrClientClick(\''+item.id+'\')">'
+          +'<div class="acr-list-thumb" style="background:'+bg+'">'+icon+'</div>'
+          +'<div class="acr-list-info"><div class="acr-list-title">'+item.nama+'</div>'
+          +(item.deskripsi?'<div class="acr-list-desc">'+item.deskripsi+'</div>':'')
+          +'</div>'
+          +(appLabel?'<span class="acr-list-badge '+appClass+'">'+appLabel+'</span>':'')
+          +'</div>';
+      }).join('')
+    : children.map(function(item){
+        var isFolder = item.tipe==='Folder';
+        var icon = isFolder ? '📂' : (ACR_ICON[item.tipe_file]||'📄');
+        var bg = isFolder ? '#E6F1FB' : (ACR_BG_FLAT[item.tipe_file]||'#f1f5f9');
+        var sub = isFolder ? acrClientBuildTree(item.id).length+' item' : (item.tipe_file||'');
+        return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\''+item.id+'\')">'
+          +'<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+bg+';border-bottom:1px solid var(--g100)">'+icon+'</div>'
+          +'<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px">'+item.nama+'</div>'
+          +'<div style="font-size:11px;color:var(--g400)">'+sub+'</div></div></div>';
       }).join('');
-    } else {
-      itemsHtml = files.map(function(item) {
-        var icon = item.tipe === 'Folder' ? '📂' : (ACR_ICON[item.tipe_file] || '📄');
-        var bg = item.tipe === 'Folder' ? '#E6F1FB' : (ACR_BG[item.tipe_file] || '#f1f5f9');
-        var sub = item.tipe === 'Folder' ? acrClientBuildTree(item.id).length + ' item' : (item.tipe_file || '');
-        var appLabel = item.aplikasi && item.aplikasi !== 'Semua' ? item.aplikasi : '';
-        var appColor = item.aplikasi === 'SPSS' ? '#dbeafe;color:#1d4ed8' : '#ede9fe;color:#6d28d9';
-        return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
-          + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;background:' + bg + ';border-bottom:1px solid var(--g100);position:relative">' + icon
-          + (appLabel ? '<span style="position:absolute;top:6px;right:6px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:100px;background:' + appColor + '">' + appLabel + '</span>' : '')
-          + '</div>'
-          + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:12px">' + item.nama + '</div>'
-          + (item.deskripsi ? '<div style="font-size:10px;color:var(--g400);line-height:1.4;margin-top:2px">' + item.deskripsi + '</div>' : '')
-          + '<div style="font-size:10px;color:var(--g400);margin-top:3px">' + sub + '</div></div></div>';
-      }).join('');
-    }
 
-    return '<div class="acr-section">'
-      + '<div class="acr-section-hdr">'
-      + '<div class="acr-section-ic" style="background:' + sectionColor + '">' + sectionIcon + '</div>'
-      + '<div class="acr-section-ttl">' + folder.nama + '</div>'
-      + '<div class="acr-section-cnt">' + files.length + ' file</div>'
-      + '</div>'
-      + '<div class="acr-section-grid">' + itemsHtml + '</div>'
-      + '</div>';
-  }).join('');
-
-  // Tambahkan file langsung (jika ada) di bagian bawah
-  if (directFiles.length) {
-    html += '<div class="acr-section">'
-      + '<div class="acr-section-hdr"><div class="acr-section-ic" style="background:#f1f5f9">📄</div><div class="acr-section-ttl">Lainnya</div><div class="acr-section-cnt">' + directFiles.length + ' file</div></div>'
-      + '<div class="acr-section-grid">' + directFiles.map(function(item) {
-          var icon = ACR_ICON[item.tipe_file] || '📄';
-          var bg = ACR_BG[item.tipe_file] || '#f1f5f9';
-          return '<div class="cbh-card" style="cursor:pointer" onclick="acrClientClick(\'' + item.id + '\')">'
-            + '<div style="height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;background:' + bg + ';border-bottom:1px solid var(--g100)">' + icon + '</div>'
-            + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:12px">' + item.nama + '</div></div></div>';
-        }).join('') + '</div></div>';
-  }
-
-  grid.innerHTML = html || '<div style="text-align:center;padding:40px 20px;color:var(--g400)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:13px">Belum ada konten tersedia</div></div>';
-}function acrClientClick(id) {
-  var item = _acrClientData.find(function(x) { return x.id === id; });
-  if (!item) return;
-  if (item.tipe === 'Folder') {
-    _acrClientPath.push(id);
-    acrClientClosePreview();
-    acrClientRender();
-  } else {
-    acrClientOpenPreview(item);
-  }
+  grid.innerHTML = '<div class="acr-section-grid">'+flatHtml+'</div>';
 }
-
 function acrClientGoLevel(level) {
   _acrClientPath = _acrClientPath.slice(0, level);
   acrClientClosePreview();

@@ -3393,6 +3393,23 @@ function acrClientRenderBc() {
     html += '<span style="color:' + (isLast ? 'var(--g800)' : 'var(--blue)') + ';font-weight:' + (isLast ? '600' : '400') + ';cursor:pointer" onclick="acrClientGoLevel(' + (i + 1) + ')">' + (item ? item.nama : '') + '</span>';
   }
   bc.innerHTML = html;
+var titleEl = document.getElementById('acr-client-title');
+  var backWrap = document.getElementById('acr-client-back-wrap');
+  if (_acrClientPath.length > 0) {
+    if (!backWrap) {
+      backWrap = document.createElement('div');
+      backWrap.id = 'acr-client-back-wrap';
+      backWrap.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:12px';
+      backWrap.innerHTML = '<button onclick="acrClientGoLevel(_acrClientPath.length-1)" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:#e8f2fc;color:#1a6bbd;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:\'DM Sans\',sans-serif">← Kembali</button>'
+        + '<span id="acr-back-bc" style="font-size:12px;color:var(--g400)"></span>';
+      var wrap = document.getElementById('acr-client-wrap');
+      if (wrap) wrap.insertBefore(backWrap, wrap.firstChild);
+    }
+    var backBc = document.getElementById('acr-back-bc');
+    if (backBc) backBc.innerHTML = html.replace(/<span[^>]*onclick="acrClientGoLevel\(0\)"[^>]*>.*?<\/span>/,'Contoh &amp; Referensi') ;
+  } else {
+    if (backWrap) backWrap.remove();
+  }
 
   var titleEl = document.getElementById('acr-client-title');
   if (titleEl) {

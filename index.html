@@ -1255,6 +1255,7 @@ function switchAdmTab(tab,btn){
   if(tab==='faq') loadFaqAdmin();
   if(tab==='bank-teori') loadAdmBankTeori();
   if(tab==='contoh') loadAdmContoh();
+  if(tab==='segera-tf') loadSegaraTF();
 }
 
 function setAdmFilter(f,btn){
@@ -1997,8 +1998,10 @@ function renderReferral(d){
   if(dis>0&&j>=3){
     if(isSelesai){
       // Status selesai + referral terpenuhi → tampil info reward
-      if(rewardDicairkan){
-        html+=`<div class="ref-dis-box" style="background:#dbeafe;border-color:#93c5fd;color:#1e40af">\u2705 Reward <strong>${fmtRp(dis)}</strong> sedang diproses admin.</div>`;
+      if(rewardDicairkan&&d.reward_ditransfer){
+        html+=`<div class="ref-dis-box" style="background:#dcfce7;border-color:#86efac;color:#065f46">\u2705 Reward <strong>${fmtRp(dis)}</strong> sudah ditransfer! Silakan cek rekening kamu.</div>`;
+      } else if(rewardDicairkan){
+        html+=`<div class="ref-dis-box" style="background:#dbeafe;border-color:#93c5fd;color:#1e40af">\u23f3 Reward <strong>${fmtRp(dis)}</strong> sedang diproses admin. Estimasi cair dalam 3x24 jam.</div>`;
       } else {
         html+=`<div class="ref-dis-box" style="background:#dbeafe;border-color:#93c5fd;color:#1e40af">\ud83c\udf81 Reward <strong>${fmtRp(dis)}</strong> siap dicairkan!</div>`;
         html+=`<div id="reward-form-wrap" style="margin-top:10px">`;
@@ -3982,7 +3985,130 @@ function abtSaveForm() {
 }
 /* ===== END ADMIN BANK TEORI ===== */
 
-
+/* ===== SEGERA TF ===== */
+var _stfLoaded=false;
+var _stfData=[];
+var _stfUndoTimer=null;
+var _stfUndoInterval=null;
+var _stfPrevPageId=null;
+ 
+function loadSegaraTF(){
+  if(_stfLoaded){renderSegaraTF();return;}
+  document.getElementById('stf-tbody').innerHTML='<tr><td colspan="6" class="adm-empty">Memuat data...</td></tr>';
+  fetch('/api/get-all-clients')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(Array.isArray(data)){
+        _stfLoaded=true;
+        _stfData=data.filter(function(c){return c.reward_dicairkan===true;});
+        renderSegaraTF();
+      }
+    }).catch(function(){
+      document.getElementById('stf-tbody').innerHTML='<tr><td colspan="6" class="adm-empty">Gagal memuat data.</td></tr>';
+    });
+}
+ 
+function renderSegaraTF(){
+  var pending=_stfData.filter(function(c){return !c.reward_ditransfer;});
+  var selesai=_stfData.filter(function(c){return c.reward_ditransfer;});
+  var sumBar=document.getElementById('stf-summary-bar');
+  var sumTxt=document.getElementById('stf-summary-txt');
+  var sumSub=document.getElementById('stf-summary-sub');
+  if(sumBar&&sumTxt&&sumSub){
+    sumBar.style.display='flex';
+    if(pending.length===0){
+      sumTxt.textContent='Semua reward sudah ditransfer';
+      sumSub.textContent='Tidak ada yang perlu diproses saat ini.';
+      sumBar.style.borderLeftColor='#16a34a';
+    } else {
+      var totalNominal=pending.reduce(function(acc,c){return acc+(c.diskon_referral||0);},0);
+      sumTxt.textContent=pending.length+' reward menunggu transfer';
+      sumSub.textContent='Total nominal: Rp '+totalNominal.toLocaleString('id-ID');
+      sumBar.style.borderLeftColor='#dc2626';
+    }
+  }
+  var rows=[].concat(pending,selesai);
+  if(!rows.length){
+    document.getElementById('stf-tbody').innerHTML='<tr><td colspan="6" class="adm-empty">Belum ada client yang mengajukan pencairan reward.</td></tr>';
+    return;
+  }
+  document.getElementById('stf-tbody').innerHTML=rows.map(function(c){
+    var rek=c.rekening_reward||'';
+    var parts=rek.split('|');
+    var metode=parts[0]||'—';
+    var nomor=parts[1]||'—';
+    var namaPemilik=parts[2]||'—';
+    var nominal=c.diskon_referral||0;
+    var isDone=c.reward_ditransfer===true;
+    var statusHtml=isDone
+      ?'<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#dcfce7;color:#15803d;cursor:default"><span style="width:6px;height:6px;border-radius:50%;background:#15803d;display:inline-block"></span>Sudah TF</span>'
+      :'<span onclick="toggleRewardTF(\''+c.page_id+'\',\''+c.nama+'\',\''+c.kode_akses+'\')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#fef3c7;color:#b45309;cursor:pointer" title="Klik untuk tandai sudah ditransfer"><span style="width:6px;height:6px;border-radius:50%;background:#b45309;display:inline-block"></span>Pending</span>';
+    return '<tr>'
+      +'<td><p class="adm-client-name">'+( c.nama||'—')+'</p><p class="adm-client-kode">'+(c.kode_akses||'')+'</p></td>'
+      +'<td style="font-weight:600;color:#0d2144">Rp '+nominal.toLocaleString('id-ID')+'</td>'
+      +'<td>'+metode+'</td>'
+      +'<td style="font-size:12px">'+nomor+'</td>'
+      +'<td style="font-size:12px">'+namaPemilik+'</td>'
+      +'<td>'+statusHtml+'</td>'
+      +'</tr>';
+  }).join('');
+}
+ 
+function toggleRewardTF(pageId,nama,kode){
+  if(_stfUndoTimer){clearTimeout(_stfUndoTimer);clearInterval(_stfUndoInterval);}
+  var undoBar=document.getElementById('stf-undo-bar');
+  var lbl=document.getElementById('stf-undo-lbl');
+  var bar=document.getElementById('stf-undo-progress');
+  var count=document.getElementById('stf-undo-count');
+  _stfPrevPageId=pageId;
+  if(lbl)lbl.textContent='Sudah TF — '+(nama||kode);
+  if(bar)bar.style.width='100%';
+  if(count)count.textContent='5';
+  if(undoBar)undoBar.style.display='flex';
+  var item=_stfData.find(function(c){return c.page_id===pageId;});
+  if(item)item.reward_ditransfer=true;
+  renderSegaraTF();
+  var secs=5;
+  _stfUndoInterval=setInterval(function(){
+    secs--;
+    if(count)count.textContent=secs;
+    if(bar)bar.style.width=(secs/5*100)+'%';
+  },1000);
+  _stfUndoTimer=setTimeout(function(){
+    clearInterval(_stfUndoInterval);
+    if(undoBar)undoBar.style.display='none';
+    if(count)count.textContent='5';
+    if(bar)bar.style.width='100%';
+    fetch('/api/update-client',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'confirm_reward_tf',page_id:pageId})
+    }).catch(function(){
+      var it=_stfData.find(function(c){return c.page_id===pageId;});
+      if(it)it.reward_ditransfer=false;
+      renderSegaraTF();
+      alert('Gagal update. Coba lagi.');
+    });
+  },5000);
+}
+ 
+function cancelStfUndo(){
+  if(_stfUndoTimer)clearTimeout(_stfUndoTimer);
+  if(_stfUndoInterval)clearInterval(_stfUndoInterval);
+  var undoBar=document.getElementById('stf-undo-bar');
+  var bar=document.getElementById('stf-undo-progress');
+  var count=document.getElementById('stf-undo-count');
+  if(undoBar)undoBar.style.display='none';
+  if(bar)bar.style.width='100%';
+  if(count)count.textContent='5';
+  if(_stfPrevPageId){
+    var item=_stfData.find(function(c){return c.page_id===_stfPrevPageId;});
+    if(item)item.reward_ditransfer=false;
+    renderSegaraTF();
+  }
+  _stfPrevPageId=null;
+}
+/* ===== END SEGERA TF ===== */
 function admTestiSaveEdit(id){
   var d=_admTesti.find(function(x){return x.page_id===id;});if(!d)return;
   var nama=document.getElementById('adm-testi-ep-nama').value.trim();
@@ -4038,6 +4164,7 @@ function admTestiSaveEdit(id){
     <button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">&#128196; Pricelist</button>
 <button class="adm-tab-btn" onclick="switchAdmTab('bank-teori',this)">&#128218; Bank Teori</button>
 <button class="adm-tab-btn" onclick="switchAdmTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
+<button class="adm-tab-btn" id="adm-tab-segera-tf" onclick="switchAdmTab('segera-tf',this)" style="color:#dc2626">&#9889; Segera TF</button>
   </div>
   <div class="adm-body">
 
@@ -4327,7 +4454,38 @@ function admTestiSaveEdit(id){
         </div>
       </div>
     </div>
-
+<!-- Tab Segera TF -->
+    <div id="adm-tc-segera-tf" class="adm-tc">
+      <div id="stf-undo-bar" style="display:none;align-items:center;gap:10px;background:#1a3560;padding:8px 16px;border-radius:8px;margin-bottom:12px">
+        <span style="font-size:12px;color:rgba(255,255,255,.8);flex:1">Status diubah ke <span id="stf-undo-lbl" style="color:#fff;font-weight:600">—</span></span>
+        <div style="flex:1;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;min-width:80px"><div id="stf-undo-progress" style="height:100%;background:#f0a500;border-radius:2px;width:100%;transition:width .1s linear"></div></div>
+        <span id="stf-undo-count" style="font-size:11px;color:rgba(255,255,255,.5);min-width:12px;text-align:center">5</span>
+        <button onclick="cancelStfUndo()" style="padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif">Batalkan</button>
+      </div>
+      <div id="stf-summary-bar" style="display:none;background:#fff;border:0.5px solid #e2e8f0;border-left:3px solid #dc2626;border-radius:0 8px 8px 0;padding:11px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:#0d2144" id="stf-summary-txt">—</div>
+          <div style="font-size:11px;color:#64748b;margin-top:1px" id="stf-summary-sub">—</div>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Nominal</th>
+              <th>Metode Transfer</th>
+              <th>No. Rekening / E-wallet</th>
+              <th>Nama Pemilik</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="stf-tbody">
+            <tr><td colspan="6" class="adm-empty">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <!-- Tab Pricelist -->
     <div id="adm-tc-pricelist" class="adm-tc">
       <!-- Toggle cepat per aplikasi -->

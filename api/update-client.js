@@ -84,22 +84,24 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
-if (action === 'update_info') {
-  const { judul, jumlah_variabel } = req.body;
-  const properties = {};
-  if (judul !== undefined) properties['Judul Penelitian'] = { rich_text: [{ text: { content: judul || '' } }] };
-  if (jumlah_variabel !== undefined) properties['Jumlah Variabel'] = jumlah_variabel ? { select: { name: jumlah_variabel } } : { select: null };
-  if (!Object.keys(properties).length) return res.status(400).json({ error: 'Tidak ada field yang diupdate.' });
-  const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    method: 'PATCH',
-    headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ properties })
-  });
-  const data = await response.json();
-  if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
-  return res.status(200).json({ success: true });
-}    
-    // ===== SUBMIT REWARD REFERRAL =====
+    // ===== UPDATE INFO (JUDUL / JUMLAH VARIABEL) =====
+    if (action === 'update_info') {
+      const { judul, jumlah_variabel } = req.body;
+      const properties = {};
+      if (judul !== undefined) properties['Judul Penelitian'] = { rich_text: [{ text: { content: judul || '' } }] };
+      if (jumlah_variabel !== undefined) properties['Jumlah Variabel'] = jumlah_variabel ? { select: { name: jumlah_variabel } } : { select: null };
+      if (!Object.keys(properties).length) return res.status(400).json({ error: 'Tidak ada field yang diupdate.' });
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
+      return res.status(200).json({ success: true });
+    }
+
+    // ===== SUBMIT REWARD REFERRAL (dari client) =====
     if (action === 'submit_reward') {
       const { nama, kode_akses, nominal, metode, nomor, nama_pemilik } = req.body || {};
       if (!metode || !nomor || !nama_pemilik) return res.status(400).json({ error: 'Metode, nomor, dan nama pemilik wajib diisi.' });
@@ -157,7 +159,7 @@ if (action === 'update_info') {
                     <tr><td style="padding:8px 0;color:#64748b">Waktu Submit</td><td style="padding:8px 0">${waktu}</td></tr>
                   </table>
                   <div style="margin-top:20px;padding:12px;background:#fef9c3;border-radius:8px;font-size:13px;color:#92400e">
-                    ⚠️ Segera lakukan transfer dan tandai reward sebagai selesai di Notion.
+                    ⚠️ Segera lakukan transfer dan tandai reward sebagai selesai di tab Segera TF pada Admin Dashboard.
                   </div>
                 </div>
               `
@@ -171,7 +173,31 @@ if (action === 'update_info') {
       return res.status(200).json({ success: true });
     }
 
-    return res.status(400).json({ error: 'Action tidak dikenal. Gunakan: update_akses, update_status, update_info, atau submit_reward.' });
+    // ===== KONFIRMASI REWARD SUDAH DITRANSFER (dari admin) =====
+    if (action === 'confirm_reward_tf') {
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${NOTION_TOKEN}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          properties: {
+            'Reward_Ditransfer': { checkbox: true }
+          }
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        return res.status(500).json({ error: `Notion error: ${response.status} - ${JSON.stringify(data)}` });
+      }
+
+      return res.status(200).json({ success: true });
+    }
+
+    return res.status(400).json({ error: 'Action tidak dikenal. Gunakan: update_akses, update_status, update_info, submit_reward, atau confirm_reward_tf.' });
 
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });

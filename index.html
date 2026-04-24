@@ -2443,6 +2443,19 @@ function doSaveStatus(pageId,status){
       if(sb&&_undoPrevStatus){sb.textContent=_undoPrevStatus;sb.className='sbadge '+statusClass(_undoPrevStatus);}
       setStatusPillActive(_undoPrevStatus||'');
       alert('Gagal menyimpan status. Coba lagi.');
+    }else{
+      var aktifkan=['Antrian','Diproses','Menunggu Pelunasan','Pendampingan','Selesai'];
+      var nonaktifkan=['Menunggu Review','Dibatalkan','Refund'];
+      var newAkses=null;
+      if(aktifkan.indexOf(status)>-1)newAkses=true;
+      else if(nonaktifkan.indexOf(status)>-1)newAkses=false;
+      if(newAkses!==null){
+        fetch('/api/update-client',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'update_akses',page_id:pageId,akses_aktif:newAkses})
+        }).then(function(){updateAksesTogUI(newAkses);});
+      }
     }
   }).catch(function(){
     var sb=document.getElementById('d-sbadge');

@@ -2,15 +2,12 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') return res.status(200).end();
-
   const NOTION_TOKEN = process.env.NOTION_TOKEN;
   const NOTION_DB_ID = process.env.NOTION_DB_ID;
   if (!NOTION_TOKEN || !NOTION_DB_ID) {
     return res.status(500).json({ error: 'Konfigurasi server tidak lengkap.' });
   }
-
   const getText = p => {
     if (!p) return null;
     if (p.type === 'title') return p.title?.[0]?.plain_text || null;
@@ -18,6 +15,7 @@ export default async function handler(req, res) {
     return null;
   };
   const getSelect = p => p?.select?.name || null;
+  const getCheckbox = p => p?.checkbox || false;
   const getFormula = p => {
     if (!p || p.type !== 'formula') return null;
     const f = p.formula;
@@ -40,20 +38,16 @@ export default async function handler(req, res) {
     return null;
   };
   const getDate = p => p?.date?.start || null;
-
   try {
     let allClients = [];
     let hasMore = true;
     let startCursor = undefined;
-
-    // Loop pagination sampai semua data termuat
     while (hasMore) {
       const body = {
         page_size: 100,
         sorts: [{ property: 'Dibuat', direction: 'descending' }]
       };
       if (startCursor) body.start_cursor = startCursor;
-
       const response = await fetch(
         `https://api.notion.com/v1/databases/${NOTION_DB_ID}/query`,
         {
@@ -66,15 +60,14 @@ export default async function handler(req, res) {
           body: JSON.stringify(body)
         }
       );
-
       const data = await response.json();
       if (!response.ok) {
         return res.status(500).json({ error: `Notion error: ${response.status}` });
       }
-
       const clients = (data.results || []).map(page => {
         const props = page.properties;
         return {
+          page_id: page.id,
           nama: getText(props['Nama Client']),
           kode_akses: getFormula(props['Kode Akses']),
           universitas: getSelect(props['Universitas']),
@@ -82,16 +75,17 @@ export default async function handler(req, res) {
           aplikasi: getRollup(props['Aplikasi']) || getSelect(props['Aplikasi']),
           status_project: getSelect(props['Status Project']),
           deadline: getDate(props['Deadline']),
+          diskon_referral: props['Diskon Referral']?.number || 0,
+          reward_dicairkan: getCheckbox(props['Reward_Dicairkan']),
+          reward_ditransfer: getCheckbox(props['Reward_Ditransfer']),
+          rekening_reward: getText(props['Rekening_Reward']),
         };
       });
-
       allClients = allClients.concat(clients);
       hasMore = data.has_more || false;
       startCursor = data.next_cursor || undefined;
     }
-
     return res.status(200).json(allClients);
-
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });
   }

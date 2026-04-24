@@ -109,6 +109,8 @@ export default async function handler(req, res) {
       kode_akses: getFormula(props['Kode Akses']),
       testimoni_selesai: getCheckbox(props['Testimoni_Selesai']),
       akses_aktif: aksesAktif,
+      reward_dicairkan: getCheckbox(props['Reward_Dicairkan']),
+      rekening_reward: getText(props['Rekening_Reward']),
     });
 
   } catch (err) {

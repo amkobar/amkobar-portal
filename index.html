@@ -2039,10 +2039,10 @@ async function submitReward(pageId,nama,kode,nominal){
   const btn=document.querySelector('#reward-form-wrap button');
   if(btn){btn.disabled=true;btn.textContent='Memproses...';}
   try{
-    const r=await fetch('/api/submit-reward',{
+    const r=await fetch('/api/update-client',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({page_id:pageId,nama,kode_akses:kode,nominal,metode,nomor,nama_pemilik:namaPemilik})
+      body:JSON.stringify({action:'submit_reward',page_id:pageId,nama,kode_akses:kode,nominal,metode,nomor,nama_pemilik:namaPemilik})
     });
     const res=await r.json();
     if(res.success){

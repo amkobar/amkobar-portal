@@ -1987,7 +1987,7 @@ function renderReferral(d){
   const refLink=`https://tally.so/r/${formId}?kh=${khParam}&ref=${kode}`;
   const dots=[0,1,2].map(i=>`<div class="ref-dot${i<j?' filled':''}"></div>`).join('');
   const sudahCukup=j>=3;
-  const isSelesai=(d.status_project||'').toLowerCase().includes('selesai');
+  const isSelesai=(d.status_project||'').toLowerCase().includes('selesai') && d.pelunasan_masuk===true;
   const rewardDicairkan=d.reward_dicairkan||false;
 
   let html=`<div class="ref-card-right ${sudahCukup||dis>0?'active':'pending'}">`;

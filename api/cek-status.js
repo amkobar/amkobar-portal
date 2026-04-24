@@ -97,7 +97,8 @@ export default async function handler(req, res) {
         const raw = getFormula(props['Sisa Pembayaran']);
         const dis = props['Diskon Referral']?.number || 0;
         const j = getRollup(props['Jumlah Referral']) || 0;
-        if (dis > 0 && j < 3) return (raw || 0) + dis;
+        if (!raw || raw <= 0) return 0;
+        if (dis > 0 && j < 3) return raw + dis;
         return raw;
       })(),
       total_addon: getRollup(props['Total Add-On']) || getFormula(props['Total Add-On']) || 0,

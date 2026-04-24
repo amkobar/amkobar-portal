@@ -1898,6 +1898,7 @@ var editBtnVariabel = document.getElementById('edit-btn-variabel');
 if (editBtnJudul) editBtnJudul.style.display = 'block';
 if (editBtnVariabel) editBtnVariabel.style.display = 'block';
       window._dashPageId=d.page_id||null;
+      window._dashData=d;
       updateAksesTogUI(d.akses_aktif!==false);
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='flex';
@@ -1986,16 +1987,77 @@ function renderReferral(d){
   const refLink=`https://tally.so/r/${formId}?kh=${khParam}&ref=${kode}`;
   const dots=[0,1,2].map(i=>`<div class="ref-dot${i<j?' filled':''}"></div>`).join('');
   const sudahCukup=j>=3;
+  const isSelesai=(d.status_project||'').toLowerCase().includes('selesai');
+  const rewardDicairkan=d.reward_dicairkan||false;
+
   let html=`<div class="ref-card-right ${sudahCukup||dis>0?'active':'pending'}">`;
   html+=`<div class="ref-top"><span class="ref-title">Referral Saya</span><span class="ref-counter ${sudahCukup||dis>0?'':'pending'}">${Math.min(j,3)} / 3</span></div>`;
   html+=`<div class="ref-progress">${dots}</div>`;
-  if(dis>0&&j>=3){html+=`<div class="ref-dis-box">\ud83c\udf81 Diskon <strong>${fmtRp(dis)}</strong> sudah aktif!</div>`;}
-  else if(sudahCukup){html+=`<div class="ref-dis-box">\u2705 Syarat terpenuhi! Diskon sedang diproses.</div>`;}
-  else{const sisa=3-j;html+=`<div style="font-size:12px;color:var(--warn);margin-bottom:8px">Ajak ${sisa} orang lagi \u2192 dapat diskon Rp 50.000\u2013100.000</div>`;}
+
+  if(dis>0&&j>=3){
+    if(isSelesai){
+      // Status selesai + referral terpenuhi → tampil info reward
+      if(rewardDicairkan){
+        html+=`<div class="ref-dis-box" style="background:#dbeafe;border-color:#93c5fd;color:#1e40af">\u2705 Reward <strong>${fmtRp(dis)}</strong> sedang diproses admin.</div>`;
+      } else {
+        html+=`<div class="ref-dis-box" style="background:#dbeafe;border-color:#93c5fd;color:#1e40af">\ud83c\udf81 Reward <strong>${fmtRp(dis)}</strong> siap dicairkan!</div>`;
+        html+=`<div id="reward-form-wrap" style="margin-top:10px">`;
+        html+=`<select id="reward-metode" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);margin-bottom:6px">`;
+        html+=`<option value="">Pilih metode pencairan</option>`;
+        html+=`<option value="Transfer Bank">Transfer Bank</option>`;
+        html+=`<option value="GoPay">GoPay</option>`;
+        html+=`<option value="OVO">OVO</option>`;
+        html+=`<option value="Dana">Dana</option>`;
+        html+=`</select>`;
+        html+=`<input id="reward-nomor" type="text" placeholder="Nomor rekening / e-wallet" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);margin-bottom:6px;box-sizing:border-box">`;
+        html+=`<input id="reward-nama" type="text" placeholder="Nama pemilik rekening" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);margin-bottom:8px;box-sizing:border-box">`;
+        html+=`<button onclick="submitReward('${d.page_id||''}','${d.nama_asli||d.nama||''}','${kode}',${dis})" style="width:100%;padding:10px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">\ud83d\udcb8 Cairkan Reward ${fmtRp(dis)}</button>`;
+        html+=`</div>`;
+      }
+    } else {
+      html+=`<div class="ref-dis-box">\ud83c\udf81 Diskon <strong>${fmtRp(dis)}</strong> sudah aktif!</div>`;
+    }
+  } else if(sudahCukup){
+    html+=`<div class="ref-dis-box">\u2705 Syarat terpenuhi! Diskon sedang diproses.</div>`;
+  } else {
+    const sisa=3-j;
+    html+=`<div style="font-size:12px;color:var(--warn);margin-bottom:8px">Ajak ${sisa} orang lagi \u2192 dapat diskon Rp 50.000\u2013100.000</div>`;
+  }
+
   html+=`<div class="ref-link-box">${refLink}</div>`;
   html+=`<button class="ref-copy-btn" onclick="copyRefLink('${refLink}',this)">Salin Link Referral</button>`;
   html+=`</div>`;
   el.innerHTML=html;el.style.display='block';
+}
+async function submitReward(pageId,nama,kode,nominal){
+  const metode=document.getElementById('reward-metode')?.value||'';
+  const nomor=document.getElementById('reward-nomor')?.value?.trim()||'';
+  const namaPemilik=document.getElementById('reward-nama')?.value?.trim()||'';
+  if(!metode){alert('Pilih metode pencairan dulu.');return;}
+  if(!nomor){alert('Masukkan nomor rekening / e-wallet.');return;}
+  if(!namaPemilik){alert('Masukkan nama pemilik rekening.');return;}
+  const btn=document.querySelector('#reward-form-wrap button');
+  if(btn){btn.disabled=true;btn.textContent='Memproses...';}
+  try{
+    const r=await fetch('/api/submit-reward',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({page_id:pageId,nama,kode_akses:kode,nominal,metode,nomor,nama_pemilik:namaPemilik})
+    });
+    const res=await r.json();
+    if(res.success){
+      const wrap=document.getElementById('reward-form-wrap');
+      if(wrap)wrap.innerHTML=`<div style="padding:10px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46;text-align:center">\u2705 Permintaan dikirim! Admin akan segera memproses transfer.</div>`;
+      // Update local data
+      if(window._dashData)window._dashData.reward_dicairkan=true;
+    } else {
+      alert('Gagal mengirim permintaan: '+(res.error||'Coba lagi.'));
+      if(btn){btn.disabled=false;btn.textContent='\ud83d\udcb8 Cairkan Reward';}
+    }
+  } catch(e){
+    alert('Gagal menghubungi server. Coba lagi.');
+    if(btn){btn.disabled=false;btn.textContent='\ud83d\udcb8 Cairkan Reward';}
+  }
 }
 function copyRefLink(url,btn){window._refLinkToCopy=url;document.getElementById('ref-popup-overlay').style.display='flex';}
 function closeRefPopup(){document.getElementById('ref-popup-overlay').style.display='none';}

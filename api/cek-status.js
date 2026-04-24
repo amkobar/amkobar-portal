@@ -110,6 +110,7 @@ export default async function handler(req, res) {
       testimoni_selesai: getCheckbox(props['Testimoni_Selesai']),
       akses_aktif: aksesAktif,
       reward_dicairkan: getCheckbox(props['Reward_Dicairkan']),
+      reward_ditransfer: getCheckbox(props['Reward_Ditransfer']), // BARU
       rekening_reward: getText(props['Rekening_Reward']),
     });
 

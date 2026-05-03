@@ -2906,12 +2906,12 @@ function btApplyRandomOrder() {
     karTeori.forEach(function(t) { idToTeori[t.id] = t; });
     var ordered = saved.map(function(id) { return idToTeori[id]; }).filter(Boolean);
     // Replace teori Karakteristik dengan yang sudah terurut
-    var varTeori = _btData.teori.filter(function(t) { return t.tab !== 'Karakteristik'; });
+    var varTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return !tTabs.includes('Karakteristik'); });
     _btData.teori = ordered.concat(varTeori);
   } else {
     // Random baru, simpan ke localStorage
     var shuffled = karTeori.slice().sort(function() { return Math.random() - 0.5; });
-    var varTeori = _btData.teori.filter(function(t) { return t.tab !== 'Karakteristik'; });
+    var varTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return !tTabs.includes('Karakteristik'); });
     _btData.teori = shuffled.concat(varTeori);
     try {
       localStorage.setItem(key, JSON.stringify(shuffled.map(function(t) { return t.id; })));

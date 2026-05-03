@@ -2896,23 +2896,29 @@ function loadBankTeori() {
 function btApplyRandomOrder() {
   var kode = window._lastKode || 'default';
   var key = 'teori_order_' + kode;
-  var karTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik'); });
+  var karTeori = _btData.teori.filter(function(t) {
+    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+    return tTabs.includes('Karakteristik');
+  });
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(key)); } catch(e) {}
 
   if (saved && Array.isArray(saved) && saved.length === karTeori.length) {
-    // Susun ulang sesuai urutan tersimpan
     var idToTeori = {};
     karTeori.forEach(function(t) { idToTeori[t.id] = t; });
     var ordered = saved.map(function(id) { return idToTeori[id]; }).filter(Boolean);
-    // Replace teori Karakteristik dengan yang sudah terurut
-    var varTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return !tTabs.includes('Karakteristik'); });
-    _btData.teori = ordered.concat(varTeori);
+    var nonKarTeori = _btData.teori.filter(function(t) {
+      var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+      return !tTabs.includes('Karakteristik');
+    });
+    _btData.teori = ordered.concat(nonKarTeori);
   } else {
-    // Random baru, simpan ke localStorage
     var shuffled = karTeori.slice().sort(function() { return Math.random() - 0.5; });
-    var varTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return !tTabs.includes('Karakteristik'); });
-    _btData.teori = shuffled.concat(varTeori);
+    var nonKarTeori = _btData.teori.filter(function(t) {
+      var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+      return !tTabs.includes('Karakteristik');
+    });
+    _btData.teori = shuffled.concat(nonKarTeori);
     try {
       localStorage.setItem(key, JSON.stringify(shuffled.map(function(t) { return t.id; })));
     } catch(e) {}

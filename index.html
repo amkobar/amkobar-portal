@@ -2896,7 +2896,7 @@ function loadBankTeori() {
 function btApplyRandomOrder() {
   var kode = window._lastKode || 'default';
   var key = 'teori_order_' + kode;
-  var karTeori = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik'; });
+  var karTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik'); });
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(key)); } catch(e) {}
 
@@ -2955,7 +2955,7 @@ function btOpenKat(kat) {
   document.getElementById('bt-kar-grid').style.display = 'none';
   document.getElementById('bt-kar-detail').style.display = 'block';
   document.getElementById('bt-cat-title').textContent = kat;
-  var items = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik' && t.kategori === kat; });
+  var items = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik') && t.kategori === kat; });
   document.getElementById('bt-kar-count').innerHTML = 'Menampilkan <span>' + items.length + '</span> teori';
   document.getElementById('bt-kar-list').innerHTML = items.length
     ? items.map(function(t) { return btRenderCard(t, kat, []); }).join('')
@@ -3021,7 +3021,7 @@ function btScore(item, kws) {
 function btRenderVar() {
   var kws = _btActiveSearch.split('+').map(function(v){ return v.trim().toLowerCase(); }).filter(function(k){ return k.length > 0; });
   var filtered = _btData.teori.filter(function(t) {
-    if (t.tab !== 'Variabel') return false;
+    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; if (!tTabs.includes('Variabel')) return false;
     var bidangOk = _btActiveBidang === 'Semua' || t.kategori === _btActiveBidang;
     var hay = (t.nama_teori + ' ' + t.kutipan + ' ' + t.tags.join(' ')).toLowerCase();
     var searchOk = !kws.length || kws.some(function(k) { return hay.includes(k); });
@@ -3844,7 +3844,8 @@ function abtShowForm() {
   document.getElementById('abt-f-nama').value = '';
   document.getElementById('abt-f-kutipan').value = '';
   document.getElementById('abt-f-sumber').value = '';
-  document.getElementById('abt-f-tab').value = 'Karakteristik';
+ document.getElementById('abt-f-tab-kar').checked = true;
+  document.getElementById('abt-f-tab-var').checked = false;
   document.getElementById('abt-f-kat').value = '';
   document.getElementById('abt-f-tags').value = '';
   document.getElementById('abt-f-link').value = '';
@@ -3863,11 +3864,14 @@ function abtShowEditForm(id) {
   document.getElementById('abt-f-nama').value = t.nama_teori;
   document.getElementById('abt-f-kutipan').value = t.kutipan;
   document.getElementById('abt-f-sumber').value = t.sumber;
-  document.getElementById('abt-f-tab').value = t.tab;
+  var tabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+  document.getElementById('abt-f-tab-kar').checked = tabs.includes('Karakteristik');
+  document.getElementById('abt-f-tab-var').checked = tabs.includes('Variabel');
   document.getElementById('abt-f-kat').value = t.kategori || '';
   document.getElementById('abt-f-tags').value = t.tags ? t.tags.join(', ') : '';
   document.getElementById('abt-f-link').value = t.link_drive || '';
-  document.getElementById('abt-f-kat-wrap').style.display = t.tab === 'Variabel' ? 'none' : 'block';
+  var showKat = tabs.includes('Karakteristik') || tabs.length === 0;
+  document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
   abtUpdateTogUI();
   document.getElementById('abt-form').classList.add('show');
 }
@@ -3878,9 +3882,11 @@ function abtHideForm() {
 }
 
 function abtOnTabChange() {
-  var tab = document.getElementById('abt-f-tab').value;
-  document.getElementById('abt-f-kat-wrap').style.display = tab === 'Variabel' ? 'none' : 'block';
-  if (tab === 'Variabel') document.getElementById('abt-f-kat').value = '';
+  var karChecked = document.getElementById('abt-f-tab-kar').checked;
+  var varChecked = document.getElementById('abt-f-tab-var').checked;
+  var showKat = karChecked || (!varChecked);
+  document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
+  if(!karChecked && varChecked) document.getElementById('abt-f-kat').value = '';
 }
 
 function abtKatInput(val) {
@@ -3934,11 +3940,15 @@ function abtUpdateTogUI() {
 }
 
 function abtSaveForm() {
-  var nama = document.getElementById('abt-f-nama').value.trim();
+ var nama = document.getElementById('abt-f-nama').value.trim();
   var kutipan = document.getElementById('abt-f-kutipan').value.trim();
   var sumber = document.getElementById('abt-f-sumber').value.trim();
-  var tab = document.getElementById('abt-f-tab').value;
-  var kat = tab === 'Variabel' ? '' : document.getElementById('abt-f-kat').value.trim();
+  var tabs = [];
+  if(document.getElementById('abt-f-tab-kar').checked) tabs.push('Karakteristik');
+  if(document.getElementById('abt-f-tab-var').checked) tabs.push('Variabel');
+  if(!tabs.length){ alert('Pilih minimal satu tab!'); return; }
+  var tab = tabs[0];
+  var kat = tabs.includes('Variabel') && !tabs.includes('Karakteristik') ? '' : document.getElementById('abt-f-kat').value.trim();
   var tagsRaw = document.getElementById('abt-f-tags').value.trim();
   var link = document.getElementById('abt-f-link').value.trim();
   var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(Boolean) : [];
@@ -3953,7 +3963,7 @@ function abtSaveForm() {
     nama_teori: nama,
     kutipan: kutipan,
     sumber: sumber,
-    tab: tab,
+    tab: tabs,
     kategori: kat || tab,
     tags: tags,
     link_drive: link || null,
@@ -4433,10 +4443,10 @@ function admTestiSaveEdit(id){
             </div>
             <div>
               <div class="abt-form-lbl">Tab</div>
-              <select class="abt-form-sel" id="abt-f-tab" onchange="abtOnTabChange()">
-                <option value="Karakteristik">Karakteristik</option>
-                <option value="Variabel">Variabel</option>
-              </select>
+              <div style="display:flex;gap:16px;margin-top:4px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-f-tab-kar" value="Karakteristik" onchange="abtOnTabChange()"> Karakteristik</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-f-tab-var" value="Variabel" onchange="abtOnTabChange()"> Variabel</label>
+              </div>
             </div>
             <div id="abt-f-kat-wrap">
               <div class="abt-form-lbl">Kategori</div>

@@ -3021,7 +3021,8 @@ function btScore(item, kws) {
 function btRenderVar() {
   var kws = _btActiveSearch.split('+').map(function(v){ return v.trim().toLowerCase(); }).filter(function(k){ return k.length > 0; });
   var filtered = _btData.teori.filter(function(t) {
-    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; if (!tTabs.includes('Variabel')) return false;
+    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+    if (!tTabs.includes('Variabel')) return false;
     var bidangOk = _btActiveBidang === 'Semua' || t.kategori === _btActiveBidang;
     var hay = (t.nama_teori + ' ' + t.kutipan + ' ' + t.tags.join(' ')).toLowerCase();
     var searchOk = !kws.length || kws.some(function(k) { return hay.includes(k); });

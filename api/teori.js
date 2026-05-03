@@ -124,7 +124,7 @@ tab: (props['Tab']?.multi_select || [])[0]?.name || '',
         if (kutipan !== undefined) properties['Kutipan'] = { rich_text: [{ text: { content: kutipan } }] };
         if (sumber !== undefined) properties['Sumber'] = { rich_text: [{ text: { content: sumber } }] };
         if (link_drive !== undefined) properties['Link Drive'] = { url: link_drive || null };
-        if (tab !== undefined) properties['Tab'] = { select: { name: tab } };
+        if (tab !== undefined) properties['Tab'] = { multi_select: (Array.isArray(tab) ? tab : [tab]).filter(Boolean).map(t => ({ name: t })) };
         if (kategori !== undefined) properties['Kategori'] = { select: { name: kategori } };
         if (tags !== undefined) properties['Tags'] = { multi_select: tags.map(t => ({ name: t })) };
         if (is_new !== undefined) properties['Is_New'] = { checkbox: is_new === true };

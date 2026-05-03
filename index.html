@@ -3726,7 +3726,8 @@ function loadAdmBankTeori() {
 function abtFiltered() {
   return _abtData.filter(function(t) {
     var mq = !_abtFilterQ || t.nama_teori.toLowerCase().includes(_abtFilterQ);
-    var mt = !_abtFilterTab || t.tab === _abtFilterTab;
+    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+    var mt = !_abtFilterTab || tTabs.includes(_abtFilterTab);
     return mq && mt;
   });
 }

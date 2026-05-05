@@ -104,6 +104,7 @@ export default async function handler(req, res) {
         if (tipe_file) properties['Tipe_File'] = { select: { name: tipe_file } };
 if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (link_drive) properties['Link_Drive'] = { url: link_drive };
+        if (req.body.link_template) properties['Link Template'] = { url: req.body.link_template };
         if (parent_id) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };
 
         const r = await fetch('https://api.notion.com/v1/pages', {
@@ -136,6 +137,7 @@ if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (akses !== undefined) properties['Akses'] = { select: { name: akses } };
 if (aplikasi !== undefined) properties['Aplikasi'] = aplikasi ? { select: { name: aplikasi } } : { select: null };
         if (link_drive !== undefined) properties['Link_Drive'] = { url: link_drive || null };
+        if (req.body.link_template !== undefined) properties['Link Template'] = { url: req.body.link_template || null };
         if (deskripsi !== undefined) properties['Deskripsi'] = { rich_text: [{ text: { content: deskripsi } }] };
         if (urutan !== undefined) properties['Urutan'] = { number: urutan };
         if (parent_id !== undefined) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };

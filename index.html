@@ -3129,7 +3129,7 @@ if (t.tab === 'Variabel') {
 var catBadge = t.tab === 'Variabel'
   ? (tahun ? '<span class="bt-badge bt-badge-cat">' + tahun + '</span>' : '')
   : (badgeLabel ? '<span class="bt-badge bt-badge-cat">' + badgeLabel + '</span>' : '');
-  var tagsHtml = t.tags.map(function(tag) {
+  var tagsHtml = (t.tags || []).map(function(tag) {
     var isHl = kws.some(function(k) { return k && tag.toLowerCase().includes(k); });
     return '<span class="bt-tag' + (isHl ? ' hl' : '') + '">' + tag + '</span>';
   }).join('');

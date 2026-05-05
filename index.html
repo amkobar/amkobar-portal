@@ -2933,7 +2933,7 @@ function btRenderAll() {
 }
 
 function btRenderKatGrid() {
-  var karTeori = _btData.teori.filter(function(t) { return t.tab === 'Karakteristik'; });
+  var karTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik'); });
   // Hitung per kategori (urutan ini tetap)
   var katOrder = [...new Set(karTeori.map(function(t){ return t.kategori; }).filter(Boolean))];
 var defaultKat = ['Jenis Kelamin','Usia','Pendidikan','Pekerjaan','Pendapatan'];

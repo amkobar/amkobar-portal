@@ -62,7 +62,7 @@ export default async function handler(req, res) {
           tabs: (props['Tab']?.multi_select || []).map(s => s.name),
 tab: (props['Tab']?.multi_select || [])[0]?.name || '',
           kategori: props['Kategori']?.select?.name || '',
-          tags: (props['Tags']?.multi_select || []).map(s => s.name),
+          filter: (props['Filter']?.multi_select || []).map(s => s.name),
           is_new: props['Is_New']?.checkbox === true,
         };
       }).filter(t => t.nama_teori);
@@ -95,6 +95,7 @@ tab: (props['Tab']?.multi_select || [])[0]?.name || '',
           'Tab': { multi_select: (Array.isArray(tab) ? tab : [tab]).filter(Boolean).map(t => ({ name: t })) },
           'Kategori': { select: { name: kategori } },
           'Tags': { multi_select: (tags || []).map(t => ({ name: t })) },
+          'Filter': { multi_select: (req.body.filter || []).map(f => ({ name: f })) },
           'Is_New': { checkbox: is_new === true },
         };
         if (link_drive) properties['Link Drive'] = { url: link_drive };
@@ -127,6 +128,7 @@ tab: (props['Tab']?.multi_select || [])[0]?.name || '',
         if (tab !== undefined) properties['Tab'] = { multi_select: (Array.isArray(tab) ? tab : [tab]).filter(Boolean).map(t => ({ name: t })) };
         if (kategori !== undefined) properties['Kategori'] = { select: { name: kategori } };
         if (tags !== undefined) properties['Tags'] = { multi_select: tags.map(t => ({ name: t })) };
+        if (req.body.filter !== undefined) properties['Filter'] = { multi_select: req.body.filter.map(f => ({ name: f })) };
         if (is_new !== undefined) properties['Is_New'] = { checkbox: is_new === true };
 
         const r = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {

@@ -69,6 +69,7 @@ export default async function handler(req, res) {
   akses: getSelect('Akses'),
   aplikasi: getSelect('Aplikasi'),
   link_drive: props['Link_Drive']?.url || '',
+  link_template: props['Link Template']?.url || '',
   deskripsi: getText('Deskripsi'),
   urutan: props['Urutan']?.number || 0,
 };

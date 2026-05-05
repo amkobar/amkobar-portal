@@ -950,6 +950,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
           <div id="bt-kar-detail" style="display:none">
             <button class="bt-back-btn" onclick="btBackToGrid()">&#8592; Semua Kategori</button>
             <div class="bt-cat-title" id="bt-cat-title"></div>
+            <div id="bt-kar-filter"></div>
             <div class="bt-count" id="bt-kar-count"></div>
             <div class="bt-list" id="bt-kar-list"></div>
           </div>
@@ -2956,16 +2957,66 @@ if (!elKatGrid) return;
 elKatGrid.innerHTML = html || '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori</div></div>';
 }
 
+var _btActiveFilter = 'Semua';
+
 function btOpenKat(kat) {
   _btActiveKat = kat;
+  _btActiveFilter = 'Semua';
   document.getElementById('bt-kar-grid').style.display = 'none';
   document.getElementById('bt-kar-detail').style.display = 'block';
   document.getElementById('bt-cat-title').textContent = kat;
-  var items = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik') && t.kategori === kat; });
+  btRenderKarDetail(kat);
+}
+
+function btRenderKarDetail(kat) {
+  var allItems = _btData.teori.filter(function(t) {
+    var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
+    return tTabs.includes('Karakteristik') && t.kategori === kat;
+  });
+
+  // Kumpulkan semua filter yang tersedia
+  var allFilters = ['Semua'];
+  allItems.forEach(function(t) {
+    (t.filter || []).forEach(function(f) {
+      if (!allFilters.includes(f)) allFilters.push(f);
+    });
+  });
+
+  // Render filter chips (hanya kalau ada lebih dari 1 filter)
+  var filterHtml = '';
+  if (allFilters.length > 1) {
+    filterHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">'
+      + allFilters.map(function(f) {
+          return '<button class="bt-chip' + (f === _btActiveFilter ? ' on' : '') + '" onclick="btSetKarFilter(\'' + kat + '\',\'' + f + '\')">' + f + '</button>';
+        }).join('')
+      + '</div>';
+  }
+
+  // Filter teori berdasarkan filter aktif
+  var items = _btActiveFilter === 'Semua'
+    ? allItems
+    : allItems.filter(function(t) { return (t.filter || []).includes(_btActiveFilter); });
+
   document.getElementById('bt-kar-count').innerHTML = 'Menampilkan <span>' + items.length + '</span> teori';
+  document.getElementById('bt-kar-detail').querySelector('.bt-cat-title').insertAdjacentHTML !== undefined
+    ? null : null;
+
+  var detailEl = document.getElementById('bt-kar-detail');
+  var filterEl = document.getElementById('bt-kar-filter');
+  if (!filterEl) {
+    var div = document.createElement('div');
+    div.id = 'bt-kar-filter';
+    detailEl.insertBefore(div, document.getElementById('bt-kar-count'));
+  }
+  document.getElementById('bt-kar-filter').innerHTML = filterHtml;
   document.getElementById('bt-kar-list').innerHTML = items.length
     ? items.map(function(t) { return btRenderCard(t, kat, []); }).join('')
-    : '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori untuk kategori ini</div></div>';
+    : '<div class="bt-empty"><div class="ei">📚</div><div class="et">Belum ada teori untuk filter ini</div></div>';
+}
+
+function btSetKarFilter(kat, filter) {
+  _btActiveFilter = filter;
+  btRenderKarDetail(kat);
 }
 
 function btBackToGrid() {
@@ -3856,6 +3907,8 @@ function abtShowForm() {
   document.getElementById('abt-f-tab-var').checked = false;
   document.getElementById('abt-f-kat').value = '';
   document.getElementById('abt-f-tags').value = '';
+  document.getElementById('abt-f-filter').value = '';
+document.getElementById('abt-f-filter-wrap').style.display = 'block';
   document.getElementById('abt-f-link').value = '';
   document.getElementById('abt-f-kat-wrap').style.display = 'block';
   abtUpdateTogUI();
@@ -3877,6 +3930,8 @@ function abtShowEditForm(id) {
   document.getElementById('abt-f-tab-var').checked = tabs.includes('Variabel');
   document.getElementById('abt-f-kat').value = t.kategori || '';
   document.getElementById('abt-f-tags').value = t.tags ? t.tags.join(', ') : '';
+  document.getElementById('abt-f-filter').value = t.filter ? t.filter.join(', ') : '';
+document.getElementById('abt-f-filter-wrap').style.display = tabs.includes('Karakteristik') ? 'block' : 'none';
   document.getElementById('abt-f-link').value = t.link_drive || '';
   var showKat = tabs.includes('Karakteristik') || tabs.length === 0;
   document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
@@ -3894,6 +3949,7 @@ function abtOnTabChange() {
   var varChecked = document.getElementById('abt-f-tab-var').checked;
   var showKat = karChecked || (!varChecked);
   document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
+  document.getElementById('abt-f-filter-wrap').style.display = karChecked ? 'block' : 'none';
   if(!karChecked && varChecked) document.getElementById('abt-f-kat').value = '';
 }
 
@@ -3960,6 +4016,8 @@ function abtSaveForm() {
   var tagsRaw = document.getElementById('abt-f-tags').value.trim();
   var link = document.getElementById('abt-f-link').value.trim();
   var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(Boolean) : [];
+  var filterRaw = document.getElementById('abt-f-filter').value.trim();
+var filter = filterRaw ? filterRaw.split(',').map(function(f) { return f.trim(); }).filter(Boolean) : [];
 
   if (!nama || !kutipan) { alert('Nama teori dan kutipan wajib diisi!'); return; }
   if (tab === 'Karakteristik' && !kat) { alert('Kategori wajib diisi untuk tab Karakteristik!'); return; }
@@ -3974,6 +4032,7 @@ function abtSaveForm() {
     tab: tabs,
     kategori: kat || tab,
     tags: tags,
+    filter: filter,
     link_drive: link || null,
     is_new: _abtIsNew,
   };
@@ -4466,6 +4525,10 @@ function admTestiSaveEdit(id){
             <div class="abt-form-full">
               <div class="abt-form-lbl">Tags Variabel (pisahkan dengan koma)</div>
               <input class="abt-form-inp" id="abt-f-tags" placeholder="kepuasan konsumen, loyalitas, kualitas layanan"/>
+            </div>
+            <div class="abt-form-full" id="abt-f-filter-wrap" style="display:none">
+              <div class="abt-form-lbl">Filter Karakteristik (pisahkan dengan koma)</div>
+              <input class="abt-form-inp" id="abt-f-filter" placeholder="Perempuan, Laki-laki"/>
             </div>
             <div class="abt-form-full">
               <div class="abt-form-lbl">Link Google Drive (opsional)</div>

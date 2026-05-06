@@ -3063,7 +3063,7 @@ function btScore(item, kws) {
   if (!kws.length) return 0;
   var j = item.nama_teori.toLowerCase();
   var k = item.kutipan.toLowerCase();
-  var t = item.tags.join(' ').toLowerCase();
+  var t = (item.tags || []).join(' ').toLowerCase();
   var score = 0; var judulHits = 0;
   kws.forEach(function(kw) {
     if (j.includes(kw)) { score += 10; judulHits++; }

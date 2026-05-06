@@ -3080,7 +3080,7 @@ function btRenderVar() {
     var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
     if (!tTabs.includes('Variabel')) return false;
     var bidangOk = _btActiveBidang === 'Semua' || t.kategori === _btActiveBidang;
-    var hay = (t.nama_teori + ' ' + t.kutipan + ' ' + t.tags.join(' ')).toLowerCase();
+    var hay = (t.nama_teori + ' ' + t.kutipan + ' ' + (t.tags || []).join(' ')).toLowerCase();
     var searchOk = !kws.length || kws.some(function(k) { return hay.includes(k); });
     return bidangOk && searchOk;
   });

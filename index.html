@@ -3369,6 +3369,7 @@ function acrBuildFormFields(type, item, locLabel) {
 + '</select></div>'
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-youtube" value="' + (item ? (item.link_youtube || '') : '') + '" placeholder="https://www.youtube.com/watch?v=..."/></div>'
       + hint;
   } else {
     fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama File</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: Contoh PPT Sempro — SPSS"/></div>'
@@ -3382,6 +3383,7 @@ function acrBuildFormFields(type, item, locLabel) {
 + '</select></div>'
       + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
+      
       + hint;
   }
   document.getElementById('acr-form-fields').innerHTML = fields;
@@ -3408,6 +3410,7 @@ var aplikasi = (document.getElementById('acr-f-aplikasi') || {}).value || 'Semua
   var tipe_file = _acrFormType === 'file' ? ((document.getElementById('acr-f-tipe-file') || {}).value || 'PPT') : '';
   var link_raw = _acrFormType === 'file' ? ((document.getElementById('acr-f-link') || {}).value || '') : '';
   var link_template = _acrFormType === 'file' ? ((document.getElementById('acr-f-template') || {}).value || '') : '';
+  var link_youtube = _acrFormType === 'folder' ? ((document.getElementById('acr-f-youtube') || {}).value || '') : '';
   var link_drive = link_raw ? acrConvertToPreview(link_raw, tipe_file) : '';
   var parentSel = document.getElementById('acr-f-parent');
 var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1]);
@@ -3433,6 +3436,7 @@ var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length
     payload.tipe_file = tipe_file;
     payload.link_drive = link_drive || null;
     payload.link_template = link_template || null;
+    payload.link_youtube = link_youtube || null;
   }
 
   fetch('/api/contoh', {
@@ -3590,7 +3594,25 @@ function acrClientRenderGrid() {
       return;
     }
   }
-
+// Tampilkan video YouTube jika ada di folder aktif
+  var currentFolder = _acrClientPath.length > 0 ? _acrClientData.find(function(x){ return x.id === _acrClientPath[_acrClientPath.length-1]; }) : null;
+  var youtubeHtml = '';
+  if (currentFolder && currentFolder.link_youtube) {
+    var ytId = '';
+    var ytMatch = currentFolder.link_youtube.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch) ytId = ytMatch[1];
+    if (ytId) {
+      youtubeHtml = '<div style="margin-bottom:20px">'
+        + '<div style="background:#FAEEDA;border:0.5px solid #FAC775;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px">'
+        + '<span style="font-size:16px">&#9654;</span>'
+        + '<div><div style="font-size:13px;font-weight:600;color:#633806">Video Tutorial</div>'
+        + '<div style="font-size:11px;color:#854F0B">Tonton video ini sebelum mengedit file contoh</div></div>'
+        + '</div>'
+        + '<div style="border-radius:10px;overflow:hidden;border:1px solid var(--g200)">'
+        + '<iframe width="100%" height="360" src="https://www.youtube.com/embed/' + ytId + '" frameborder="0" allowfullscreen loading="lazy"></iframe>'
+        + '</div></div>';
+    }
+  }
   var subFolders = children.filter(function(i){ return i.tipe==='Folder'; });
   var directFiles = children.filter(function(i){ return i.tipe==='File'; });
 
@@ -3676,8 +3698,8 @@ function acrClientRenderGrid() {
         +'<div class="acr-section-grid">'+extraHtml+'</div></div>';
     }
 
-    grid.innerHTML = html;
-    return;
+    grid.innerHTML = youtubeHtml + html;
+  return;
   }
 
   // Tidak ada subfolder = flat grid/list
@@ -3707,7 +3729,7 @@ function acrClientRenderGrid() {
           +'<div style="font-size:11px;color:var(--g400)">'+sub+'</div></div></div>';
       }).join('');
 
-  grid.innerHTML = '<div class="acr-section-grid">'+flatHtml+'</div>';
+  grid.innerHTML = youtubeHtml + '<div class="acr-section-grid">'+flatHtml+'</div>';
 }
 function acrClientClick(id) {
   var item = _acrClientData.find(function(x) { return x.id === id; });

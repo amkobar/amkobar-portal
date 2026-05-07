@@ -108,6 +108,7 @@ if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (link_drive) properties['Link_Drive'] = { url: link_drive };
         if (req.body.link_template) properties['Link Template'] = { url: req.body.link_template };
         if (req.body.link_youtube) properties['Link YouTube'] = { url: req.body.link_youtube };
+        if (req.body.judul_youtube) properties['Judul Video Tutorial'] = { rich_text: [{ text: { content: req.body.judul_youtube } }] };
         if (parent_id) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };
 
         const r = await fetch('https://api.notion.com/v1/pages', {
@@ -142,6 +143,7 @@ if (aplikasi !== undefined) properties['Aplikasi'] = aplikasi ? { select: { name
         if (link_drive !== undefined) properties['Link_Drive'] = { url: link_drive || null };
         if (req.body.link_template !== undefined) properties['Link Template'] = { url: req.body.link_template || null };
         if (req.body.link_youtube !== undefined) properties['Link YouTube'] = { url: req.body.link_youtube || null };
+        if (req.body.judul_youtube !== undefined) properties['Judul Video Tutorial'] = { rich_text: [{ text: { content: req.body.judul_youtube || '' } }] };
         if (deskripsi !== undefined) properties['Deskripsi'] = { rich_text: [{ text: { content: deskripsi } }] };
         if (urutan !== undefined) properties['Urutan'] = { number: urutan };
         if (parent_id !== undefined) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };

@@ -71,6 +71,7 @@ export default async function handler(req, res) {
   link_drive: props['Link_Drive']?.url || '',
   link_template: props['Link Template']?.url || '',
   link_youtube: props['Link YouTube']?.url || '',
+  judul_youtube: (props['Judul Video Tutorial']?.rich_text || []).map(t => t.plain_text).join('') || '',
   deskripsi: getText('Deskripsi'),
   urutan: props['Urutan']?.number || 0,
 };

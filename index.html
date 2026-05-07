@@ -3369,9 +3369,9 @@ function acrBuildFormFields(type, item, locLabel) {
 + '</select></div>'
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
-      + '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-youtube" value="' + (item ? (item.link_youtube || '') : '') + '" placeholder="https://www.youtube.com/watch?v=..."/></div>'
-      + '<div class="abt-form-full"><div class="abt-form-lbl">Note Folder (opsional)</div><textarea class="abt-form-ta" id="acr-f-note" placeholder="Contoh: Pilih jurnal yang sesuai dengan topik penelitian kamu...">' + (item ? (item.note_folder || '') : '') + '</textarea></div>'
+     + '<div class="abt-form-full"><div class="abt-form-lbl">Note Folder (opsional)</div><textarea class="abt-form-ta" id="acr-f-note" placeholder="Contoh: Pilih jurnal yang sesuai dengan topik penelitian kamu...">' + (item ? (item.note_folder || '') : '') + '</textarea></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Judul Video Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-judul-youtube" value="' + (item ? (item.judul_youtube || '') : '') + '" placeholder="Contoh: Tutorial Cara Edit PPT Sempro"/></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-youtube" value="' + (item ? (item.link_youtube || '') : '') + '" placeholder="https://www.youtube.com/watch?v=..."/></div>'
       + hint;
   } else {
     fields = '<div class="abt-form-full"><div class="abt-form-lbl">Nama File</div><input class="abt-form-inp" id="acr-f-nama" value="' + (item ? item.nama : '') + '" placeholder="Contoh: Contoh PPT Sempro — SPSS"/></div>'

@@ -3370,6 +3370,7 @@ function acrBuildFormFields(type, item, locLabel) {
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-youtube" value="' + (item ? (item.link_youtube || '') : '') + '" placeholder="https://www.youtube.com/watch?v=..."/></div>'
+      + '<div class="abt-form-full"><div class="abt-form-lbl">Note Folder (opsional)</div><textarea class="abt-form-ta" id="acr-f-note" placeholder="Contoh: Pilih jurnal yang sesuai dengan topik penelitian kamu...">' + (item ? (item.note_folder || '') : '') + '</textarea></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Judul Video Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-judul-youtube" value="' + (item ? (item.judul_youtube || '') : '') + '" placeholder="Contoh: Tutorial Cara Edit PPT Sempro"/></div>'
       + hint;
   } else {
@@ -3413,6 +3414,7 @@ var aplikasi = (document.getElementById('acr-f-aplikasi') || {}).value || 'Semua
   var link_template = _acrFormType === 'file' ? ((document.getElementById('acr-f-template') || {}).value || '') : '';
   var link_youtube = _acrFormType === 'folder' ? ((document.getElementById('acr-f-youtube') || {}).value || '') : '';
   var judul_youtube = _acrFormType === 'folder' ? ((document.getElementById('acr-f-judul-youtube') || {}).value || '') : '';
+  var note_folder = _acrFormType === 'folder' ? ((document.getElementById('acr-f-note') || {}).value || '') : '';
   var link_drive = link_raw ? acrConvertToPreview(link_raw, tipe_file) : '';
   var parentSel = document.getElementById('acr-f-parent');
 var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1]);
@@ -3436,6 +3438,7 @@ var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length
   if (_acrEditId) payload.page_id = _acrEditId;
   payload.link_youtube = link_youtube || null;
   payload.judul_youtube = judul_youtube || null;
+  payload.note_folder = note_folder || null;
   if (_acrFormType === 'file') {
     payload.tipe_file = tipe_file;
     payload.link_drive = link_drive || null;
@@ -3599,6 +3602,13 @@ function acrClientRenderGrid() {
   }
 // Tampilkan video YouTube jika ada di folder aktif
   var currentFolder = _acrClientPath.length > 0 ? _acrClientData.find(function(x){ return x.id === _acrClientPath[_acrClientPath.length-1]; }) : null;
+  var noteHtml = '';
+  if (currentFolder && currentFolder.note_folder) {
+    noteHtml = '<div style="background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:8px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px">'
+      + '<span style="font-size:16px;flex-shrink:0">&#8505;</span>'
+      + '<div style="font-size:13px;color:#0C447C;line-height:1.6">' + currentFolder.note_folder + '</div>'
+      + '</div>';
+  }
   var youtubeHtml = '';
   if (currentFolder && currentFolder.link_youtube) {
     var ytId = '';
@@ -3704,7 +3714,7 @@ function acrClientRenderGrid() {
         +'<div class="acr-section-grid">'+extraHtml+'</div></div>';
     }
 
-    grid.innerHTML = youtubeHtml + html;
+   grid.innerHTML = noteHtml + youtubeHtml + html;
   return;
   }
 
@@ -3735,7 +3745,7 @@ function acrClientRenderGrid() {
           +'<div style="font-size:11px;color:var(--g400)">'+sub+'</div></div></div>';
       }).join('');
 
-  grid.innerHTML = youtubeHtml + '<div class="acr-section-grid">'+flatHtml+'</div>';
+  grid.innerHTML = noteHtml + youtubeHtml + '<div class="acr-section-grid">'+flatHtml+'</div>';
 }
 function acrClientClick(id) {
   var item = _acrClientData.find(function(x) { return x.id === id; });

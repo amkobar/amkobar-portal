@@ -3603,12 +3603,15 @@ function acrClientRenderGrid() {
     if (ytMatch) ytId = ytMatch[1];
     if (ytId) {
       youtubeHtml = '<div style="margin-bottom:20px">'
-        + '<div style="background:#FAEEDA;border:0.5px solid #FAC775;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px">'
+        + '<div style="background:#FAEEDA;border:0.5px solid #FAC775;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px">'
+        + '<div style="display:flex;align-items:center;gap:10px">'
         + '<span style="font-size:16px">&#9654;</span>'
         + '<div><div style="font-size:13px;font-weight:600;color:#633806">Video Tutorial</div>'
-        + '<div style="font-size:11px;color:#854F0B">Tonton video ini sebelum mengedit file contoh</div></div>'
+        + '<div style="font-size:11px;color:#854F0B">Klik tombol untuk menonton video tutorial</div></div>'
         + '</div>'
-        + '<div style="border-radius:10px;overflow:hidden;border:1px solid var(--g200)">'
+        + '<button onclick="acrShowYoutube(\''+ytId+'\')" style="padding:6px 14px;border-radius:8px;background:#633806;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:\'DM Sans\',sans-serif">&#9654; Tonton</button>'
+        + '</div>'
+        + '<div id="acr-yt-wrap-'+ytId+'" style="display:none;border-radius:10px;overflow:hidden;border:1px solid var(--g200)">'
         + '<iframe width="100%" height="360" src="https://www.youtube.com/embed/' + ytId + '" frameborder="0" allowfullscreen loading="lazy"></iframe>'
         + '</div></div>';
     }
@@ -3788,6 +3791,11 @@ function acrClientClosePreview() {
   var frame = document.getElementById('acr-preview-frame');
   if (preview) preview.style.display = 'none';
   if (frame) frame.src = '';
+}
+  function acrShowYoutube(ytId) {
+  var el = document.getElementById('acr-yt-wrap-' + ytId);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 /* ===== END CONTOH & REFERENSI ===== */
 

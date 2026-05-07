@@ -70,6 +70,7 @@ export default async function handler(req, res) {
   aplikasi: getSelect('Aplikasi'),
   link_drive: props['Link_Drive']?.url || '',
   link_template: props['Link Template']?.url || '',
+  link_youtube: props['Link YouTube']?.url || '',
   deskripsi: getText('Deskripsi'),
   urutan: props['Urutan']?.number || 0,
 };
@@ -105,6 +106,7 @@ export default async function handler(req, res) {
 if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (link_drive) properties['Link_Drive'] = { url: link_drive };
         if (req.body.link_template) properties['Link Template'] = { url: req.body.link_template };
+        if (req.body.link_youtube) properties['Link YouTube'] = { url: req.body.link_youtube };
         if (parent_id) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };
 
         const r = await fetch('https://api.notion.com/v1/pages', {
@@ -138,6 +140,7 @@ if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
 if (aplikasi !== undefined) properties['Aplikasi'] = aplikasi ? { select: { name: aplikasi } } : { select: null };
         if (link_drive !== undefined) properties['Link_Drive'] = { url: link_drive || null };
         if (req.body.link_template !== undefined) properties['Link Template'] = { url: req.body.link_template || null };
+        if (req.body.link_youtube !== undefined) properties['Link YouTube'] = { url: req.body.link_youtube || null };
         if (deskripsi !== undefined) properties['Deskripsi'] = { rich_text: [{ text: { content: deskripsi } }] };
         if (urutan !== undefined) properties['Urutan'] = { number: urutan };
         if (parent_id !== undefined) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };

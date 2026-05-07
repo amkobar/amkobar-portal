@@ -3432,11 +3432,11 @@ var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length
   };
 
   if (_acrEditId) payload.page_id = _acrEditId;
+  payload.link_youtube = link_youtube || null;
   if (_acrFormType === 'file') {
     payload.tipe_file = tipe_file;
     payload.link_drive = link_drive || null;
     payload.link_template = link_template || null;
-    payload.link_youtube = link_youtube || null;
   }
 
   fetch('/api/contoh', {

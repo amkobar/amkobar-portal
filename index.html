@@ -3994,7 +3994,11 @@ function abtBulkAddRow() {
     + '<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;background:#fff;padding:3px 9px;border-radius:var(--rs);border:1.5px solid var(--g200)"><input type="checkbox" id="abt-bulk-var-'+n+'" onchange="abtBulkTabChange('+n+')"> Variabel</label>'
     + '</div></div>'
     + '<input class="abt-form-inp" id="abt-bulk-nama-' + n + '" placeholder="Nama teori..." style="margin-bottom:6px"/>'
-    + '<div id="abt-bulk-kat-wrap-' + n + '" style="margin-bottom:6px"><input class="abt-form-inp" id="abt-bulk-kat-row-' + n + '" placeholder="Kategori karakteristik..."/></div>'
+    + '<div id="abt-bulk-kat-wrap-' + n + '" style="margin-bottom:6px">'
++ '<div class="abt-form-kat-wrap">'
++ '<input class="abt-form-inp" id="abt-bulk-kat-row-' + n + '" placeholder="Kategori karakteristik..." autocomplete="off" oninput="abtBulkKatInput('+n+',this.value)" onfocus="abtBulkKatFocus('+n+')" onblur="abtBulkKatBlur('+n+')" />'
++ '<div class="abt-kat-opts" id="abt-bulk-kat-opts-' + n + '"></div>'
++ '</div></div>'
     + '<div id="abt-bulk-filter-wrap-'+n+'" style="margin-bottom:6px"><input class="abt-form-inp" id="abt-bulk-filter-row-' + n + '" placeholder="Filter karakteristik (pisahkan koma)..."/></div>'
     + '<div id="abt-bulk-tags-wrap-'+n+'" style="margin-bottom:6px;display:none"><input class="abt-form-inp" id="abt-bulk-tags-row-' + n + '" placeholder="Tags variabel (pisahkan koma)..."/></div>'
     + '<textarea class="abt-form-ta" id="abt-bulk-kutipan-' + n + '" placeholder="Isi kutipan..."></textarea>';
@@ -4013,6 +4017,39 @@ function abtBulkTabChange(n) {
   if (katEl) katEl.placeholder = 'Kategori karakteristik...';
 }
 
+  function abtBulkKatInput(n, val) {
+  var all = _abtKatOptions.concat(_abtExtraKat);
+  var filtered = val ? all.filter(function(k){ return k.toLowerCase().includes(val.toLowerCase()); }) : all;
+  abtBulkRenderKatOpts(n, filtered, val);
+}
+function abtBulkKatFocus(n) {
+  var val = document.getElementById('abt-bulk-kat-row-' + n).value;
+  var all = _abtKatOptions.concat(_abtExtraKat);
+  var filtered = val ? all.filter(function(k){ return k.toLowerCase().includes(val.toLowerCase()); }) : all;
+  abtBulkRenderKatOpts(n, filtered, val);
+}
+function abtBulkKatBlur(n) {
+  setTimeout(function(){ var el = document.getElementById('abt-bulk-kat-opts-' + n); if(el) el.classList.remove('show'); }, 200);
+}
+function abtBulkRenderKatOpts(n, opts, val) {
+  var el = document.getElementById('abt-bulk-kat-opts-' + n);
+  if (!el) return;
+  var html = opts.map(function(k){
+    return '<div class="abt-kat-opt" onclick="abtBulkPickKat('+n+',\''+k+'\')">' + k + '</div>';
+  }).join('');
+  if (val && !opts.find(function(k){ return k.toLowerCase() === val.toLowerCase(); })) {
+    html += '<div class="abt-kat-opt manual" onclick="abtBulkPickKat('+n+',\''+val+'\')">Tambah "'+val+'" sebagai kategori baru</div>';
+  }
+  el.innerHTML = html;
+  el.classList.toggle('show', html !== '');
+}
+function abtBulkPickKat(n, val) {
+  var el = document.getElementById('abt-bulk-kat-row-' + n);
+  if (el) el.value = val;
+  var opts = document.getElementById('abt-bulk-kat-opts-' + n);
+  if (opts) opts.classList.remove('show');
+  if (!_abtKatOptions.includes(val) && !_abtExtraKat.includes(val)) _abtExtraKat.push(val);
+}
 function abtSaveBulkForm() {
   var sumber = document.getElementById('abt-bulk-sumber').value.trim();
   var link = document.getElementById('abt-bulk-link').value.trim();

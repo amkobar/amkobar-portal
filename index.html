@@ -4068,6 +4068,7 @@ function abtShowForm() {
 document.getElementById('abt-f-filter-wrap').style.display = 'block';
   document.getElementById('abt-f-link').value = '';
   document.getElementById('abt-f-kat-wrap').style.display = 'block';
+  document.getElementById('abt-f-tags-wrap').style.display = 'none';
   abtUpdateTogUI();
   document.getElementById('abt-form').classList.add('show');
   document.getElementById('abt-f-nama').focus();
@@ -4089,6 +4090,7 @@ function abtShowEditForm(id) {
   document.getElementById('abt-f-tags').value = t.tags ? t.tags.join(', ') : '';
   document.getElementById('abt-f-filter').value = t.filter ? t.filter.join(', ') : '';
 document.getElementById('abt-f-filter-wrap').style.display = tabs.includes('Karakteristik') ? 'block' : 'none';
+  document.getElementById('abt-f-tags-wrap').style.display = tabs.includes('Variabel') ? 'block' : 'none';
   document.getElementById('abt-f-link').value = t.link_drive || '';
   var showKat = tabs.includes('Karakteristik') || tabs.length === 0;
   document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
@@ -4107,6 +4109,8 @@ function abtOnTabChange() {
   var showKat = karChecked || (!varChecked);
   document.getElementById('abt-f-kat-wrap').style.display = showKat ? 'block' : 'none';
   document.getElementById('abt-f-filter-wrap').style.display = karChecked ? 'block' : 'none';
+  var tagsWrap = document.getElementById('abt-f-tags-wrap');
+  if (tagsWrap) tagsWrap.style.display = varChecked ? 'block' : 'none';
   if(!karChecked && varChecked) document.getElementById('abt-f-kat').value = '';
 }
 
@@ -4731,6 +4735,7 @@ function admTestiSaveEdit(id){
               </div>
             </div>
             <div class="abt-form-full">
+            <div class="abt-form-full" id="abt-f-tags-wrap">
               <div class="abt-form-lbl">Tags Variabel (pisahkan dengan koma)</div>
               <input class="abt-form-inp" id="abt-f-tags" placeholder="kepuasan konsumen, loyalitas, kualitas layanan"/>
             </div>

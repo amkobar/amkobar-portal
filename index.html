@@ -4034,7 +4034,26 @@ function abtSaveBulkForm() {
     if (!namaEl || !kutipanEl) continue;
     var nama = namaEl.value.trim();
     var kutipan = kutipanEl.value.trim();
-    if (nama && kutipan) kutipan_list.push({ nama_teori: nama, kutipan: kutipan });
+    if (!nama || !kutipan) continue;
+    var karEl = document.getElementById('abt-bulk-kar-' + i);
+    var varEl = document.getElementById('abt-bulk-var-' + i);
+    var rowTabs = [];
+    if (karEl && karEl.checked) rowTabs.push('Karakteristik');
+    if (varEl && varEl.checked) rowTabs.push('Variabel');
+    if (!rowTabs.length) rowTabs.push('Karakteristik');
+    var rowKat = (document.getElementById('abt-bulk-kat-row-' + i) || {}).value || '';
+    var rowFilterRaw = (document.getElementById('abt-bulk-filter-row-' + i) || {}).value || '';
+    var rowTagsRaw = (document.getElementById('abt-bulk-tags-row-' + i) || {}).value || '';
+    var rowFilter = rowFilterRaw ? rowFilterRaw.split(',').map(function(f){ return f.trim(); }).filter(Boolean) : [];
+    var rowTags = rowTagsRaw ? rowTagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : [];
+    kutipan_list.push({
+      nama_teori: nama,
+      kutipan: kutipan,
+      tab: rowTabs,
+      kategori: rowKat || rowTabs[0],
+      filter: rowFilter,
+      tags: rowTags
+    });
   }
   if (!kutipan_list.length) { alert('Isi minimal 1 kutipan!'); return; }
   var btn = document.getElementById('abt-bulk-save-btn');

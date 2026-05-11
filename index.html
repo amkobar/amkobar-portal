@@ -3994,7 +3994,7 @@ function abtBulkAddRow() {
     + '<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;background:#fff;padding:3px 9px;border-radius:var(--rs);border:1.5px solid var(--g200)"><input type="checkbox" id="abt-bulk-var-'+n+'" onchange="abtBulkTabChange('+n+')"> Variabel</label>'
     + '</div></div>'
     + '<input class="abt-form-inp" id="abt-bulk-nama-' + n + '" placeholder="Nama teori..." style="margin-bottom:6px"/>'
-    + '<input class="abt-form-inp" id="abt-bulk-kat-row-' + n + '" placeholder="Kategori..." style="margin-bottom:6px"/>'
+    + '<div id="abt-bulk-kat-wrap-' + n + '" style="margin-bottom:6px"><input class="abt-form-inp" id="abt-bulk-kat-row-' + n + '" placeholder="Kategori karakteristik..."/></div>'
     + '<div id="abt-bulk-filter-wrap-'+n+'" style="margin-bottom:6px"><input class="abt-form-inp" id="abt-bulk-filter-row-' + n + '" placeholder="Filter karakteristik (pisahkan koma)..."/></div>'
     + '<div id="abt-bulk-tags-wrap-'+n+'" style="margin-bottom:6px;display:none"><input class="abt-form-inp" id="abt-bulk-tags-row-' + n + '" placeholder="Tags variabel (pisahkan koma)..."/></div>'
     + '<textarea class="abt-form-ta" id="abt-bulk-kutipan-' + n + '" placeholder="Isi kutipan..."></textarea>';
@@ -4007,7 +4007,10 @@ function abtBulkTabChange(n) {
   var varr = document.getElementById('abt-bulk-var-' + n).checked;
   document.getElementById('abt-bulk-filter-wrap-' + n).style.display = kar ? 'block' : 'none';
   document.getElementById('abt-bulk-tags-wrap-' + n).style.display = varr ? 'block' : 'none';
-  document.getElementById('abt-bulk-kat-row-' + n).placeholder = kar ? 'Kategori karakteristik...' : 'Bidang variabel...';
+  var katEl = document.getElementById('abt-bulk-kat-row-' + n);
+  var katWrap = document.getElementById('abt-bulk-kat-wrap-' + n);
+  if (katWrap) katWrap.style.display = kar ? 'block' : 'none';
+  if (katEl) katEl.placeholder = 'Kategori karakteristik...';
 }
 
 function abtSaveBulkForm() {

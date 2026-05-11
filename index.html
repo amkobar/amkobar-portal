@@ -3955,6 +3955,103 @@ function abtDoHapus(id) {
     }).catch(function() { alert('Gagal menghubungi server.'); });
 }
 
+  var _abtBulkIsNew = false;
+var _abtBulkRowCount = 0;
+
+function abtShowBulkForm() {
+  _abtBulkIsNew = false;
+  _abtBulkRowCount = 0;
+  document.getElementById('abt-bulk-sumber').value = '';
+  document.getElementById('abt-bulk-kat').value = '';
+  document.getElementById('abt-bulk-filter').value = '';
+  document.getElementById('abt-bulk-tags').value = '';
+  document.getElementById('abt-bulk-link').value = '';
+  document.getElementById('abt-bulk-tab-kar').checked = true;
+  document.getElementById('abt-bulk-tab-var').checked = false;
+  document.getElementById('abt-bulk-isnew-tog').className = 'abt-form-tog off';
+  document.getElementById('abt-bulk-list').innerHTML = '';
+  abtBulkAddRow();
+  abtBulkAddRow();
+  document.getElementById('abt-bulk-form').classList.add('show');
+  document.getElementById('abt-form').classList.remove('show');
+}
+
+function abtHideBulkForm() {
+  document.getElementById('abt-bulk-form').classList.remove('show');
+}
+
+function abtBulkTogIsNew() {
+  _abtBulkIsNew = !_abtBulkIsNew;
+  document.getElementById('abt-bulk-isnew-tog').className = 'abt-form-tog ' + (_abtBulkIsNew ? 'on' : 'off');
+}
+
+function abtBulkAddRow() {
+  _abtBulkRowCount++;
+  var n = _abtBulkRowCount;
+  var div = document.createElement('div');
+  div.id = 'abt-bulk-row-' + n;
+  div.style.cssText = 'background:var(--g50);border-radius:var(--rs);padding:10px;border:1px solid var(--g200)';
+  div.innerHTML = '<div style="font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Kutipan ' + n + '</div>'
+    + '<input class="abt-form-inp" id="abt-bulk-nama-' + n + '" placeholder="Nama teori..." style="margin-bottom:6px"/>'
+    + '<textarea class="abt-form-ta" id="abt-bulk-kutipan-' + n + '" placeholder="Isi kutipan..."></textarea>';
+  document.getElementById('abt-bulk-list').appendChild(div);
+}
+
+function abtSaveBulkForm() {
+  var sumber = document.getElementById('abt-bulk-sumber').value.trim();
+  var kat = document.getElementById('abt-bulk-kat').value.trim();
+  var filterRaw = document.getElementById('abt-bulk-filter').value.trim();
+  var tagsRaw = document.getElementById('abt-bulk-tags').value.trim();
+  var link = document.getElementById('abt-bulk-link').value.trim();
+  var tabs = [];
+  if (document.getElementById('abt-bulk-tab-kar').checked) tabs.push('Karakteristik');
+  if (document.getElementById('abt-bulk-tab-var').checked) tabs.push('Variabel');
+  var filter = filterRaw ? filterRaw.split(',').map(function(f){ return f.trim(); }).filter(Boolean) : [];
+  var tags = tagsRaw ? tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : [];
+
+  if (!sumber) { alert('Sumber jurnal wajib diisi!'); return; }
+  if (!tabs.length) { alert('Pilih minimal satu tab!'); return; }
+
+  var kutipan_list = [];
+  for (var i = 1; i <= _abtBulkRowCount; i++) {
+    var namaEl = document.getElementById('abt-bulk-nama-' + i);
+    var kutipanEl = document.getElementById('abt-bulk-kutipan-' + i);
+    if (!namaEl || !kutipanEl) continue;
+    var nama = namaEl.value.trim();
+    var kutipan = kutipanEl.value.trim();
+    if (nama && kutipan) kutipan_list.push({ nama_teori: nama, kutipan: kutipan });
+  }
+
+  if (!kutipan_list.length) { alert('Isi minimal 1 kutipan!'); return; }
+
+  var btn = document.getElementById('abt-bulk-save-btn');
+  btn.textContent = 'Menyimpan ' + kutipan_list.length + ' teori...';
+  btn.disabled = true;
+
+  fetch('/api/teori', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'tambah_bulk',
+      sumber: sumber,
+      tab: tabs,
+      kategori: kat || tabs[0],
+      filter: filter,
+      tags: tags,
+      link_drive: link || null,
+      is_new: _abtBulkIsNew,
+      kutipan_list: kutipan_list
+    })
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        alert('Berhasil menyimpan ' + res.saved + ' teori!');
+        _abtLoaded = false;
+        abtHideBulkForm();
+        loadAdmBankTeori();
+      } else { alert('Gagal: ' + (res.error || '')); }
+    }).catch(function() { alert('Gagal
+                                
 function abtShowForm() {
   _abtEditId = null;
   _abtIsNew = false;
@@ -4539,6 +4636,7 @@ function admTestiSaveEdit(id){
             <option value="Variabel">Variabel</option>
           </select>
           <button class="abt-add-btn" onclick="abtShowForm()">&#43; Tambah Teori</button>
+          <button class="abt-add-btn" style="background:var(--blue)" onclick="abtShowBulkForm()">&#43; Dari 1 Jurnal</button>
         </div>
         <div class="abt-count" id="abt-count">Memuat teori...</div>
         <div class="abt-split">
@@ -4549,6 +4647,56 @@ function admTestiSaveEdit(id){
             <div class="abt-empty">Pilih teori di sebelah kiri<br>untuk melihat detail &amp; mengedit</div>
           </div>
         </div>
+        <div class="abt-form" id="abt-bulk-form">
+  <div class="abt-form-title">
+    <span>Tambah dari 1 Jurnal</span>
+    <button class="abt-form-close" onclick="abtHideBulkForm()">&#10005;</button>
+  </div>
+  <div class="abt-form-grid">
+    <div class="abt-form-full">
+      <div class="abt-form-lbl">Sumber Jurnal</div>
+      <input class="abt-form-inp" id="abt-bulk-sumber" placeholder="Nama et al. (tahun). Judul. Penerbit."/>
+    </div>
+    <div>
+      <div class="abt-form-lbl">Tab</div>
+      <div style="display:flex;gap:16px;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-bulk-tab-kar" value="Karakteristik" checked> Karakteristik</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-bulk-tab-var" value="Variabel"> Variabel</label>
+      </div>
+    </div>
+    <div>
+      <div class="abt-form-lbl">Kategori</div>
+      <input class="abt-form-inp" id="abt-bulk-kat" placeholder="Jenis Kelamin"/>
+    </div>
+    <div>
+      <div class="abt-form-lbl">Filter (pisahkan koma)</div>
+      <input class="abt-form-inp" id="abt-bulk-filter" placeholder="Perempuan, Laki-laki"/>
+    </div>
+    <div>
+      <div class="abt-form-lbl">Tags (pisahkan koma)</div>
+      <input class="abt-form-inp" id="abt-bulk-tags" placeholder="tag1, tag2"/>
+    </div>
+    <div>
+      <div class="abt-form-lbl">Link Google Drive (opsional)</div>
+      <input class="abt-form-inp" id="abt-bulk-link" placeholder="https://drive.google.com/..."/>
+    </div>
+    <div class="abt-form-full">
+      <div class="abt-form-tog-row">
+        <div class="abt-form-tog off" id="abt-bulk-isnew-tog" onclick="abtBulkTogIsNew()"><div class="abt-form-tog-t"></div></div>
+        <span class="abt-form-tog-lbl">Tandai semua sebagai teori baru</span>
+      </div>
+    </div>
+    <div class="abt-form-full">
+      <div class="abt-form-lbl">Kutipan</div>
+      <div id="abt-bulk-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+      <button class="abt-form-cancel" onclick="abtBulkAddRow()" style="width:100%;border-style:dashed">&#43; Tambah Kutipan</button>
+    </div>
+  </div>
+  <div class="abt-form-btns">
+    <button class="abt-form-cancel" onclick="abtHideBulkForm()">Batal</button>
+    <button class="abt-form-save" id="abt-bulk-save-btn" onclick="abtSaveBulkForm()">Simpan Semua ke Notion</button>
+  </div>
+</div>
         <div class="abt-form" id="abt-form">
           <div class="abt-form-title">
             <span id="abt-form-title-txt">Tambah teori baru</span>

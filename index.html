@@ -3999,6 +3999,7 @@ function abtBulkAddRow() {
     + '<div id="abt-bulk-tags-wrap-'+n+'" style="margin-bottom:6px;display:none"><input class="abt-form-inp" id="abt-bulk-tags-row-' + n + '" placeholder="Tags variabel (pisahkan koma)..."/></div>'
     + '<textarea class="abt-form-ta" id="abt-bulk-kutipan-' + n + '" placeholder="Isi kutipan..."></textarea>';
   document.getElementById('abt-bulk-list').appendChild(div);
+  abtBulkTabChange(n);
 }
 
 function abtBulkTabChange(n) {

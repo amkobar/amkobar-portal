@@ -92,14 +92,18 @@ if (action === 'tambah_bulk') {
   const results = [];
   for (const item of kutipan_list) {
     if (!item.nama_teori || !item.kutipan) continue;
+    const itemTab = item.tab || tab;
+    const itemKat = item.kategori || kategori;
+    const itemFilter = item.filter || filter;
+    const itemTags = item.tags || tags;
     const properties = {
       'Nama Teori': { title: [{ text: { content: item.nama_teori } }] },
       'Kutipan': { rich_text: [{ text: { content: item.kutipan } }] },
       'Sumber': { rich_text: [{ text: { content: sumber || '' } }] },
-      'Tab': { multi_select: (Array.isArray(tab) ? tab : [tab]).filter(Boolean).map(t => ({ name: t })) },
-      'Kategori': { select: { name: kategori || '' } },
-      'Tags': { multi_select: (tags || []).map(t => ({ name: t })) },
-      'Filter': { multi_select: (filter || []).map(f => ({ name: f })) },
+      'Tab': { multi_select: (Array.isArray(itemTab) ? itemTab : [itemTab]).filter(Boolean).map(t => ({ name: t })) },
+      'Kategori': { select: { name: itemKat || '' } },
+      'Tags': { multi_select: (itemTags || []).map(t => ({ name: t })) },
+      'Filter': { multi_select: (itemFilter || []).map(f => ({ name: f })) },
       'Is_New': { checkbox: is_new === true },
     };
     if (link_drive) properties['Link Drive'] = { url: link_drive };

@@ -83,6 +83,42 @@ tab: (props['Tab']?.multi_select || [])[0]?.name || '',
     try {
       const { action, page_id, nama_teori, kutipan, sumber, link_drive, tab, kategori, tags, is_new } = req.body;
 
+      // --- TAMBAH BULK ---
+if (action === 'tambah_bulk') {
+  const { sumber, tab, kategori, tags, filter, link_drive, is_new, kutipan_list } = req.body;
+  if (!kutipan_list || !kutipan_list.length) {
+    return res.status(400).json({ error: 'kutipan_list tidak boleh kosong' });
+  }
+  const results = [];
+  for (const item of kutipan_list) {
+    if (!item.nama_teori || !item.kutipan) continue;
+    const properties = {
+      'Nama Teori': { title: [{ text: { content: item.nama_teori } }] },
+      'Kutipan': { rich_text: [{ text: { content: item.kutipan } }] },
+      'Sumber': { rich_text: [{ text: { content: sumber || '' } }] },
+      'Tab': { multi_select: (Array.isArray(tab) ? tab : [tab]).filter(Boolean).map(t => ({ name: t })) },
+      'Kategori': { select: { name: kategori || '' } },
+      'Tags': { multi_select: (tags || []).map(t => ({ name: t })) },
+      'Filter': { multi_select: (filter || []).map(f => ({ name: f })) },
+      'Is_New': { checkbox: is_new === true },
+    };
+    if (link_drive) properties['Link Drive'] = { url: link_drive };
+    const r = await fetch('https://api.notion.com/v1/pages', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${NOTION_TOKEN}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ parent: { database_id: DB_ID }, properties }),
+    });
+    if (r.ok) {
+      const data = await r.json();
+      results.push({ id: data.id, nama_teori: item.nama_teori });
+    }
+  }
+  return res.status(200).json({ success: true, saved: results.length, results });
+}
       // --- TAMBAH ---
       if (action === 'tambah') {
         if (!nama_teori || !tab || !kategori) {

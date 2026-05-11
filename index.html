@@ -3992,10 +3992,26 @@ function abtBulkAddRow() {
   var div = document.createElement('div');
   div.id = 'abt-bulk-row-' + n;
   div.style.cssText = 'background:var(--g50);border-radius:var(--rs);padding:10px;border:1px solid var(--g200)';
-  div.innerHTML = '<div style="font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Kutipan ' + n + '</div>'
+  div.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+    + '<div style="font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px">Kutipan ' + n + '</div>'
+    + '<div style="display:flex;gap:8px">'
+    + '<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;background:#fff;padding:3px 9px;border-radius:var(--rs);border:1.5px solid var(--g200)"><input type="checkbox" id="abt-bulk-kar-'+n+'" checked onchange="abtBulkTabChange('+n+')"> Karakteristik</label>'
+    + '<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;background:#fff;padding:3px 9px;border-radius:var(--rs);border:1.5px solid var(--g200)"><input type="checkbox" id="abt-bulk-var-'+n+'" onchange="abtBulkTabChange('+n+')"> Variabel</label>'
+    + '</div></div>'
     + '<input class="abt-form-inp" id="abt-bulk-nama-' + n + '" placeholder="Nama teori..." style="margin-bottom:6px"/>'
+    + '<input class="abt-form-inp" id="abt-bulk-kat-row-' + n + '" placeholder="Kategori..." style="margin-bottom:6px"/>'
+    + '<div id="abt-bulk-filter-wrap-'+n+'" style="margin-bottom:6px"><input class="abt-form-inp" id="abt-bulk-filter-row-' + n + '" placeholder="Filter karakteristik (pisahkan koma)..."/></div>'
+    + '<div id="abt-bulk-tags-wrap-'+n+'" style="margin-bottom:6px;display:none"><input class="abt-form-inp" id="abt-bulk-tags-row-' + n + '" placeholder="Tags variabel (pisahkan koma)..."/></div>'
     + '<textarea class="abt-form-ta" id="abt-bulk-kutipan-' + n + '" placeholder="Isi kutipan..."></textarea>';
   document.getElementById('abt-bulk-list').appendChild(div);
+}
+
+function abtBulkTabChange(n) {
+  var kar = document.getElementById('abt-bulk-kar-' + n).checked;
+  var varr = document.getElementById('abt-bulk-var-' + n).checked;
+  document.getElementById('abt-bulk-filter-wrap-' + n).style.display = kar ? 'block' : 'none';
+  document.getElementById('abt-bulk-tags-wrap-' + n).style.display = varr ? 'block' : 'none';
+  document.getElementById('abt-bulk-kat-row-' + n).placeholder = kar ? 'Kategori karakteristik...' : 'Bidang variabel...';
 }
 
 function abtSaveBulkForm() {

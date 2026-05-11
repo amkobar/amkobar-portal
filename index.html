@@ -3974,6 +3974,7 @@ function abtShowBulkForm() {
   abtBulkAddRow();
   document.getElementById('abt-bulk-form').classList.add('show');
   document.getElementById('abt-form').classList.remove('show');
+  setTimeout(function(){ document.getElementById('abt-bulk-form').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
 }
 
 function abtHideBulkForm() {

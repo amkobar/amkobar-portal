@@ -4008,10 +4008,8 @@ function abtSaveBulkForm() {
   if (document.getElementById('abt-bulk-tab-var').checked) tabs.push('Variabel');
   var filter = filterRaw ? filterRaw.split(',').map(function(f){ return f.trim(); }).filter(Boolean) : [];
   var tags = tagsRaw ? tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : [];
-
   if (!sumber) { alert('Sumber jurnal wajib diisi!'); return; }
   if (!tabs.length) { alert('Pilih minimal satu tab!'); return; }
-
   var kutipan_list = [];
   for (var i = 1; i <= _abtBulkRowCount; i++) {
     var namaEl = document.getElementById('abt-bulk-nama-' + i);
@@ -4021,13 +4019,10 @@ function abtSaveBulkForm() {
     var kutipan = kutipanEl.value.trim();
     if (nama && kutipan) kutipan_list.push({ nama_teori: nama, kutipan: kutipan });
   }
-
   if (!kutipan_list.length) { alert('Isi minimal 1 kutipan!'); return; }
-
   var btn = document.getElementById('abt-bulk-save-btn');
   btn.textContent = 'Menyimpan ' + kutipan_list.length + ' teori...';
   btn.disabled = true;
-
   fetch('/api/teori', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -4050,7 +4045,12 @@ function abtSaveBulkForm() {
         abtHideBulkForm();
         loadAdmBankTeori();
       } else { alert('Gagal: ' + (res.error || '')); }
-    }).catch(function() { alert('Gagal
+    }).catch(function() { alert('Gagal menghubungi server.'); })
+    .finally(function() {
+      btn.textContent = 'Simpan Semua ke Notion';
+      btn.disabled = false;
+    });
+}
                                 
 function abtShowForm() {
   _abtEditId = null;

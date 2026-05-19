@@ -3842,7 +3842,10 @@ function loadAdmBankTeori() {
 
 function abtFiltered() {
   return _abtData.filter(function(t) {
-    var mq = !_abtFilterQ || t.nama_teori.toLowerCase().includes(_abtFilterQ);
+    var mq = !_abtFilterQ ||
+  t.nama_teori.toLowerCase().includes(_abtFilterQ) ||
+  (t.kutipan || '').toLowerCase().includes(_abtFilterQ) ||
+  (t.sumber || '').toLowerCase().includes(_abtFilterQ);
     var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
     var mt = !_abtFilterTab || tTabs.includes(_abtFilterTab);
     return mq && mt;

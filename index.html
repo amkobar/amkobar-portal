@@ -2873,7 +2873,7 @@ var _BT_KAT_META = {
   'Jenis Kelamin': { icon: '👥' },
   'Usia':          { icon: '🎂' },
   'Pendidikan':    { icon: '🎓' },
-  'Pekerjaan':     { icon: '💼' },
+  'Lama Bekerja':     { icon: '💼' },
   'Pendapatan':    { icon: '💰' },
 };
 
@@ -2937,7 +2937,7 @@ function btRenderKatGrid() {
   var karTeori = _btData.teori.filter(function(t) { var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab]; return tTabs.includes('Karakteristik'); });
   // Hitung per kategori (urutan ini tetap)
   var katOrder = [...new Set(karTeori.map(function(t){ return t.kategori; }).filter(Boolean))];
-var defaultKat = ['Jenis Kelamin','Usia','Pendidikan','Pekerjaan','Pendapatan'];
+var defaultKat = ['Jenis Kelamin','Usia','Pendidikan','Lama Bekerja','Pendapatan'];
 defaultKat.forEach(function(k){ if(!katOrder.includes(k)) katOrder.push(k); });
   var katCount = {};
   karTeori.forEach(function(t) {
@@ -3823,7 +3823,7 @@ var _abtEditId = null;
 var _abtIsNew = false;
 var _abtFilterQ = '';
 var _abtFilterTab = '';
-var _abtKatOptions = ['Jenis Kelamin','Usia','Pendidikan','Pekerjaan','Pendapatan'];
+var _abtKatOptions = ['Jenis Kelamin','Usia','Pendidikan','Lama Bekerja','Pendapatan'];
 var _abtExtraKat = [];
 
 function loadAdmBankTeori() {

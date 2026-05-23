@@ -4037,14 +4037,28 @@ function abtBulkKatBlur(n) {
 function abtBulkRenderKatOpts(n, opts, val) {
   var el = document.getElementById('abt-bulk-kat-opts-' + n);
   if (!el) return;
-  var html = opts.map(function(k){
-    return '<div class="abt-kat-opt" onclick="abtBulkPickKat('+n+',\''+k+'\')">' + k + '</div>';
-  }).join('');
+  el.innerHTML = '';
+  opts.forEach(function(k) {
+    var div = document.createElement('div');
+    div.className = 'abt-kat-opt';
+    div.textContent = k;
+    div.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      abtBulkPickKat(n, k);
+    });
+    el.appendChild(div);
+  });
   if (val && !opts.find(function(k){ return k.toLowerCase() === val.toLowerCase(); })) {
-    html += '<div class="abt-kat-opt manual" onclick="abtBulkPickKat('+n+',\''+val+'\')">Tambah "'+val+'" sebagai kategori baru</div>';
+    var div = document.createElement('div');
+    div.className = 'abt-kat-opt manual';
+    div.textContent = 'Tambah "' + val + '" sebagai kategori baru';
+    div.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      abtBulkPickKat(n, val);
+    });
+    el.appendChild(div);
   }
-  el.innerHTML = html;
-  el.classList.toggle('show', html !== '');
+  el.classList.toggle('show', el.children.length > 0);
 }
 function abtBulkPickKat(n, val) {
   var el = document.getElementById('abt-bulk-kat-row-' + n);

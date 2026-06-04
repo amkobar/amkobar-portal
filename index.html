@@ -2756,6 +2756,17 @@ function loadMateriPanduan(){
   var tag=document.getElementById('mp-app-tag');
   var app=sessionStorage.getItem('amkobar_aplikasi')||'';
   if(banner){banner.style.display='flex';}
+  // Pengecekan status akses (Rencana 1)
+  var statusSekarang = (window._dashData && window._dashData.status_project) ? window._dashData.status_project : '';
+  var statusBoleh = ['Menunggu Pelunasan', 'Pendampingan', 'Selesai'];
+  var bolehAkses = statusBoleh.indexOf(statusSekarang) > -1;
+  if (!bolehAkses) {
+    var gridLock = document.getElementById('mp-modul-grid');
+    var panelCbhLock = document.getElementById('mp-panel-cbh');
+    if (gridLock) gridLock.innerHTML = '<div style="text-align:center;padding:40px 20px"><div style="font-size:40px;margin-bottom:12px">🔒</div><div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px">Materi & Panduan Belum Tersedia</div><div style="font-size:13.5px;color:var(--g600);line-height:1.7;max-width:420px;margin:0 auto">Materi & Panduan akan dapat diakses setelah status project kamu <strong>Menunggu Pelunasan</strong>. Saat ini status kamu adalah <strong>' + (statusSekarang || 'belum diketahui') + '</strong>. Tetap Pantau Progres Project kamu! 💪</div></div>';
+    if (panelCbhLock) panelCbhLock.innerHTML = '';
+    return;
+  }
   if(tag){tag.textContent=app||'Semua';}
   if(_mpLoaded){mpRender();return;}
   var grid=document.getElementById('mp-modul-grid');

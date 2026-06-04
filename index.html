@@ -3198,7 +3198,7 @@ var catBadge = t.tab === 'Variabel'
     + (tagsHtml ? '<div class="bt-tags">' + tagsHtml + '</div>' : '')
     + (t.sumber ? '<div class="bt-sumber">Sumber: ' + t.sumber + '</div>' : '')
     + '<div class="bt-actions">'
-    + '<button class="bt-salin-btn" onclick="btSalin(this,`' + safeKutipan + '`,`' + t.id + '`,`' + (badgeLabel||'') + '`)">Salin Kutipan</button>'
+    + '<button class="bt-salin-btn" onclick="btSalin(this,`' + safeKutipan + '`,`' + t.id + '`,`' + (t.kategori||'') + '`)">Salin Kutipan</button>'
     + sumberBtn
     + '</div></div>';
 }

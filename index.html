@@ -794,6 +794,11 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
         <span id="d-akses-lbl" class="akses-tog-lbl">Akses Aktif</span>
         <div id="d-akses-tog" class="akses-tog on"><div class="akses-tog-t"></div></div>
       </div>
+      <div id="d-all-teori-wrap" style="display:none" class="akses-tog-wrap" onclick="toggleAllTeoriTampil()">
+        <div id="d-all-teori-dot" class="akses-tog-dot off"></div>
+        <span id="d-all-teori-lbl" class="akses-tog-lbl">Teori Terkunci</span>
+        <div id="d-all-teori-tog" class="akses-tog off"><div class="akses-tog-t"></div></div>
+      </div>
       <button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
     </div>
   </div>
@@ -1902,7 +1907,11 @@ if (editBtnJudul) editBtnJudul.style.display = 'block';
 if (editBtnVariabel) editBtnVariabel.style.display = 'block';
       window._dashPageId=d.page_id||null;
       window._dashData=d;
+      window._teoriDipilih = {};
+try { window._teoriDipilih = JSON.parse(d.teori_dipilih || '{}'); } catch(e) {}
+window._allTeoriTampil = d.all_teori_tampil || false;
       updateAksesTogUI(d.akses_aktif!==false);
+      updateAllTeoriTampilUI(d.all_teori_tampil||false);
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='flex';
       setStatusPillActive(d.status_project||'');
@@ -2422,6 +2431,43 @@ function updateAksesTogUI(aktif){
     lbl.textContent='Akses Nonaktif';
     tog.className='akses-tog off';
   }
+}
+  function updateAllTeoriTampilUI(allTampil){
+  var wrap=document.getElementById('d-all-teori-wrap');
+  var dot=document.getElementById('d-all-teori-dot');
+  var lbl=document.getElementById('d-all-teori-lbl');
+  var tog=document.getElementById('d-all-teori-tog');
+  if(!wrap)return;
+  wrap.style.display='flex';
+  if(allTampil){
+    wrap.className='akses-tog-wrap';
+    dot.className='akses-tog-dot on';
+    lbl.textContent='Semua Teori Tampil';
+    tog.className='akses-tog on';
+  }else{
+    wrap.className='akses-tog-wrap nonaktif';
+    dot.className='akses-tog-dot off';
+    lbl.textContent='Teori Terkunci';
+    tog.className='akses-tog off';
+  }
+  window._allTeoriTampil=allTampil;
+}
+
+function toggleAllTeoriTampil(){
+  var pageId=window._dashPageId||null;
+  if(!pageId)return;
+  var togEl=document.getElementById('d-all-teori-tog');
+  var isOn=togEl&&togEl.classList.contains('on');
+  var newVal=!isOn;
+  updateAllTeoriTampilUI(newVal);
+  fetch('/api/update-client',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'update_all_teori_tampil',page_id:pageId,all_teori_tampil:newVal})
+  }).catch(function(){
+    updateAllTeoriTampilUI(isOn);
+    alert('Gagal update. Coba lagi.');
+  });
 }
 function toggleAksesClient(){
   var pageId=window._dashPageId||null;
@@ -2970,10 +3016,18 @@ function btOpenKat(kat) {
 }
 
 function btRenderKarDetail(kat) {
-  var allItems = _btData.teori.filter(function(t) {
+  var allItemsRaw = _btData.teori.filter(function(t) {
     var tTabs = t.tabs && t.tabs.length ? t.tabs : [t.tab];
     return tTabs.includes('Karakteristik') && t.kategori === kat;
   });
+
+  var dipilihId = (window._teoriDipilih || {})[kat] || null;
+  var allItems;
+  if (!window._allTeoriTampil && dipilihId) {
+    allItems = allItemsRaw.filter(function(t) { return t.id === dipilihId; });
+  } else {
+    allItems = allItemsRaw;
+  }
 
   // Kumpulkan semua filter yang tersedia
   var allFilters = ['Semua'];
@@ -3145,12 +3199,33 @@ var catBadge = t.tab === 'Variabel'
     + (tagsHtml ? '<div class="bt-tags">' + tagsHtml + '</div>' : '')
     + (t.sumber ? '<div class="bt-sumber">Sumber: ' + t.sumber + '</div>' : '')
     + '<div class="bt-actions">'
-    + '<button class="bt-salin-btn" onclick="btSalin(this,`' + safeKutipan + '`)">Salin Kutipan</button>'
+    + '<button class="bt-salin-btn" onclick="btSalin(this,`' + safeKutipan + '`,`' + t.id + '`,`' + (badgeLabel||'') + '`)">Salin Kutipan</button>'
     + sumberBtn
     + '</div></div>';
 }
 
-function btSalin(btn, teks) {
+function btSalin(btn, teks, teoriId, kat) {
+  var dipilihId = (window._teoriDipilih || {})[kat] || null;
+  var isKar = kat && kat !== 'undefined' && kat !== '';
+  var sudahDipilih = dipilihId === teoriId;
+
+  if (isKar && !window._allTeoriTampil && !dipilihId) {
+    if (!confirm('Yakin ingin menggunakan teori ini?\nPastikan teori ini sesuai dengan kebutuhan dan hasil penelitian kamu. Setelah klik OK, teori ini akan tersimpan permanen dan hanya teori ini yang tampil di kategori "' + kat + '".')) return;
+    var pageId = window._dashPageId || null;
+    if (pageId) {
+      fetch('/api/update-client', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'simpan_teori_dipilih', page_id: pageId, kategori: kat, teori_id: teoriId })
+      }).then(function(r) { return r.json(); }).then(function(res) {
+        if (res.success) {
+          window._teoriDipilih = res.teori_dipilih;
+          btRenderKarDetail(kat);
+        }
+      });
+    }
+  }
+
   navigator.clipboard.writeText(teks).then(function() {
     btn.textContent = '✓ Tersalin!';
     btn.classList.add('copied');

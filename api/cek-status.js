@@ -112,6 +112,8 @@ export default async function handler(req, res) {
       reward_dicairkan: getCheckbox(props['Reward_Dicairkan']),
       reward_ditransfer: getCheckbox(props['Reward_Ditransfer']), // BARU
       rekening_reward: getText(props['Rekening_Reward']),
+      teori_dipilih: (props['Teori Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}',
+all_teori_tampil: getCheckbox(props['All Teori Tampil']),
     });
 
   } catch (err) {

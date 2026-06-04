@@ -984,7 +984,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
     </div>
     <div id="mp-app-tag" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:100px;font-size:11.5px;font-weight:600"></div>
   </div>
-  <div style="display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:5px;border-radius:12px;border:1px solid var(--g200);width:fit-content">
+  <div id="mp-subtab-bar" style="display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:5px;border-radius:12px;border:1px solid var(--g200);width:fit-content">
     <button class="mp-subtab on" id="mp-sub-modul" onclick="mpSwitchSub('modul',this)">📄 Modul</button>
     <button class="mp-subtab" id="mp-sub-cbh" onclick="mpSwitchSub('cbh',this)">🎬 Cara Baca Hasil</button>
   </div>
@@ -2760,12 +2760,31 @@ function loadMateriPanduan(){
   var statusSekarang = (window._dashData && window._dashData.status_project) ? window._dashData.status_project : '';
   var statusBoleh = ['Menunggu Pelunasan', 'Pendampingan', 'Selesai'];
   var bolehAkses = statusBoleh.indexOf(statusSekarang) > -1;
+  var mpSubtabBar = document.getElementById('mp-subtab-bar');
+  var mpPanelModul = document.getElementById('mp-panel-modul');
+  var mpPanelCbh = document.getElementById('mp-panel-cbh');
   if (!bolehAkses) {
-    var gridLock = document.getElementById('mp-modul-grid');
-    var panelCbhLock = document.getElementById('mp-panel-cbh');
-    if (gridLock) gridLock.innerHTML = '<div style="text-align:center;padding:40px 20px"><div style="font-size:40px;margin-bottom:12px">🔒</div><div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px">Materi & Panduan Belum Tersedia</div><div style="font-size:13.5px;color:var(--g600);line-height:1.7;max-width:420px;margin:0 auto">Materi & Panduan akan dapat diakses setelah status project kamu <strong>Menunggu Pelunasan</strong>. Saat ini status kamu adalah <strong>' + (statusSekarang || 'belum diketahui') + '</strong>. Tetap Pantau Progres Project kamu! 💪</div></div>';
-    if (panelCbhLock) panelCbhLock.innerHTML = '';
+    // Sembunyikan banner + baris tab + panel agar tampilan bersih
+    if (banner) banner.style.display = 'none';
+    if (mpSubtabBar) mpSubtabBar.style.display = 'none';
+    if (mpPanelCbh) mpPanelCbh.style.display = 'none';
+    if (mpPanelModul) {
+      mpPanelModul.style.display = 'block';
+      mpPanelModul.innerHTML = '<div style="background:#f1f5f9;border-radius:14px;padding:40px 24px">'
+        + '<div style="max-width:440px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:14px;padding:36px 32px">'
+        + '<div style="width:64px;height:64px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px">🔒</div>'
+        + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:10px">Materi &amp; Panduan Belum Tersedia</div>'
+        + '<div style="font-size:14px;color:var(--g600);line-height:1.7">Materi &amp; Panduan dapat diakses setelah project kamu memasuki tahap akhir pengerjaan. Tetap pantau progres project kamu!</div>'
+        + '<div style="display:inline-flex;align-items:center;gap:6px;margin-top:20px;background:#f1f5f9;padding:6px 14px;border-radius:8px;font-size:13px;color:var(--g600)">Status saat ini: <strong style="color:#b45309">' + (statusSekarang || 'belum diketahui') + '</strong></div>'
+        + '</div></div>';
+    }
     return;
+  }
+  // Akses terbuka — pastikan banner, baris tab, dan panel dipulihkan
+  if (banner) banner.style.display = 'flex';
+  if (mpSubtabBar) mpSubtabBar.style.display = 'flex';
+  if (mpPanelModul && !mpPanelModul.querySelector('#mp-modul-grid')) {
+    mpPanelModul.innerHTML = '<div id="mp-modul-grid" class="mp-grid"></div>';
   }
   if(tag){tag.textContent=app||'Semua';}
   if(_mpLoaded){mpRender();return;}

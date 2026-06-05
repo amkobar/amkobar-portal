@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
 <title>AMKOBAR — Portal Client</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
-<script async src="https://tally.so/widgets/embed.js"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
+<script async="" src="https://tally.so/widgets/embed.js"></script>
 <style>
 :root{
   --navy:#0d2144;--navy-2:#1a3560;--blue:#1a6bbd;--blue-2:#2d84e0;
@@ -718,294 +719,282 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </style>
 </head>
 <body>
-
-<div id="ref-popup-overlay" class="ref-popup-overlay" style="display:none" onclick="if(event.target===this)closeRefPopup()">
-  <div class="ref-popup">
-  <div class="ref-popup-title">&#9888;&#65039; Setelah Membagikan Link</div>
-  <div class="ref-popup-desc">Ingatkan calon client atau teman kamu untuk <strong>menghubungi admin AMKOBAR via WhatsApp terlebih dahulu</strong> sebelum mengisi form registrasi.</div>
-   <div class="ref-popup-btns">
-      <button class="ref-popup-cancel" onclick="closeRefPopup()">Batal</button>
-      <button class="ref-popup-copy" id="ref-popup-copy-btn" onclick="doRefCopy()">Salin &amp; Bagikan</button>
-    </div>
-  </div>
+<div class="ref-popup-overlay" id="ref-popup-overlay" onclick="if(event.target===this)closeRefPopup()" style="display:none">
+<div class="ref-popup">
+<div class="ref-popup-title">⚠️ Setelah Membagikan Link</div>
+<div class="ref-popup-desc">Ingatkan calon client atau teman kamu untuk <strong>menghubungi admin AMKOBAR via WhatsApp terlebih dahulu</strong> sebelum mengisi form registrasi.</div>
+<div class="ref-popup-btns">
+<button class="ref-popup-cancel" onclick="closeRefPopup()">Batal</button>
+<button class="ref-popup-copy" id="ref-popup-copy-btn" onclick="doRefCopy()">Salin &amp; Bagikan</button>
 </div>
-
+</div>
+</div>
 <nav class="nav" id="nav-main">
-  <div class="nav-brand" onclick="goHome()">
-    <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
-    <div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik &amp; Statistik</div></div>
-  </div>
-  <div class="nav-links">
-    <a id="nl-home" class="on" onclick="goHome()">Cek Status</a>
-    <a id="nl-faq" onclick="showPg('faq')">FAQ</a>
-    <a id="nl-testimoni" onclick="showPg('testimoni')">Testimoni</a>
-    <a onclick="window.open('pricelist.html','_blank')">Pricelist</a>
-  </div>
+<div class="nav-brand" onclick="goHome()">
+<div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
+<div><div class="nav-name">AMKOBAR</div><div class="nav-sub">Konsultasi Akademik &amp; Statistik</div></div>
+</div>
+<div class="nav-links">
+<a class="on" id="nl-home" onclick="goHome()">Cek Status</a>
+<a id="nl-faq" onclick="showPg('faq')">FAQ</a>
+<a id="nl-testimoni" onclick="showPg('testimoni')">Testimoni</a>
+<a onclick="window.open('pricelist.html','_blank')">Pricelist</a>
+</div>
 </nav>
-
-<div id="pg-home" class="pg on">
-  <div class="hero">
-    <div class="hero-badge">&#10022; Portal Khusus Client AMKOBAR</div>
-    <h1>Pantau Progress<br><span>Pekerjaanmu</span> di Sini</h1>
-    <p>Masukkan kode akses yang kamu terima via WhatsApp untuk melihat status pengerjaan dan info pembayaran.</p>
-    <div class="lcard">
-      <h2>Masuk ke Portal</h2>
-      <p>Kode akses dikirimkan setelah registrasi kamu dikonfirmasi oleh tim AMKOBAR.</p>
-      <input class="inp" id="kode-inp" type="text" placeholder="Masukkan kode akses kamu..." autocomplete="off"/>
-      <button class="btn" id="login-btn" onclick="doLogin()">Masuk &#8594;</button>
-      <div id="login-al" class="al"></div>
-      <div style="margin-top:14px;text-align:center;font-size:12.5px;color:var(--g400)">
-        Belum terdaftar? <a href="https://wa.me/6281267090606" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none">Hubungi kami via WhatsApp →</a>
-      </div>
-    </div>
-  </div>
-  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
+<div class="pg on" id="pg-home">
+<div class="hero">
+<div class="hero-badge">✦ Portal Khusus Client AMKOBAR</div>
+<h1>Pantau Progress<br/><span>Pekerjaanmu</span> di Sini</h1>
+<p>Masukkan kode akses yang kamu terima via WhatsApp untuk melihat status pengerjaan dan info pembayaran.</p>
+<div class="lcard">
+<h2>Masuk ke Portal</h2>
+<p>Kode akses dikirimkan setelah registrasi kamu dikonfirmasi oleh tim AMKOBAR.</p>
+<input autocomplete="off" class="inp" id="kode-inp" placeholder="Masukkan kode akses kamu..." type="text"/>
+<button class="btn" id="login-btn" onclick="doLogin()">Masuk →</button>
+<div class="al" id="login-al"></div>
+<div style="margin-top:14px;text-align:center;font-size:12.5px;color:var(--g400)">
+        Belum terdaftar? <a href="https://wa.me/6281267090606" style="color:var(--blue);font-weight:600;text-decoration:none" target="_blank">Hubungi kami via WhatsApp →</a>
 </div>
-
+</div>
+</div>
+<footer>© 2026 AMKOBAR — Konsultasi Akademik &amp; Statistik</footer>
+</div>
 <!-- HALAMAN TESTIMONI — CAROUSEL -->
-<div id="pg-testimoni" class="pg">
-  <div class="pub" id="testimoni-wrap">
-    <h2>Kata Mereka</h2>
-    <p class="sub">Ulasan dari beberapa client kami.</p>
-    <div id="testimoni-carousel-outer"></div>
-  </div>
-  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
+<div class="pg" id="pg-testimoni">
+<div class="pub" id="testimoni-wrap">
+<h2>Kata Mereka</h2>
+<p class="sub">Ulasan dari beberapa client kami.</p>
+<div id="testimoni-carousel-outer"></div>
 </div>
-
-<div id="pg-faq" class="pg">
-  <div class="pub">
-    <h2>Pertanyaan Umum</h2>
-    <p class="sub">Jawaban atas pertanyaan yang paling sering ditanyakan sebelum menggunakan layanan AMKOBAR.</p>
-    <div class="faq-list" id="faq-pub"></div>
-  </div>
-  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
+<footer>© 2026 AMKOBAR — Konsultasi Akademik &amp; Statistik</footer>
 </div>
-
-<div id="dash" class="dash">
-  <div class="dash-hdr" id="dash-hdr">
-    <div class="cli-info">
-      <div class="cli-av" id="d-av">A</div>
-      <div><div class="cli-name" id="d-nama">&#8212;</div><div class="cli-meta" id="d-meta">&#8212;</div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <div id="d-sbadge" class="sbadge s-default">&#8212;</div>
-      <div id="d-akses-tog-wrap" style="display:none" class="akses-tog-wrap" onclick="toggleAksesClient()">
-        <div id="d-akses-dot" class="akses-tog-dot on"></div>
-        <span id="d-akses-lbl" class="akses-tog-lbl">Akses Aktif</span>
-        <div id="d-akses-tog" class="akses-tog on"><div class="akses-tog-t"></div></div>
-      </div>
-      <div id="d-all-teori-wrap" style="display:none" class="akses-tog-wrap" onclick="toggleAllTeoriTampil()">
-        <div id="d-all-teori-dot" class="akses-tog-dot off"></div>
-        <span id="d-all-teori-lbl" class="akses-tog-lbl">Teori Terkunci</span>
-        <div id="d-all-teori-tog" class="akses-tog off"><div class="akses-tog-t"></div></div>
-      </div>
-      <button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
-    </div>
-  </div>
-  <div id="adm-status-row" style="display:none;background:var(--navy-2);padding:8px 48px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)">
-    <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Status:</span>
-    <div class="adm-status-pills" id="adm-status-pills">
-      <div class="adm-status-pill asp-refund" onclick="pickStatus('Refund',this)">Refund</div>
-      <div class="adm-status-pill asp-review" onclick="pickStatus('Menunggu Review',this)">Menunggu Review</div>
-      <div class="adm-status-pill asp-antrian" onclick="pickStatus('Antrian',this)">Antrian</div>
-      <div class="adm-status-pill asp-diproses" onclick="pickStatus('Diproses',this)">Diproses</div>
-      <div class="adm-status-pill asp-pelunasan" onclick="pickStatus('Menunggu Pelunasan',this)">Menunggu Pelunasan</div>
-      <div class="adm-status-pill asp-pendampingan" onclick="pickStatus('Pendampingan',this)">Pendampingan</div>
-      <div class="adm-status-pill asp-selesai" onclick="pickStatus('Selesai',this)">Selesai</div>
-      <div class="adm-status-pill asp-batal" onclick="pickStatus('Dibatalkan',this)">Dibatalkan</div>
-    </div>
-    <span id="adm-status-saving" class="adm-status-saving"></span>
-  </div>
-  <div class="adm-undo-bar" id="adm-undo-bar">
-    <span class="adm-undo-txt">Status diubah ke <span id="adm-undo-lbl">—</span></span>
-    <div class="adm-undo-progress"><div class="adm-undo-bar-inner" id="adm-undo-progress" style="width:100%"></div></div>
-    <span class="adm-undo-count" id="adm-undo-count">5</span>
-    <button class="adm-undo-cancel" onclick="cancelStatusUndo()">Batalkan</button>
-  </div>
-  <div class="dash-tabs">
-    <button class="tab-btn on" onclick="switchTab('status',this)">&#128203; Status &amp; Pembayaran</button>
-<button class="tab-btn" onclick="switchTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
-<button class="tab-btn" onclick="switchTab('bank-teori',this)">&#128218; Bank Teori</button>
-    <button class="tab-btn" onclick="switchTab('cbh',this)">&#128214; Materi &amp; Panduan</button>
-    <button class="tab-btn" onclick="switchTab('faq-in',this)">&#128172; FAQ Sidang</button>
-  </div>
-  <div class="dash-body">
-    <div id="tc-status" class="tc on">
+<div class="pg" id="pg-faq">
+<div class="pub">
+<h2>Pertanyaan Umum</h2>
+<p class="sub">Jawaban atas pertanyaan yang paling sering ditanyakan sebelum menggunakan layanan AMKOBAR.</p>
+<div class="faq-list" id="faq-pub"></div>
+</div>
+<footer>© 2026 AMKOBAR — Konsultasi Akademik &amp; Statistik</footer>
+</div>
+<div class="dash" id="dash">
+<div class="dash-hdr" id="dash-hdr">
+<div class="cli-info">
+<div class="cli-av" id="d-av">A</div>
+<div><div class="cli-name" id="d-nama">—</div><div class="cli-meta" id="d-meta">—</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div class="sbadge s-default" id="d-sbadge">—</div>
+<div class="akses-tog-wrap" id="d-akses-tog-wrap" onclick="toggleAksesClient()" style="display:none">
+<div class="akses-tog-dot on" id="d-akses-dot"></div>
+<span class="akses-tog-lbl" id="d-akses-lbl">Akses Aktif</span>
+<div class="akses-tog on" id="d-akses-tog"><div class="akses-tog-t"></div></div>
+</div>
+<div class="akses-tog-wrap" id="d-all-teori-wrap" onclick="toggleAllTeoriTampil()" style="display:none">
+<div class="akses-tog-dot off" id="d-all-teori-dot"></div>
+<span class="akses-tog-lbl" id="d-all-teori-lbl">Teori Terkunci</span>
+<div class="akses-tog off" id="d-all-teori-tog"><div class="akses-tog-t"></div></div>
+</div>
+<button class="logout-btn" id="dash-logout-btn" onclick="doLogout()">Keluar</button>
+</div>
+</div>
+<div id="adm-status-row" style="display:none;background:var(--navy-2);padding:8px 48px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)">
+<span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Status:</span>
+<div class="adm-status-pills" id="adm-status-pills">
+<div class="adm-status-pill asp-refund" onclick="pickStatus('Refund',this)">Refund</div>
+<div class="adm-status-pill asp-review" onclick="pickStatus('Menunggu Review',this)">Menunggu Review</div>
+<div class="adm-status-pill asp-antrian" onclick="pickStatus('Antrian',this)">Antrian</div>
+<div class="adm-status-pill asp-diproses" onclick="pickStatus('Diproses',this)">Diproses</div>
+<div class="adm-status-pill asp-pelunasan" onclick="pickStatus('Menunggu Pelunasan',this)">Menunggu Pelunasan</div>
+<div class="adm-status-pill asp-pendampingan" onclick="pickStatus('Pendampingan',this)">Pendampingan</div>
+<div class="adm-status-pill asp-selesai" onclick="pickStatus('Selesai',this)">Selesai</div>
+<div class="adm-status-pill asp-batal" onclick="pickStatus('Dibatalkan',this)">Dibatalkan</div>
+</div>
+<span class="adm-status-saving" id="adm-status-saving"></span>
+</div>
+<div class="adm-undo-bar" id="adm-undo-bar">
+<span class="adm-undo-txt">Status diubah ke <span id="adm-undo-lbl">—</span></span>
+<div class="adm-undo-progress"><div class="adm-undo-bar-inner" id="adm-undo-progress" style="width:100%"></div></div>
+<span class="adm-undo-count" id="adm-undo-count">5</span>
+<button class="adm-undo-cancel" onclick="cancelStatusUndo()">Batalkan</button>
+</div>
+<div class="dash-tabs">
+<button class="tab-btn on" onclick="switchTab('status',this)">📋 Status &amp; Pembayaran</button>
+<button class="tab-btn" onclick="switchTab('contoh',this)">📁 Contoh &amp; Referensi</button>
+<button class="tab-btn" onclick="switchTab('bank-teori',this)">📚 Bank Teori</button>
+<button class="tab-btn" onclick="switchTab('cbh',this)">📖 Materi &amp; Panduan</button>
+<button class="tab-btn" onclick="switchTab('faq-in',this)">💬 FAQ Sidang</button>
+</div>
+<div class="dash-body">
+<div class="tc on" id="tc-status">
 <!-- MOBILE ONLY: Progress + Info -->
-      <div class="mob-progress-wrap" id="mob-progress-wrap">
-        <div class="mob-steps" id="mob-steps"></div>
-      </div>
-      <div id="mob-notif" style="display:none">
-  <div class="mob-notif-txt" id="mob-notif-txt"></div>
+<div class="mob-progress-wrap" id="mob-progress-wrap">
+<div class="mob-steps" id="mob-steps"></div>
 </div>
-      <div class="mob-info-grid" id="mob-info-grid">
-        <div class="mob-info-cell"><div class="mob-info-lbl">Layanan</div><div class="mob-info-val" id="mob-i-layanan">&#8212;</div></div>
-        <div class="mob-info-cell"><div class="mob-info-lbl">Aplikasi</div><div class="mob-info-val" id="mob-i-app">&#8212;</div></div>
-        <div class="mob-info-cell"><div class="mob-info-lbl">Universitas</div><div class="mob-info-val" id="mob-i-univ">&#8212;</div></div>
-        <div class="mob-info-cell"><div class="mob-info-lbl">Target</div><div class="mob-info-val" id="mob-i-ddl">&#8212;</div></div>
-      </div>
-      <div class="mob-pay-card" id="mob-pay-card">
-        <div class="mob-pay-ttl">Pembayaran</div>
-        <div id="mob-pay-rows"></div>
-        <div class="mob-sisa">
-          <div><div class="mob-sisa-lbl">Sisa Pembayaran</div><div class="mob-sisa-val" id="mob-sisa-amt">&#8212;</div></div>
-          <span style="font-size:18px">&#128176;</span>
-<div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="5" fill="#22c55e"/><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
-        </div>
-      </div>
-      <div class="mob-ref-compact" id="mob-ref-compact"></div>      
-
+<div id="mob-notif" style="display:none">
+<div class="mob-notif-txt" id="mob-notif-txt"></div>
+</div>
+<div class="mob-info-grid" id="mob-info-grid">
+<div class="mob-info-cell"><div class="mob-info-lbl">Layanan</div><div class="mob-info-val" id="mob-i-layanan">—</div></div>
+<div class="mob-info-cell"><div class="mob-info-lbl">Aplikasi</div><div class="mob-info-val" id="mob-i-app">—</div></div>
+<div class="mob-info-cell"><div class="mob-info-lbl">Universitas</div><div class="mob-info-val" id="mob-i-univ">—</div></div>
+<div class="mob-info-cell"><div class="mob-info-lbl">Target</div><div class="mob-info-val" id="mob-i-ddl">—</div></div>
+</div>
+<div class="mob-pay-card" id="mob-pay-card">
+<div class="mob-pay-ttl">Pembayaran</div>
+<div id="mob-pay-rows"></div>
+<div class="mob-sisa">
+<div><div class="mob-sisa-lbl">Sisa Pembayaran</div><div class="mob-sisa-val" id="mob-sisa-amt">—</div></div>
+<span style="font-size:18px">💰</span>
+<div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg fill="none" height="11" viewbox="0 0 11 11" width="11"><circle cx="5.5" cy="5.5" fill="#22c55e" r="5"></circle><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></polyline></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
+</div>
+</div>
+<div class="mob-ref-compact" id="mob-ref-compact"></div>
 <!-- END MOBILE ONLY -->
-      <div class="sg">
-        <div>
-          <div class="card">
-            <div class="card-ttl">Informasi Project</div>
-            <div class="irow">
-  <div style="display:flex;align-items:center;justify-content:space-between">
-    <div class="ilabel">Judul Penelitian</div>
-    <button id="edit-btn-judul" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer" onclick="editInfo('judul')">Edit</button>
-  </div>
-  <div class="ival judul" id="i-judul">&#8212;</div>
-  <div id="edit-wrap-judul" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
-    <input id="edit-judul-inp" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px" placeholder="Masukkan judul penelitian..."/>
-    <div style="display:flex;gap:7px">
-      <button onclick="editInfo('judul')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
-      <button id="edit-save-judul" onclick="saveInfo('judul')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
-    </div>
-  </div>
+<div class="sg">
+<div>
+<div class="card">
+<div class="card-ttl">Informasi Project</div>
+<div class="irow">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div class="ilabel">Judul Penelitian</div>
+<button id="edit-btn-judul" onclick="editInfo('judul')" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit</button>
 </div>
-            <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">&#8212;</div></div>
-            <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">&#8212;</div></div>
-            <div class="irow">
-  <div style="display:flex;align-items:center;justify-content:space-between">
-    <div class="ilabel">Jumlah Variabel</div>
-    <button id="edit-btn-variabel" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer" onclick="editInfo('variabel')">Edit</button>
-  </div>
-  <div class="ival" id="i-variabel">&#8212;</div>
-  <div id="edit-wrap-variabel" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
-    <select id="edit-variabel-sel" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px">
-      <option value="">-- Pilih --</option>
-      <option value="2 Variabel">2 Variabel</option>
-      <option value="3 Variabel">3 Variabel</option>
-      <option value="4 Variabel">4 Variabel</option>
-    </select>
-    <div style="display:flex;gap:7px">
-      <button onclick="editInfo('variabel')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
-      <button id="edit-save-variabel" onclick="saveInfo('variabel')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
-    </div>
-  </div>
+<div class="ival judul" id="i-judul">—</div>
+<div id="edit-wrap-judul" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
+<input id="edit-judul-inp" placeholder="Masukkan judul penelitian..." style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px"/>
+<div style="display:flex;gap:7px">
+<button onclick="editInfo('judul')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
+<button id="edit-save-judul" onclick="saveInfo('judul')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
 </div>
-            <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">&#8212;</div></div>
-            <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">&#8212;</div></div>
-          </div>
-          <div id="ref-wrap" style="display:none"></div>
-        </div>
-        <div>
-          <div id="ref-card-right" style="display:none"></div>
-          <div class="card">
-            <div class="card-ttl">Info Pembayaran</div>
-            <div class="psteps" id="psteps"></div>
-            <div id="addon-row" style="display:none;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g50);border-radius:var(--rs);margin-bottom:10px;border:1px solid var(--g200)">
-              <div style="font-size:13px;color:var(--g600);">Add-On</div>
-              <div style="font-size:13px;font-weight:600;color:var(--g800)" id="addon-amt">&#8212;</div>
-            </div>
-            <div class="sisa-box">
-  <div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">&#8212;</div></div>
-  <div class="sisa-ic" id="sisa-ic">&#128176;</div>
 </div>
-            <a id="drive-btn" href="#" target="_blank" class="drive-btn" style="display:none">&#128194; Kirim File &amp; Data Disini</a>
-            <div id="akses-box" style="display:none"></div>
-            <button id="rating-btn" class="rating-btn" style="display:none" onclick="openRatingModal()">&#11088; Beri Rating &amp; Testimoni</button>
-          </div>
-        </div>
-      </div>
-    </div>
-<div id="tc-contoh" class="tc">
-      <div id="acr-client-wrap">
-        <div id="acr-client-bc" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g400);margin-bottom:14px;flex-wrap:wrap"></div>
-        <div id="acr-client-title" style="font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:16px;display:none"></div>
-        <div id="acr-client-grid"></div>
-      </div>
-      <div id="acr-client-preview" style="display:none;margin-top:16px;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden">
-        <div style="padding:10px 14px;background:var(--g50);border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:13px;font-weight:600;color:var(--navy)" id="acr-preview-name"></div>
-          <button onclick="acrClientClosePreview()" style="font-size:12px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">&#10005; Tutup</button>
-        </div>
-        <iframe id="acr-preview-frame" style="width:100%;height:480px;border:none;" allowfullscreen></iframe>
-        <div style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
-  <a id="acr-preview-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0;flex-direction:column;gap:2px">&#128279; Buka di Google Drive<span style="font-size:10px;opacity:.7">buka di browser</span></a>
-  <a id="acr-download-link" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0;background:#e8f2fc;color:#1a6bbd;border-color:#bfdbfe;flex-direction:column;gap:2px">&#11015; Download<span style="font-size:10px;opacity:.7">file yang ditampilkan</span></a>
-<a id="acr-download-template" href="#" target="_blank" class="drive-btn" style="flex:1;margin-top:0;background:#EAF3DE;color:#3B6D11;border-color:#C0DD97;flex-direction:column;gap:2px;display:none">&#11015; Download Template<span style="font-size:10px;opacity:.7">file kosong tanpa isi</span></a>
 </div>
-      </div>
-    </div>
-
-<div id="tc-bank-teori" class="tc">
-      <div class="bt-wrap" id="bt-main">
-        <div class="bt-subtab-row">
-          <button class="bt-subtab on" id="bt-sub-kar" onclick="btSwitchSub('kar')">Karakteristik Responden</button>
-          <button class="bt-subtab" id="bt-sub-var" onclick="btSwitchSub('var')">Teori Variabel</button>
-        </div>
-
-        <!-- Sub: Karakteristik Responden -->
-        <div id="bt-panel-kar">
-          <div id="bt-kar-grid">
-            <div class="bt-section-lbl">Pilih Kategori</div>
-            <div class="bt-cat-grid" id="bt-cat-grid"></div>
-          </div>
-          <div id="bt-kar-detail" style="display:none">
-            <button class="bt-back-btn" onclick="btBackToGrid()">&#8592; Semua Kategori</button>
-            <div class="bt-cat-title" id="bt-cat-title"></div>
-            <div id="bt-kar-filter"></div>
-            <div class="bt-count" id="bt-kar-count"></div>
-            <div class="bt-list" id="bt-kar-list"></div>
-          </div>
-        </div>
-
-        <!-- Sub: Teori Variabel -->
+<div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
+<div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
+<div class="irow">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div class="ilabel">Jumlah Variabel</div>
+<button id="edit-btn-variabel" onclick="editInfo('variabel')" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit</button>
+</div>
+<div class="ival" id="i-variabel">—</div>
+<div id="edit-wrap-variabel" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
+<select id="edit-variabel-sel" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px">
+<option value="">-- Pilih --</option>
+<option value="2 Variabel">2 Variabel</option>
+<option value="3 Variabel">3 Variabel</option>
+<option value="4 Variabel">4 Variabel</option>
+</select>
+<div style="display:flex;gap:7px">
+<button onclick="editInfo('variabel')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
+<button id="edit-save-variabel" onclick="saveInfo('variabel')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
+</div>
+</div>
+</div>
+<div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
+<div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
+</div>
+<div id="ref-wrap" style="display:none"></div>
+</div>
+<div>
+<div id="ref-card-right" style="display:none"></div>
+<div class="card">
+<div class="card-ttl">Info Pembayaran</div>
+<div class="psteps" id="psteps"></div>
+<div id="addon-row" style="display:none;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g50);border-radius:var(--rs);margin-bottom:10px;border:1px solid var(--g200)">
+<div style="font-size:13px;color:var(--g600);">Add-On</div>
+<div id="addon-amt" style="font-size:13px;font-weight:600;color:var(--g800)">—</div>
+</div>
+<div class="sisa-box">
+<div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">—</div></div>
+<div class="sisa-ic" id="sisa-ic">💰</div>
+</div>
+<a class="drive-btn" href="#" id="drive-btn" style="display:none" target="_blank">📂 Kirim File &amp; Data Disini</a>
+<div id="akses-box" style="display:none"></div>
+<button class="rating-btn" id="rating-btn" onclick="openRatingModal()" style="display:none">⭐ Beri Rating &amp; Testimoni</button>
+</div>
+</div>
+</div>
+</div>
+<div class="tc" id="tc-contoh">
+<div id="acr-client-wrap">
+<div id="acr-client-bc" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g400);margin-bottom:14px;flex-wrap:wrap"></div>
+<div id="acr-client-title" style="font-family:'Sora',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:16px;display:none"></div>
+<div id="acr-client-grid"></div>
+</div>
+<div id="acr-client-preview" style="display:none;margin-top:16px;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden">
+<div style="padding:10px 14px;background:var(--g50);border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between">
+<div id="acr-preview-name" style="font-size:13px;font-weight:600;color:var(--navy)"></div>
+<button onclick="acrClientClosePreview()" style="font-size:12px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">✕ Tutup</button>
+</div>
+<iframe allowfullscreen="" id="acr-preview-frame" style="width:100%;height:480px;border:none;"></iframe>
+<div style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
+<a class="drive-btn" href="#" id="acr-preview-link" style="flex:1;margin-top:0;flex-direction:column;gap:2px" target="_blank">🔗 Buka di Google Drive<span style="font-size:10px;opacity:.7">buka di browser</span></a>
+<a class="drive-btn" href="#" id="acr-download-link" style="flex:1;margin-top:0;background:#e8f2fc;color:#1a6bbd;border-color:#bfdbfe;flex-direction:column;gap:2px" target="_blank">⬇ Download<span style="font-size:10px;opacity:.7">file yang ditampilkan</span></a>
+<a class="drive-btn" href="#" id="acr-download-template" style="flex:1;margin-top:0;background:#EAF3DE;color:#3B6D11;border-color:#C0DD97;flex-direction:column;gap:2px;display:none" target="_blank">⬇ Download Template<span style="font-size:10px;opacity:.7">file kosong tanpa isi</span></a>
+</div>
+</div>
+</div>
+<div class="tc" id="tc-bank-teori">
+<div class="bt-wrap" id="bt-main">
+<div class="bt-subtab-row">
+<button class="bt-subtab on" id="bt-sub-kar" onclick="btSwitchSub('kar')">Karakteristik Responden</button>
+<button class="bt-subtab" id="bt-sub-var" onclick="btSwitchSub('var')">Teori Variabel</button>
+</div>
+<!-- Sub: Karakteristik Responden -->
+<div id="bt-panel-kar">
+<div id="bt-kar-grid">
+<div class="bt-section-lbl">Pilih Kategori</div>
+<div class="bt-cat-grid" id="bt-cat-grid"></div>
+</div>
+<div id="bt-kar-detail" style="display:none">
+<button class="bt-back-btn" onclick="btBackToGrid()">← Semua Kategori</button>
+<div class="bt-cat-title" id="bt-cat-title"></div>
+<div id="bt-kar-filter"></div>
+<div class="bt-count" id="bt-kar-count"></div>
+<div class="bt-list" id="bt-kar-list"></div>
+</div>
+</div>
+<!-- Sub: Teori Variabel -->
 <div id="bt-panel-var" style="display:none">
-  <div class="bt-search-wrap">
-    <input class="bt-search-inp" type="text" id="bt-search" placeholder="Cari nama variabel atau teori..." oninput="btDoSearch(this.value)"/>
-    <div class="bt-search-hint">Ketik nama variabel dan gunakan <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">+</code> untuk mencari 2 atau lebih variabel. Contoh: <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">motivasi + kinerja + kepuasan</code></div>
-    <div id="bt-pills" style="display:none;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
-  </div>
-  <div class="bt-count" id="bt-var-count"></div>
-  <div class="bt-list" id="bt-var-list"></div>
+<div class="bt-search-wrap">
+<input class="bt-search-inp" id="bt-search" oninput="btDoSearch(this.value)" placeholder="Cari nama variabel atau teori..." type="text"/>
+<div class="bt-search-hint">Ketik nama variabel dan gunakan <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">+</code> untuk mencari 2 atau lebih variabel. Contoh: <code style="background:var(--g100);padding:1px 5px;border-radius:4px;font-size:11px">motivasi + kinerja + kepuasan</code></div>
+<div id="bt-pills" style="display:none;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
 </div>
-      </div>
-    </div>
-
-    <div id="tc-cbh" class="tc">
-  <div id="mp-app-banner" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,#1a3560 0%,#1a6bbd 100%);border-radius:12px;padding:12px 16px;margin-bottom:20px">
-    <div style="width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📖</div>
-    <div style="flex:1">
-      <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:#fff;margin-bottom:1px">Materi &amp; Panduan</div>
-      <div style="font-size:11.5px;color:rgba(255,255,255,.6)">Konten disesuaikan dengan aplikasi yang kamu gunakan</div>
-    </div>
-    <div id="mp-app-tag" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:100px;font-size:11.5px;font-weight:600"></div>
-  </div>
-  <div id="mp-subtab-bar" style="display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:5px;border-radius:12px;border:1px solid var(--g200);width:fit-content">
-    <button class="mp-subtab on" id="mp-sub-modul" onclick="mpSwitchSub('modul',this)">📄 Modul</button>
-    <button class="mp-subtab" id="mp-sub-cbh" onclick="mpSwitchSub('cbh',this)">🎬 Cara Baca Hasil</button>
-  </div>
-  <div id="mp-panel-modul">
-    <div id="mp-modul-grid" class="mp-grid"></div>
-  </div>
-  <div id="mp-panel-cbh" style="display:none">
-    <div id="cbh-content"></div>
-  </div>
+<div class="bt-count" id="bt-var-count"></div>
+<div class="bt-list" id="bt-var-list"></div>
 </div>
-    <div id="tc-faq-in" class="tc">
-      <div style="max-width:720px">
-        <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">FAQ Pertanyaan Sidang</h2>
-        <p style="font-size:14px;color:var(--g600);margin-bottom:26px;line-height:1.6">Kumpulan pertanyaan yang sering diajukan dosen saat sidang akhir beserta tips menjawabnya.</p>
-        <div class="faq-list" id="faq-in"></div>
-      </div>
-    </div>
-  </div>
-  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
 </div>
-
+</div>
+<div class="tc" id="tc-cbh">
+<div id="mp-app-banner" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,#1a3560 0%,#1a6bbd 100%);border-radius:12px;padding:12px 16px;margin-bottom:20px">
+<div style="width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📖</div>
+<div style="flex:1">
+<div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:#fff;margin-bottom:1px">Materi &amp; Panduan</div>
+<div style="font-size:11.5px;color:rgba(255,255,255,.6)">Konten disesuaikan dengan aplikasi yang kamu gunakan</div>
+</div>
+<div id="mp-app-tag" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:100px;font-size:11.5px;font-weight:600"></div>
+</div>
+<div id="mp-subtab-bar" style="display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:5px;border-radius:12px;border:1px solid var(--g200);width:fit-content">
+<button class="mp-subtab on" id="mp-sub-modul" onclick="mpSwitchSub('modul',this)">📄 Modul</button>
+<button class="mp-subtab" id="mp-sub-cbh" onclick="mpSwitchSub('cbh',this)">🎬 Cara Baca Hasil</button>
+</div>
+<div id="mp-panel-modul">
+<div class="mp-grid" id="mp-modul-grid"></div>
+</div>
+<div id="mp-panel-cbh" style="display:none">
+<div id="cbh-content"></div>
+</div>
+</div>
+<div class="tc" id="tc-faq-in">
+<div style="max-width:720px">
+<h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:7px">FAQ Pertanyaan Sidang</h2>
+<p style="font-size:14px;color:var(--g600);margin-bottom:26px;line-height:1.6">Kumpulan pertanyaan yang sering diajukan dosen saat sidang akhir beserta tips menjawabnya.</p>
+<div class="faq-list" id="faq-in"></div>
+</div>
+</div>
+</div>
+<footer>© 2026 AMKOBAR — Konsultasi Akademik &amp; Statistik</footer>
+</div>
 <script>
 const TALLY_RATING_FORM_ID='yPD7rg';
 const FAQ_PUB=[
@@ -4567,486 +4556,475 @@ function admTestiSaveEdit(id){
   }).catch(function(){alert('Gagal menghubungi server.');if(btn){btn.textContent='Simpan ke Notion';btn.disabled=false;}});
 }
 </script>
-
-
 <!-- ===== ADMIN DASHBOARD ===== -->
-<div id="adm-dash" class="adm-dash">
-  <div class="adm-header">
-    <div class="adm-header-top">
-      <div class="adm-brand-row">
-        <div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
-        <div>
-          <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:-.3px">AMKOBAR</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.45)">Konsultasi Akademik &amp; Statistik</div>
-        </div>
-        <div class="adm-badge">ADMIN</div>
-      </div>
-      <button class="logout-btn" onclick="doAdminLogout()">Keluar</button>
-    </div>
-    <div class="adm-stat-grid">
-      <div class="adm-stat"><div class="adm-stat-lbl">Total Client</div><div class="adm-stat-val blue" id="adm-total">&#8212;</div></div>
-      <div class="adm-stat"><div class="adm-stat-lbl">Sedang Diproses</div><div class="adm-stat-val amber" id="adm-diproses">&#8212;</div></div>
-      <div class="adm-stat"><div class="adm-stat-lbl">Menunggu Pelunasan</div><div class="adm-stat-val red" id="adm-pelunasan">&#8212;</div></div>
-      <div class="adm-stat"><div class="adm-stat-lbl">Selesai</div><div class="adm-stat-val green" id="adm-selesai">&#8212;</div></div>
-    </div>
-  </div>
-  <div class="adm-tabs">
-    <button class="adm-tab-btn on" onclick="switchAdmTab('status',this)">&#128203; Cek Status</button>
-    <button class="adm-tab-btn" onclick="switchAdmTab('faq',this)">&#128172; FAQ</button>
-    <button class="adm-tab-btn" onclick="switchAdmTab('testimoni',this)">&#9733; Testimoni</button>
-    <button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">&#128196; Pricelist</button>
-<button class="adm-tab-btn" onclick="switchAdmTab('bank-teori',this)">&#128218; Bank Teori</button>
-<button class="adm-tab-btn" onclick="switchAdmTab('contoh',this)">&#128193; Contoh &amp; Referensi</button>
-<button class="adm-tab-btn" id="adm-tab-segera-tf" onclick="switchAdmTab('segera-tf',this)" style="color:#dc2626">&#9889; Segera TF</button>
-  </div>
-  <div class="adm-body">
-
-    <!-- Tab Status -->
-    <div id="adm-tc-status" class="adm-tc on">
-      <div class="adm-toolbar">
-        <input class="adm-search" id="adm-search" type="text" placeholder="Cari nama, kode akses, universitas..." oninput="renderAdmTable()"/>
-        <div class="adm-filter-btns">
-          <button class="adm-fbtn on" onclick="setAdmFilter('Semua',this)">Semua</button>
-          <button class="adm-fbtn" onclick="setAdmFilter('diproses',this)">Diproses</button>
-          <button class="adm-fbtn" onclick="setAdmFilter('antrian',this)">Antrian</button>
-          <button class="adm-fbtn" onclick="setAdmFilter('pelunasan',this)">Pelunasan</button>
-          <button class="adm-fbtn" onclick="setAdmFilter('selesai',this)">Selesai</button>
-        </div>
-      </div>
-      <div class="adm-table-wrap">
-        <table class="adm-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Layanan</th>
-              <th>Aplikasi</th>
-              <th>Status</th>
-              <th>Deadline</th>
-            </tr>
-          </thead>
-          <tbody id="adm-tbody">
-            <tr><td colspan="5" class="adm-empty">Memuat data client...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Tab FAQ -->
-    <div id="adm-tc-faq" class="adm-tc">
-      <!-- Section 1: FAQ Publik -->
-      <div class="adm-acc-sec" id="adm-acc-pub">
-        <div class="adm-acc-hdr" onclick="toggleAdmAcc('pub')">
-          <div class="adm-acc-left">
-            <div class="adm-acc-ic" style="background:#e8f2fc">&#128172;</div>
-            <div>
-              <div class="adm-acc-ttl">FAQ Publik</div>
-              <div class="adm-acc-sub" id="adm-acc-sub-pub">Ditampilkan di halaman publik sebelum login</div>
-            </div>
-          </div>
-          <div class="adm-acc-arr" id="adm-acc-arr-pub">&#9660;</div>
-        </div>
-        <div class="adm-acc-body" id="adm-acc-body-pub" style="display:none">
-          <div id="adm-faq-pub-list"></div>
-          <button class="faq-crud-tambah" onclick="openFaqModal('Publik')">&#43; Tambah Pertanyaan</button>
-        </div>
-      </div>
-      <!-- Section 2: FAQ Sidang -->
-      <div class="adm-acc-sec" id="adm-acc-sidang">
-        <div class="adm-acc-hdr" onclick="toggleAdmAcc('sidang')">
-          <div class="adm-acc-left">
-            <div class="adm-acc-ic" style="background:#fef3c7">&#127979;</div>
-            <div>
-              <div class="adm-acc-ttl">FAQ Sidang</div>
-              <div class="adm-acc-sub" id="adm-acc-sub-sidang">Ditampilkan di dashboard client — tab FAQ Sidang</div>
-            </div>
-          </div>
-          <div class="adm-acc-arr" id="adm-acc-arr-sidang">&#9660;</div>
-        </div>
-        <div class="adm-acc-body" id="adm-acc-body-sidang" style="display:none">
-          <div id="adm-faq-sidang-list"></div>
-          <button class="faq-crud-tambah" onclick="openFaqModal('Sidang')">&#43; Tambah Pertanyaan</button>
-        </div>
-      </div>
-      <!-- Section 3: Cara Baca Hasil -->
-      <div class="adm-acc-sec" id="adm-acc-cbh">
-        <div class="adm-acc-hdr" onclick="toggleAdmAcc('cbh')">
-          <div class="adm-acc-left">
-            <div class="adm-acc-ic" style="background:#dcfce7">&#128218;</div>
-            <div>
-              <div class="adm-acc-ttl">Cara Baca Hasil</div>
-              <div class="adm-acc-sub" id="adm-acc-sub-cbh">Ditampilkan di dashboard client — tab Cara Baca Hasil</div>
-            </div>
-          </div>
-          <div class="adm-acc-arr" id="adm-acc-arr-cbh">&#9660;</div>
-        </div>
-        <div class="adm-acc-body" id="adm-acc-body-cbh" style="display:none">
-          <div id="adm-faq-cbh-list"></div>
-          <button class="faq-crud-tambah" onclick="openFaqModal('CBH')">&#43; Tambah Konten</button>
-        </div>
-      </div>
-    </div>
-    <!-- Modal Tambah FAQ -->
-    <div class="faq-modal-overlay" id="faq-modal-overlay">
-      <div class="faq-modal">
-        <div class="faq-modal-hdr">
-          <div class="faq-modal-ttl">&#43; Tambah Pertanyaan</div>
-         
-        </div>
-        <div class="faq-modal-lbl">Kategori</div>
-        <div class="faq-modal-cats">
-          <div class="faq-modal-cat pub on" onclick="setFaqModalKat('Publik',this)">&#128172; FAQ Publik</div>
-          <div class="faq-modal-cat sid" onclick="setFaqModalKat('Sidang',this)">&#127979; FAQ Sidang</div>
-          <div class="faq-modal-cat cbh" onclick="setFaqModalKat('CBH',this)">&#128218; Cara Baca Hasil</div>
-        </div>
-        <div class="faq-modal-lbl">Pertanyaan</div>
-        <input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
-        <div class="faq-modal-lbl">Jawaban</div>
-<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:14px">
-  <div style="background:var(--g50);border-bottom:1px solid var(--g200);padding:5px 8px;display:flex;align-items:center;justify-content:space-between">
-    <span style="font-size:10px;color:var(--g400)">Format teks</span>
-    <div style="display:flex;gap:4px">
-      <button type="button" onclick="faqModalInsert('faq-modal-a','<b>','</b>')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;border:1px solid var(--g200);background:#fff;cursor:pointer">B</button>
-      <button type="button" onclick="faqModalInsert('faq-modal-a','<i>','</i>')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-style:italic;border:1px solid var(--g200);background:#fff;cursor:pointer">I</button>
-      <button type="button" onclick="faqModalNewline('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">↵</button>
-      <button type="button" onclick="faqModalTab('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer">⇥</button>
-      <select onchange="faqModalColor('faq-modal-a',this.value);this.value=''" style="font-size:10px;border:1px solid var(--g200);border-radius:5px;padding:2px 4px;background:#fff;cursor:pointer">
-        <option value="">Warna teks</option>
-        <option value="#dc2626">Merah</option>
-        <option value="#16a34a">Hijau</option>
-        <option value="#1a6bbd">Biru</option>
-        <option value="#f0a500">Kuning</option>
-      </select>
-    </div>
-  </div>
-  <textarea id="faq-modal-a" style="width:100%;padding:8px 10px;border:none;border-radius:0;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;resize:none;height:100px;outline:none;display:block;box-sizing:border-box" placeholder="Tulis jawaban lengkap di sini..."></textarea>
+<div class="adm-dash" id="adm-dash">
+<div class="adm-header">
+<div class="adm-header-top">
+<div class="adm-brand-row">
+<div style="width:34px;height:34px;border-radius:9px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0">AK</div>
+<div>
+<div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:-.3px">AMKOBAR</div>
+<div style="font-size:11px;color:rgba(255,255,255,.45)">Konsultasi Akademik &amp; Statistik</div>
 </div>
-        <div class="faq-modal-lbl">Aplikasi</div>
+<div class="adm-badge">ADMIN</div>
+</div>
+<button class="logout-btn" onclick="doAdminLogout()">Keluar</button>
+</div>
+<div class="adm-stat-grid">
+<div class="adm-stat"><div class="adm-stat-lbl">Total Client</div><div class="adm-stat-val blue" id="adm-total">—</div></div>
+<div class="adm-stat"><div class="adm-stat-lbl">Sedang Diproses</div><div class="adm-stat-val amber" id="adm-diproses">—</div></div>
+<div class="adm-stat"><div class="adm-stat-lbl">Menunggu Pelunasan</div><div class="adm-stat-val red" id="adm-pelunasan">—</div></div>
+<div class="adm-stat"><div class="adm-stat-lbl">Selesai</div><div class="adm-stat-val green" id="adm-selesai">—</div></div>
+</div>
+</div>
+<div class="adm-tabs">
+<button class="adm-tab-btn on" onclick="switchAdmTab('status',this)">📋 Cek Status</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('faq',this)">💬 FAQ</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('testimoni',this)">★ Testimoni</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('pricelist',this)">📄 Pricelist</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('bank-teori',this)">📚 Bank Teori</button>
+<button class="adm-tab-btn" onclick="switchAdmTab('contoh',this)">📁 Contoh &amp; Referensi</button>
+<button class="adm-tab-btn" id="adm-tab-segera-tf" onclick="switchAdmTab('segera-tf',this)" style="color:#dc2626">⚡ Segera TF</button>
+</div>
+<div class="adm-body">
+<!-- Tab Status -->
+<div class="adm-tc on" id="adm-tc-status">
+<div class="adm-toolbar">
+<input class="adm-search" id="adm-search" oninput="renderAdmTable()" placeholder="Cari nama, kode akses, universitas..." type="text"/>
+<div class="adm-filter-btns">
+<button class="adm-fbtn on" onclick="setAdmFilter('Semua',this)">Semua</button>
+<button class="adm-fbtn" onclick="setAdmFilter('diproses',this)">Diproses</button>
+<button class="adm-fbtn" onclick="setAdmFilter('antrian',this)">Antrian</button>
+<button class="adm-fbtn" onclick="setAdmFilter('pelunasan',this)">Pelunasan</button>
+<button class="adm-fbtn" onclick="setAdmFilter('selesai',this)">Selesai</button>
+</div>
+</div>
+<div class="adm-table-wrap">
+<table class="adm-table">
+<thead>
+<tr>
+<th>Client</th>
+<th>Layanan</th>
+<th>Aplikasi</th>
+<th>Status</th>
+<th>Deadline</th>
+</tr>
+</thead>
+<tbody id="adm-tbody">
+<tr><td class="adm-empty" colspan="5">Memuat data client...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Tab FAQ -->
+<div class="adm-tc" id="adm-tc-faq">
+<!-- Section 1: FAQ Publik -->
+<div class="adm-acc-sec" id="adm-acc-pub">
+<div class="adm-acc-hdr" onclick="toggleAdmAcc('pub')">
+<div class="adm-acc-left">
+<div class="adm-acc-ic" style="background:#e8f2fc">💬</div>
+<div>
+<div class="adm-acc-ttl">FAQ Publik</div>
+<div class="adm-acc-sub" id="adm-acc-sub-pub">Ditampilkan di halaman publik sebelum login</div>
+</div>
+</div>
+<div class="adm-acc-arr" id="adm-acc-arr-pub">▼</div>
+</div>
+<div class="adm-acc-body" id="adm-acc-body-pub" style="display:none">
+<div id="adm-faq-pub-list"></div>
+<button class="faq-crud-tambah" onclick="openFaqModal('Publik')">+ Tambah Pertanyaan</button>
+</div>
+</div>
+<!-- Section 2: FAQ Sidang -->
+<div class="adm-acc-sec" id="adm-acc-sidang">
+<div class="adm-acc-hdr" onclick="toggleAdmAcc('sidang')">
+<div class="adm-acc-left">
+<div class="adm-acc-ic" style="background:#fef3c7">🏫</div>
+<div>
+<div class="adm-acc-ttl">FAQ Sidang</div>
+<div class="adm-acc-sub" id="adm-acc-sub-sidang">Ditampilkan di dashboard client — tab FAQ Sidang</div>
+</div>
+</div>
+<div class="adm-acc-arr" id="adm-acc-arr-sidang">▼</div>
+</div>
+<div class="adm-acc-body" id="adm-acc-body-sidang" style="display:none">
+<div id="adm-faq-sidang-list"></div>
+<button class="faq-crud-tambah" onclick="openFaqModal('Sidang')">+ Tambah Pertanyaan</button>
+</div>
+</div>
+<!-- Section 3: Cara Baca Hasil -->
+<div class="adm-acc-sec" id="adm-acc-cbh">
+<div class="adm-acc-hdr" onclick="toggleAdmAcc('cbh')">
+<div class="adm-acc-left">
+<div class="adm-acc-ic" style="background:#dcfce7">📚</div>
+<div>
+<div class="adm-acc-ttl">Cara Baca Hasil</div>
+<div class="adm-acc-sub" id="adm-acc-sub-cbh">Ditampilkan di dashboard client — tab Cara Baca Hasil</div>
+</div>
+</div>
+<div class="adm-acc-arr" id="adm-acc-arr-cbh">▼</div>
+</div>
+<div class="adm-acc-body" id="adm-acc-body-cbh" style="display:none">
+<div id="adm-faq-cbh-list"></div>
+<button class="faq-crud-tambah" onclick="openFaqModal('CBH')">+ Tambah Konten</button>
+</div>
+</div>
+</div>
+<!-- Modal Tambah FAQ -->
+<div class="faq-modal-overlay" id="faq-modal-overlay">
+<div class="faq-modal">
+<div class="faq-modal-hdr">
+<div class="faq-modal-ttl">+ Tambah Pertanyaan</div>
+</div>
+<div class="faq-modal-lbl">Kategori</div>
+<div class="faq-modal-cats">
+<div class="faq-modal-cat pub on" onclick="setFaqModalKat('Publik',this)">💬 FAQ Publik</div>
+<div class="faq-modal-cat sid" onclick="setFaqModalKat('Sidang',this)">🏫 FAQ Sidang</div>
+<div class="faq-modal-cat cbh" onclick="setFaqModalKat('CBH',this)">📚 Cara Baca Hasil</div>
+</div>
+<div class="faq-modal-lbl">Pertanyaan</div>
+<input class="faq-crud-inp" id="faq-modal-q" placeholder="Tulis pertanyaan di sini..."/>
+<div class="faq-modal-lbl">Jawaban</div>
+<div style="border:1.5px solid var(--blue);border-radius:7px;overflow:hidden;margin-bottom:14px">
+<div style="background:var(--g50);border-bottom:1px solid var(--g200);padding:5px 8px;display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:10px;color:var(--g400)">Format teks</span>
+<div style="display:flex;gap:4px">
+<button onclick="faqModalInsert('faq-modal-a','&lt;b&gt;','&lt;/b&gt;')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;border:1px solid var(--g200);background:#fff;cursor:pointer" type="button">B</button>
+<button onclick="faqModalInsert('faq-modal-a','&lt;i&gt;','&lt;/i&gt;')" style="padding:3px 8px;border-radius:5px;font-size:11px;font-style:italic;border:1px solid var(--g200);background:#fff;cursor:pointer" type="button">I</button>
+<button onclick="faqModalNewline('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer" type="button">↵</button>
+<button onclick="faqModalTab('faq-modal-a')" style="padding:3px 8px;border-radius:5px;font-size:11px;border:1px solid var(--g200);background:#fff;cursor:pointer" type="button">⇥</button>
+<select onchange="faqModalColor('faq-modal-a',this.value);this.value=''" style="font-size:10px;border:1px solid var(--g200);border-radius:5px;padding:2px 4px;background:#fff;cursor:pointer">
+<option value="">Warna teks</option>
+<option value="#dc2626">Merah</option>
+<option value="#16a34a">Hijau</option>
+<option value="#1a6bbd">Biru</option>
+<option value="#f0a500">Kuning</option>
+</select>
+</div>
+</div>
+<textarea id="faq-modal-a" placeholder="Tulis jawaban lengkap di sini..." style="width:100%;padding:8px 10px;border:none;border-radius:0;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;resize:none;height:100px;outline:none;display:block;box-sizing:border-box"></textarea>
+</div>
+<div class="faq-modal-lbl">Aplikasi</div>
 <select class="faq-crud-inp" id="faq-modal-aplikasi" style="cursor:pointer">
-  <option value="Semua">Semua</option>
-  <option value="SPSS">SPSS</option>
-  <option value="SmartPLS">SmartPLS</option>
-  <option value="Lisrel">Lisrel</option>
-  <option value="AMOS">AMOS</option>
-  <option value="WarpPLS">WarpPLS</option>
-  <option value="Eviews">Eviews</option>
+<option value="Semua">Semua</option>
+<option value="SPSS">SPSS</option>
+<option value="SmartPLS">SmartPLS</option>
+<option value="Lisrel">Lisrel</option>
+<option value="AMOS">AMOS</option>
+<option value="WarpPLS">WarpPLS</option>
+<option value="Eviews">Eviews</option>
 </select>
 <div class="faq-modal-lbl">Urutan Tampil</div>
-        <input class="faq-crud-inp" id="faq-modal-urutan" type="number" placeholder="Contoh: 9"/>
-        <div class="faq-modal-btns">
-          <button class="faq-modal-cancel" onclick="closeFaqModal()">Batal</button>
-          <button class="faq-modal-save" onclick="saveFaqTambah()">Simpan Pertanyaan</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab Testimoni -->
-    <div id="adm-tc-testimoni" class="adm-tc">
-      <div class="adm-testi-wrap">
-        <div class="adm-testi-toolbar">
-          <div class="adm-testi-toolbar-row">
-            <input class="adm-search" id="adm-testi-search" type="text" placeholder="Cari nama atau teks testimoni..." oninput="admTestiSearch(this.value)"/>
-            <div class="adm-filter-btns" id="adm-testi-chips-status">
-              <button class="adm-fbtn on" onclick="admTestiSetStatus(this,'semua')">Semua</button>
-              <button class="adm-fbtn" onclick="admTestiSetStatus(this,'tampil')">Tampil</button>
-              <button class="adm-fbtn" onclick="admTestiSetStatus(this,'hidden')">Tersembunyi</button>
-            </div>
-          </div>
-          <div class="adm-testi-toolbar-row">
-            <span style="font-size:11px;color:var(--g400);white-space:nowrap">Filter rating:</span>
-            <div class="adm-filter-btns" id="adm-testi-chips-star">
-              <button class="adm-fbtn on" onclick="admTestiSetStar(this,0)">Semua</button>
-              <button class="adm-fbtn" onclick="admTestiSetStar(this,1)">&#9733;1</button>
-              <button class="adm-fbtn" onclick="admTestiSetStar(this,2)">&#9733;2</button>
-              <button class="adm-fbtn" onclick="admTestiSetStar(this,3)">&#9733;3</button>
-              <button class="adm-fbtn" onclick="admTestiSetStar(this,4)">&#9733;4</button>
-              <button class="adm-fbtn" onclick="admTestiSetStar(this,5)">&#9733;5</button>
-            </div>
-          </div>
-        </div>
-        <div class="adm-testi-count" id="adm-testi-count">Memuat testimoni...</div>
-        <div class="adm-testi-note">&#8505; Hanya testimoni baru (dari Tally/Notion) yang dapat dikelola. Testimoni lama selalu tampil otomatis.</div>
-        <div class="adm-testi-split">
-          <div class="adm-testi-list" id="adm-testi-list">
-            <div style="padding:20px;text-align:center;font-size:13px;color:var(--g400)">Memuat...</div>
-          </div>
-          <div class="adm-testi-detail" id="adm-testi-detail">
-            <div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br>untuk lihat detail &amp; edit</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<input class="faq-crud-inp" id="faq-modal-urutan" placeholder="Contoh: 9" type="number"/>
+<div class="faq-modal-btns">
+<button class="faq-modal-cancel" onclick="closeFaqModal()">Batal</button>
+<button class="faq-modal-save" onclick="saveFaqTambah()">Simpan Pertanyaan</button>
+</div>
+</div>
+</div>
+<!-- Tab Testimoni -->
+<div class="adm-tc" id="adm-tc-testimoni">
+<div class="adm-testi-wrap">
+<div class="adm-testi-toolbar">
+<div class="adm-testi-toolbar-row">
+<input class="adm-search" id="adm-testi-search" oninput="admTestiSearch(this.value)" placeholder="Cari nama atau teks testimoni..." type="text"/>
+<div class="adm-filter-btns" id="adm-testi-chips-status">
+<button class="adm-fbtn on" onclick="admTestiSetStatus(this,'semua')">Semua</button>
+<button class="adm-fbtn" onclick="admTestiSetStatus(this,'tampil')">Tampil</button>
+<button class="adm-fbtn" onclick="admTestiSetStatus(this,'hidden')">Tersembunyi</button>
+</div>
+</div>
+<div class="adm-testi-toolbar-row">
+<span style="font-size:11px;color:var(--g400);white-space:nowrap">Filter rating:</span>
+<div class="adm-filter-btns" id="adm-testi-chips-star">
+<button class="adm-fbtn on" onclick="admTestiSetStar(this,0)">Semua</button>
+<button class="adm-fbtn" onclick="admTestiSetStar(this,1)">★1</button>
+<button class="adm-fbtn" onclick="admTestiSetStar(this,2)">★2</button>
+<button class="adm-fbtn" onclick="admTestiSetStar(this,3)">★3</button>
+<button class="adm-fbtn" onclick="admTestiSetStar(this,4)">★4</button>
+<button class="adm-fbtn" onclick="admTestiSetStar(this,5)">★5</button>
+</div>
+</div>
+</div>
+<div class="adm-testi-count" id="adm-testi-count">Memuat testimoni...</div>
+<div class="adm-testi-note">ℹ Hanya testimoni baru (dari Tally/Notion) yang dapat dikelola. Testimoni lama selalu tampil otomatis.</div>
+<div class="adm-testi-split">
+<div class="adm-testi-list" id="adm-testi-list">
+<div style="padding:20px;text-align:center;font-size:13px;color:var(--g400)">Memuat...</div>
+</div>
+<div class="adm-testi-detail" id="adm-testi-detail">
+<div class="adm-testi-empty">Pilih testimoni di sebelah kiri<br/>untuk lihat detail &amp; edit</div>
+</div>
+</div>
+</div>
+</div>
 <!-- Tab Contoh & Referensi -->
-    <div id="adm-tc-contoh" class="adm-tc">
-      <div class="abt-wrap">
-        <div class="abt-toolbar">
-          <input class="abt-search" id="acr-search" type="text" placeholder="Cari nama folder atau file..." oninput="acrFilter()"/>
-          <button class="abt-add-btn" style="background:var(--blue);margin-right:6px" onclick="acrShowForm('folder')">&#128193; + Folder</button>
-          <button class="abt-add-btn" onclick="acrShowForm('file')">&#43; Tambah File</button>
-        </div>
-        <div class="abt-count" id="acr-bc" style="font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--g100)">
-          <span style="color:var(--g600);cursor:pointer;font-weight:500" onclick="acrGoLevel(0)">Contoh &amp; Referensi</span>
-        </div>
-        <div class="abt-count" id="acr-count">Memuat...</div>
-        <div class="abt-split">
-          <div class="abt-list" id="acr-list">
-            <div class="abt-loading">Memuat...</div>
-          </div>
-          <div class="abt-detail" id="acr-detail">
-            <div class="abt-empty">Pilih folder atau file di sebelah kiri<br>untuk melihat detail</div>
-          </div>
-        </div>
-        <div class="abt-form" id="acr-form">
-          <div class="abt-form-title">
-            <span id="acr-form-title-txt">Tambah Folder</span>
-            <button class="abt-form-close" onclick="acrHideForm()">&#10005;</button>
-          </div>
-          <div class="abt-form-grid" id="acr-form-fields"></div>
-          <div class="abt-form-btns">
-            <button class="abt-form-cancel" onclick="acrHideForm()">Batal</button>
-            <button class="abt-form-save" id="acr-f-save-btn" onclick="acrSaveForm()">Simpan ke Notion</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<div class="adm-tc" id="adm-tc-contoh">
+<div class="abt-wrap">
+<div class="abt-toolbar">
+<input class="abt-search" id="acr-search" oninput="acrFilter()" placeholder="Cari nama folder atau file..." type="text"/>
+<button class="abt-add-btn" onclick="acrShowForm('folder')" style="background:var(--blue);margin-right:6px">📁 + Folder</button>
+<button class="abt-add-btn" onclick="acrShowForm('file')">+ Tambah File</button>
+</div>
+<div class="abt-count" id="acr-bc" style="font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--g100)">
+<span onclick="acrGoLevel(0)" style="color:var(--g600);cursor:pointer;font-weight:500">Contoh &amp; Referensi</span>
+</div>
+<div class="abt-count" id="acr-count">Memuat...</div>
+<div class="abt-split">
+<div class="abt-list" id="acr-list">
+<div class="abt-loading">Memuat...</div>
+</div>
+<div class="abt-detail" id="acr-detail">
+<div class="abt-empty">Pilih folder atau file di sebelah kiri<br/>untuk melihat detail</div>
+</div>
+</div>
+<div class="abt-form" id="acr-form">
+<div class="abt-form-title">
+<span id="acr-form-title-txt">Tambah Folder</span>
+<button class="abt-form-close" onclick="acrHideForm()">✕</button>
+</div>
+<div class="abt-form-grid" id="acr-form-fields"></div>
+<div class="abt-form-btns">
+<button class="abt-form-cancel" onclick="acrHideForm()">Batal</button>
+<button class="abt-form-save" id="acr-f-save-btn" onclick="acrSaveForm()">Simpan ke Notion</button>
+</div>
+</div>
+</div>
+</div>
 <!-- Tab Bank Teori -->
-    <div id="adm-tc-bank-teori" class="adm-tc">
-      <div class="abt-wrap">
-        <div class="abt-toolbar">
-          <input class="abt-search" id="abt-search" type="text" placeholder="Cari nama teori..." oninput="abtFilter()"/>
-          <select class="abt-tab-sel" id="abt-tab-sel" onchange="abtFilter()">
-            <option value="">Semua Tab</option>
-            <option value="Karakteristik">Karakteristik</option>
-            <option value="Variabel">Variabel</option>
-          </select>
-          <button class="abt-add-btn" onclick="abtShowForm()">&#43; Tambah Teori</button>
-          <button class="abt-add-btn" style="background:var(--blue)" onclick="abtShowBulkForm()">&#43; Dari 1 Jurnal</button>
-        </div>
-        <div class="abt-count" id="abt-count">Memuat teori...</div>
-        <div class="abt-split">
-          <div class="abt-list" id="abt-list">
-            <div class="abt-loading">Memuat...</div>
-          </div>
-          <div class="abt-detail" id="abt-detail">
-            <div class="abt-empty">Pilih teori di sebelah kiri<br>untuk melihat detail &amp; mengedit</div>
-          </div>
-        </div>
-        <div class="abt-form" id="abt-bulk-form">
-  <div class="abt-form-title">
-    <span>Tambah dari 1 Jurnal</span>
-    <button class="abt-form-close" onclick="abtHideBulkForm()">&#10005;</button>
-  </div>
-  <div class="abt-form-grid">
-    <div class="abt-form-full">
-      <div class="abt-form-lbl">Sumber Jurnal</div>
-      <input class="abt-form-inp" id="abt-bulk-sumber" placeholder="Nama et al. (tahun). Judul. Penerbit."/>
-    </div>
-    
-    <div>
-      <div class="abt-form-lbl">Link Google Drive (opsional)</div>
-      <input class="abt-form-inp" id="abt-bulk-link" placeholder="https://drive.google.com/..."/>
-    </div>
-    <div class="abt-form-full">
-      <div class="abt-form-tog-row">
-        <div class="abt-form-tog off" id="abt-bulk-isnew-tog" onclick="abtBulkTogIsNew()"><div class="abt-form-tog-t"></div></div>
-        <span class="abt-form-tog-lbl">Tandai semua sebagai teori baru</span>
-      </div>
-    </div>
-    <div class="abt-form-full">
-      <div class="abt-form-lbl">Kutipan</div>
-      <div id="abt-bulk-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
-      <button class="abt-form-cancel" onclick="abtBulkAddRow()" style="width:100%;border-style:dashed">&#43; Tambah Kutipan</button>
-    </div>
-  </div>
-  <div class="abt-form-btns">
-    <button class="abt-form-cancel" onclick="abtHideBulkForm()">Batal</button>
-    <button class="abt-form-save" id="abt-bulk-save-btn" onclick="abtSaveBulkForm()">Simpan Semua ke Notion</button>
-  </div>
+<div class="adm-tc" id="adm-tc-bank-teori">
+<div class="abt-wrap">
+<div class="abt-toolbar">
+<input class="abt-search" id="abt-search" oninput="abtFilter()" placeholder="Cari nama teori..." type="text"/>
+<select class="abt-tab-sel" id="abt-tab-sel" onchange="abtFilter()">
+<option value="">Semua Tab</option>
+<option value="Karakteristik">Karakteristik</option>
+<option value="Variabel">Variabel</option>
+</select>
+<button class="abt-add-btn" onclick="abtShowForm()">+ Tambah Teori</button>
+<button class="abt-add-btn" onclick="abtShowBulkForm()" style="background:var(--blue)">+ Dari 1 Jurnal</button>
 </div>
-        <div class="abt-form" id="abt-form">
-          <div class="abt-form-title">
-            <span id="abt-form-title-txt">Tambah teori baru</span>
-            <button class="abt-form-close" onclick="abtHideForm()">&#10005;</button>
-          </div>
-          <div class="abt-form-grid">
-            <div class="abt-form-full">
-              <div class="abt-form-lbl">Nama Teori</div>
-              <input class="abt-form-inp" id="abt-f-nama" placeholder="Contoh: Pengaruh Kualitas Produk terhadap Keputusan Pembelian"/>
-            </div>
-            <div class="abt-form-full">
-              <div class="abt-form-lbl">Kutipan</div>
-              <textarea class="abt-form-ta" id="abt-f-kutipan" placeholder="Menurut X (tahun), ..."></textarea>
-            </div>
-            <div class="abt-form-full">
-              <div class="abt-form-lbl">Sumber</div>
-              <input class="abt-form-inp" id="abt-f-sumber" placeholder="Nama, A. (tahun). Judul Buku. Penerbit."/>
-            </div>
-            <div>
-              <div class="abt-form-lbl">Tab</div>
-              <div style="display:flex;gap:16px;margin-top:4px">
-                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-f-tab-kar" value="Karakteristik" onchange="abtOnTabChange()"> Karakteristik</label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input type="checkbox" id="abt-f-tab-var" value="Variabel" onchange="abtOnTabChange()"> Variabel</label>
-              </div>
-            </div>
-            <div id="abt-f-kat-wrap">
-              <div class="abt-form-lbl">Kategori</div>
-              <div class="abt-form-kat-wrap">
-                <input class="abt-form-inp" id="abt-f-kat" placeholder="Pilih atau ketik kategori..." autocomplete="off" oninput="abtKatInput(this.value)" onfocus="abtKatFocus()" onblur="abtKatBlur()"/>
-                <div class="abt-kat-opts" id="abt-kat-opts"></div>
-              </div>
-            </div>
-            <div class="abt-form-full">
-            <div class="abt-form-full" id="abt-f-tags-wrap">
-              <div class="abt-form-lbl">Tags Variabel (pisahkan dengan koma)</div>
-              <input class="abt-form-inp" id="abt-f-tags" placeholder="kepuasan konsumen, loyalitas, kualitas layanan"/>
-            </div>
-            <div class="abt-form-full" id="abt-f-filter-wrap" style="display:none">
-              <div class="abt-form-lbl">Filter Karakteristik (pisahkan dengan koma)</div>
-              <input class="abt-form-inp" id="abt-f-filter" placeholder="Perempuan, Laki-laki"/>
-            </div>
-            <div class="abt-form-full">
-              <div class="abt-form-lbl">Link Google Drive (opsional)</div>
-              <input class="abt-form-inp" id="abt-f-link" placeholder="https://drive.google.com/..."/>
-            </div>
-            <div class="abt-form-full">
-              <div class="abt-form-tog-row">
-                <div class="abt-form-tog off" id="abt-f-isnew-tog" onclick="abtTogIsNew()">
-                  <div class="abt-form-tog-t"></div>
-                </div>
-                <span class="abt-form-tog-lbl">Tandai sebagai teori baru (badge &#8220;Baru&#8221;)</span>
-              </div>
-            </div>
-          </div>
-          <div class="abt-form-btns">
-            <button class="abt-form-cancel" onclick="abtHideForm()">Batal</button>
-            <button class="abt-form-save" id="abt-f-save-btn" onclick="abtSaveForm()">Simpan ke Notion</button>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="abt-count" id="abt-count">Memuat teori...</div>
+<div class="abt-split">
+<div class="abt-list" id="abt-list">
+<div class="abt-loading">Memuat...</div>
+</div>
+<div class="abt-detail" id="abt-detail">
+<div class="abt-empty">Pilih teori di sebelah kiri<br/>untuk melihat detail &amp; mengedit</div>
+</div>
+</div>
+<div class="abt-form" id="abt-bulk-form">
+<div class="abt-form-title">
+<span>Tambah dari 1 Jurnal</span>
+<button class="abt-form-close" onclick="abtHideBulkForm()">✕</button>
+</div>
+<div class="abt-form-grid">
+<div class="abt-form-full">
+<div class="abt-form-lbl">Sumber Jurnal</div>
+<input class="abt-form-inp" id="abt-bulk-sumber" placeholder="Nama et al. (tahun). Judul. Penerbit."/>
+</div>
+<div>
+<div class="abt-form-lbl">Link Google Drive (opsional)</div>
+<input class="abt-form-inp" id="abt-bulk-link" placeholder="https://drive.google.com/..."/>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-tog-row">
+<div class="abt-form-tog off" id="abt-bulk-isnew-tog" onclick="abtBulkTogIsNew()"><div class="abt-form-tog-t"></div></div>
+<span class="abt-form-tog-lbl">Tandai semua sebagai teori baru</span>
+</div>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-lbl">Kutipan</div>
+<div id="abt-bulk-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+<button class="abt-form-cancel" onclick="abtBulkAddRow()" style="width:100%;border-style:dashed">+ Tambah Kutipan</button>
+</div>
+</div>
+<div class="abt-form-btns">
+<button class="abt-form-cancel" onclick="abtHideBulkForm()">Batal</button>
+<button class="abt-form-save" id="abt-bulk-save-btn" onclick="abtSaveBulkForm()">Simpan Semua ke Notion</button>
+</div>
+</div>
+<div class="abt-form" id="abt-form">
+<div class="abt-form-title">
+<span id="abt-form-title-txt">Tambah teori baru</span>
+<button class="abt-form-close" onclick="abtHideForm()">✕</button>
+</div>
+<div class="abt-form-grid">
+<div class="abt-form-full">
+<div class="abt-form-lbl">Nama Teori</div>
+<input class="abt-form-inp" id="abt-f-nama" placeholder="Contoh: Pengaruh Kualitas Produk terhadap Keputusan Pembelian"/>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-lbl">Kutipan</div>
+<textarea class="abt-form-ta" id="abt-f-kutipan" placeholder="Menurut X (tahun), ..."></textarea>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-lbl">Sumber</div>
+<input class="abt-form-inp" id="abt-f-sumber" placeholder="Nama, A. (tahun). Judul Buku. Penerbit."/>
+</div>
+<div>
+<div class="abt-form-lbl">Tab</div>
+<div style="display:flex;gap:16px;margin-top:4px">
+<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input id="abt-f-tab-kar" onchange="abtOnTabChange()" type="checkbox" value="Karakteristik"/> Karakteristik</label>
+<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--g800)"><input id="abt-f-tab-var" onchange="abtOnTabChange()" type="checkbox" value="Variabel"/> Variabel</label>
+</div>
+</div>
+<div id="abt-f-kat-wrap">
+<div class="abt-form-lbl">Kategori</div>
+<div class="abt-form-kat-wrap">
+<input autocomplete="off" class="abt-form-inp" id="abt-f-kat" onblur="abtKatBlur()" onfocus="abtKatFocus()" oninput="abtKatInput(this.value)" placeholder="Pilih atau ketik kategori...">
+<div class="abt-kat-opts" id="abt-kat-opts"></div>
+</input></div>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-full" id="abt-f-tags-wrap">
+<div class="abt-form-lbl">Tags Variabel (pisahkan dengan koma)</div>
+<input class="abt-form-inp" id="abt-f-tags" placeholder="kepuasan konsumen, loyalitas, kualitas layanan">
+</input></div>
+<div class="abt-form-full" id="abt-f-filter-wrap" style="display:none">
+<div class="abt-form-lbl">Filter Karakteristik (pisahkan dengan koma)</div>
+<input class="abt-form-inp" id="abt-f-filter" placeholder="Perempuan, Laki-laki"/>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-lbl">Link Google Drive (opsional)</div>
+<input class="abt-form-inp" id="abt-f-link" placeholder="https://drive.google.com/..."/>
+</div>
+<div class="abt-form-full">
+<div class="abt-form-tog-row">
+<div class="abt-form-tog off" id="abt-f-isnew-tog" onclick="abtTogIsNew()">
+<div class="abt-form-tog-t"></div>
+</div>
+<span class="abt-form-tog-lbl">Tandai sebagai teori baru (badge “Baru”)</span>
+</div>
+</div>
+</div>
+<div class="abt-form-btns">
+<button class="abt-form-cancel" onclick="abtHideForm()">Batal</button>
+<button class="abt-form-save" id="abt-f-save-btn" onclick="abtSaveForm()">Simpan ke Notion</button>
+</div>
+</div>
+</div>
+</div>
 <!-- Tab Segera TF -->
-    <div id="adm-tc-segera-tf" class="adm-tc">
-      <div style="background:#fffbeb;border:0.5px solid #fde68a;border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
-  <span style="font-size:15px;flex-shrink:0;margin-top:1px">💡</span>
-  <div style="font-size:12px;color:#92400e;line-height:1.7">
-    <strong style="color:#78350f">Cara pakai tab ini:</strong> Daftar ini menampilkan client yang sudah mengajukan pencairan reward referral. Setelah kamu transfer manual ke rekening client, <span style="display:inline-block;background:#fff;border:0.5px solid #fde68a;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500;color:#92400e">klik badge "Pending"</span> pada baris client tersebut untuk mengubah statusnya menjadi <span style="color:#15803d;font-weight:500">&#10003; Sudah TF</span> — client otomatis mendapat notifikasi di portalnya. Ada jeda <strong style="color:#78350f">5 detik</strong> untuk membatalkan jika klik tidak sengaja.
+<div class="adm-tc" id="adm-tc-segera-tf">
+<div style="background:#fffbeb;border:0.5px solid #fde68a;border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
+<span style="font-size:15px;flex-shrink:0;margin-top:1px">💡</span>
+<div style="font-size:12px;color:#92400e;line-height:1.7">
+<strong style="color:#78350f">Cara pakai tab ini:</strong> Daftar ini menampilkan client yang sudah mengajukan pencairan reward referral. Setelah kamu transfer manual ke rekening client, <span style="display:inline-block;background:#fff;border:0.5px solid #fde68a;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500;color:#92400e">klik badge "Pending"</span> pada baris client tersebut untuk mengubah statusnya menjadi <span style="color:#15803d;font-weight:500">✓ Sudah TF</span> — client otomatis mendapat notifikasi di portalnya. Ada jeda <strong style="color:#78350f">5 detik</strong> untuk membatalkan jika klik tidak sengaja.
   </div>
 </div>
-      <div id="stf-undo-bar" style="display:none;align-items:center;gap:10px;background:#1a3560;padding:8px 16px;border-radius:8px;margin-bottom:12px">
-        <span style="font-size:12px;color:rgba(255,255,255,.8);flex:1">Status diubah ke <span id="stf-undo-lbl" style="color:#fff;font-weight:600">—</span></span>
-        <div style="flex:1;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;min-width:80px"><div id="stf-undo-progress" style="height:100%;background:#f0a500;border-radius:2px;width:100%;transition:width .1s linear"></div></div>
-        <span id="stf-undo-count" style="font-size:11px;color:rgba(255,255,255,.5);min-width:12px;text-align:center">5</span>
-        <button onclick="cancelStfUndo()" style="padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif">Batalkan</button>
-      </div>
-      <div id="stf-summary-bar" style="display:none;background:#fff;border:0.5px solid #e2e8f0;border-left:3px solid #dc2626;border-radius:0 8px 8px 0;padding:11px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600;color:#0d2144" id="stf-summary-txt">—</div>
-          <div style="font-size:11px;color:#64748b;margin-top:1px" id="stf-summary-sub">—</div>
-        </div>
-      </div>
-      <div class="adm-table-wrap">
-        <table class="adm-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Nominal</th>
-              <th>Metode Transfer</th>
-              <th>No. Rekening / E-wallet</th>
-              <th>Nama Pemilik</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="stf-tbody">
-            <tr><td colspan="6" class="adm-empty">Memuat data...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <!-- Tab Pricelist -->
-    <div id="adm-tc-pricelist" class="adm-tc">
-      <!-- Toggle cepat per aplikasi -->
-      <div class="adm-quick-bar">
-        <div class="adm-quick-ttl">Toggle Cepat &#8212; klik untuk on/off semua paket per aplikasi</div>
-        <div class="adm-quick-apps" id="adm-quick-apps">
-          <div class="adm-pl-loading">Memuat...</div>
-        </div>
-      </div>
-      <!-- Kategori Selector -->
-      <div class="adm-kat-sel">
-        <button class="adm-kat-btn on kerjasama" id="adm-kat-k" onclick="setAdmKat('kerjasama',this)">&#127775; Kerjasama</button>
-        <button class="adm-kat-btn umum" id="adm-kat-u" onclick="setAdmKat('umum',this)">&#128100; Umum</button>
-      </div>
-      <!-- Filter -->
-      <div class="adm-pl-filter">
-        <div class="adm-pl-frow">
-          <span class="adm-pl-flbl">Layanan</span>
-          <div class="adm-pl-chips" id="adm-pl-f-lay">
-            <button class="adm-pl-chip on" onclick="setAdmPlFilter('lay','Semua',this)">Semua</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV',this)">BAB IV</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV–V',this)">BAB IV&#x2013;V</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','FULL BAB (I–V)',this)">FULL BAB</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('lay','Olahdata Only',this)">Olahdata</button>
-          </div>
-        </div>
-        <div class="adm-pl-frow">
-          <span class="adm-pl-flbl">Aplikasi</span>
-          <div class="adm-pl-chips" id="adm-pl-f-app">
-            <button class="adm-pl-chip on" onclick="setAdmPlFilter('app','Semua',this)">Semua</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','SPSS',this)">SPSS</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','SmartPLS',this)">SmartPLS</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','Lisrel',this)">Lisrel</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','Eviews',this)">Eviews</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','AMOS',this)">AMOS</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('app','WarpPLS',this)">WarpPLS</button>
-          </div>
-        </div>
-        <div class="adm-pl-frow">
-          <span class="adm-pl-flbl">Variabel</span>
-          <div class="adm-pl-chips" id="adm-pl-f-var">
-            <button class="adm-pl-chip on" onclick="setAdmPlFilter('var','Semua',this)">Semua</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','2 Variabel',this)">2 Variabel</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','3 Variabel',this)">3 Variabel</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('var','4 Variabel',this)">4 Variabel</button>
-          </div>
-        </div>
-        <div class="adm-pl-frow">
-          <span class="adm-pl-flbl">Status</span>
-          <div class="adm-pl-chips" id="adm-pl-f-st">
-            <button class="adm-pl-chip on" onclick="setAdmPlFilter('st','Semua',this)">Semua</button>
-            <button class="adm-pl-chip" onclick="setAdmPlFilter('st','tersedia',this)">Tersedia</button>
-            <button class="adm-pl-chip penuh-chip" onclick="setAdmPlFilter('st','penuh',this)">Sementara Penuh</button>
-          </div>
-        </div>
-      </div>
-      <!-- Count + Grid -->
-      <div class="adm-pl-count" id="adm-pl-count">Memuat paket...</div>
-      <div id="adm-pl-grid"></div>
-    </div>
+<div id="stf-undo-bar" style="display:none;align-items:center;gap:10px;background:#1a3560;padding:8px 16px;border-radius:8px;margin-bottom:12px">
+<span style="font-size:12px;color:rgba(255,255,255,.8);flex:1">Status diubah ke <span id="stf-undo-lbl" style="color:#fff;font-weight:600">—</span></span>
+<div style="flex:1;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;min-width:80px"><div id="stf-undo-progress" style="height:100%;background:#f0a500;border-radius:2px;width:100%;transition:width .1s linear"></div></div>
+<span id="stf-undo-count" style="font-size:11px;color:rgba(255,255,255,.5);min-width:12px;text-align:center">5</span>
+<button onclick="cancelStfUndo()" style="padding:4px 11px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif">Batalkan</button>
+</div>
+<div id="stf-summary-bar" style="display:none;background:#fff;border:0.5px solid #e2e8f0;border-left:3px solid #dc2626;border-radius:0 8px 8px 0;padding:11px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+<div style="flex:1">
+<div id="stf-summary-txt" style="font-size:13px;font-weight:600;color:#0d2144">—</div>
+<div id="stf-summary-sub" style="font-size:11px;color:#64748b;margin-top:1px">—</div>
+</div>
+</div>
+<div class="adm-table-wrap">
+<table class="adm-table">
+<thead>
+<tr>
+<th>Client</th>
+<th>Nominal</th>
+<th>Metode Transfer</th>
+<th>No. Rekening / E-wallet</th>
+<th>Nama Pemilik</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="stf-tbody">
+<tr><td class="adm-empty" colspan="6">Memuat data...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Tab Pricelist -->
+<div class="adm-tc" id="adm-tc-pricelist">
+<!-- Toggle cepat per aplikasi -->
+<div class="adm-quick-bar">
+<div class="adm-quick-ttl">Toggle Cepat — klik untuk on/off semua paket per aplikasi</div>
+<div class="adm-quick-apps" id="adm-quick-apps">
+<div class="adm-pl-loading">Memuat...</div>
+</div>
+</div>
+<!-- Kategori Selector -->
+<div class="adm-kat-sel">
+<button class="adm-kat-btn on kerjasama" id="adm-kat-k" onclick="setAdmKat('kerjasama',this)">🌟 Kerjasama</button>
+<button class="adm-kat-btn umum" id="adm-kat-u" onclick="setAdmKat('umum',this)">👤 Umum</button>
+</div>
+<!-- Filter -->
+<div class="adm-pl-filter">
+<div class="adm-pl-frow">
+<span class="adm-pl-flbl">Layanan</span>
+<div class="adm-pl-chips" id="adm-pl-f-lay">
+<button class="adm-pl-chip on" onclick="setAdmPlFilter('lay','Semua',this)">Semua</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV',this)">BAB IV</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('lay','BAB IV–V',this)">BAB IV–V</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('lay','FULL BAB (I–V)',this)">FULL BAB</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('lay','Olahdata Only',this)">Olahdata</button>
+</div>
+</div>
+<div class="adm-pl-frow">
+<span class="adm-pl-flbl">Aplikasi</span>
+<div class="adm-pl-chips" id="adm-pl-f-app">
+<button class="adm-pl-chip on" onclick="setAdmPlFilter('app','Semua',this)">Semua</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','SPSS',this)">SPSS</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','SmartPLS',this)">SmartPLS</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','Lisrel',this)">Lisrel</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','Eviews',this)">Eviews</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','AMOS',this)">AMOS</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('app','WarpPLS',this)">WarpPLS</button>
+</div>
+</div>
+<div class="adm-pl-frow">
+<span class="adm-pl-flbl">Variabel</span>
+<div class="adm-pl-chips" id="adm-pl-f-var">
+<button class="adm-pl-chip on" onclick="setAdmPlFilter('var','Semua',this)">Semua</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('var','2 Variabel',this)">2 Variabel</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('var','3 Variabel',this)">3 Variabel</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('var','4 Variabel',this)">4 Variabel</button>
+</div>
+</div>
+<div class="adm-pl-frow">
+<span class="adm-pl-flbl">Status</span>
+<div class="adm-pl-chips" id="adm-pl-f-st">
+<button class="adm-pl-chip on" onclick="setAdmPlFilter('st','Semua',this)">Semua</button>
+<button class="adm-pl-chip" onclick="setAdmPlFilter('st','tersedia',this)">Tersedia</button>
+<button class="adm-pl-chip penuh-chip" onclick="setAdmPlFilter('st','penuh',this)">Sementara Penuh</button>
+</div>
+</div>
+</div>
+<!-- Count + Grid -->
+<div class="adm-pl-count" id="adm-pl-count">Memuat paket...</div>
+<div id="adm-pl-grid"></div>
+</div>
+</div>
+<footer>© 2026 AMKOBAR — Konsultasi Akademik &amp; Statistik</footer>
+</div>
 
-  </div>
-  <footer>&#169; 2026 AMKOBAR &#8212; Konsultasi Akademik &amp; Statistik</footer>
+</div><div class="bottom-tab-bar" id="bottom-tab-bar">
+<div class="bottom-tab-pill">
+<button class="bottom-tab on" id="bt-home" onclick="showPg('home')">
+<span class="bottom-tab-ic">▶</span>
+<span class="bottom-tab-lbl">Status</span>
+</button>
+<button class="bottom-tab" id="bt-faq" onclick="showPg('faq')">
+<span class="bottom-tab-ic">ⓘ</span>
+<span class="bottom-tab-lbl">FAQ</span>
+</button>
+<button class="bottom-tab" id="bt-testimoni" onclick="showPg('testimoni')">
+<span class="bottom-tab-ic">★</span>
+<span class="bottom-tab-lbl">Testimoni</span>
+</button>
+<button class="bottom-tab" id="bt-pricelist" onclick="window.open('pricelist.html','_blank')">
+<span class="bottom-tab-ic">📄</span>
+<span class="bottom-tab-lbl">Pricelist</span>
+</button>
 </div>
-
-<div class="bottom-tab-bar" id="bottom-tab-bar">
-  <div class="bottom-tab-pill">
-    <button class="bottom-tab on" id="bt-home" onclick="showPg('home')">
-      <span class="bottom-tab-ic">&#9654;</span>
-      <span class="bottom-tab-lbl">Status</span>
-    </button>
-    <button class="bottom-tab" id="bt-faq" onclick="showPg('faq')">
-      <span class="bottom-tab-ic">&#9432;</span>
-      <span class="bottom-tab-lbl">FAQ</span>
-    </button>
-    <button class="bottom-tab" id="bt-testimoni" onclick="showPg('testimoni')">
-      <span class="bottom-tab-ic">&#9733;</span>
-      <span class="bottom-tab-lbl">Testimoni</span>
-    </button>
-    <button class="bottom-tab" id="bt-pricelist" onclick="window.open('pricelist.html','_blank')">
-      <span class="bottom-tab-ic">&#128196;</span>
-      <span class="bottom-tab-lbl">Pricelist</span>
-    </button>
-  </div>
-</div>
-</body>
+</div></body>
 </html>

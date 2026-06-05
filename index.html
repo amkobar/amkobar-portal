@@ -2312,6 +2312,7 @@ function switchTabMob(tab, btn) {
   var tcEl = document.getElementById('tc-' + tab);
   if (tcEl) tcEl.classList.add('on');
   if (tab === 'bank-teori') loadBankTeori();
+  if (tab === 'cbh') loadMateriPanduan();
   if (tab === 'contoh') {
     var kat = sessionStorage.getItem('amkobar_kat') || '';
     loadClientContoh(kat);

@@ -1230,22 +1230,38 @@ function doAdminLogout(){
 function applyFreezeOverlay(tab){
   var tcEl = document.getElementById('tc-' + tab);
   if (!tcEl) return;
-  var lama = tcEl.querySelector('.freeze-overlay');
-  // Jika freeze tidak aktif atau tab status: bersihkan overlay bila ada
-  if (!window._aksesFreeze || tab === 'status') {
-    if (lama) lama.remove();
+  var card = tcEl.querySelector('.freeze-card');
+  var freezeAktif = window._aksesFreeze && tab !== 'status';
+  if (!freezeAktif) {
+    // Unfreeze: hapus kartu freeze & tampilkan kembali konten asli
+    if (card) card.remove();
+    Array.prototype.forEach.call(tcEl.children, function(ch){
+      if (ch.classList && ch.classList.contains('freeze-card')) return;
+      if (ch.dataset && ch.dataset.freezeHidden === '1') {
+        ch.style.display = ch.dataset.freezePrevDisplay || '';
+        delete ch.dataset.freezeHidden;
+        delete ch.dataset.freezePrevDisplay;
+      }
+    });
     return;
   }
-  // Freeze aktif & tab non-status: pasang overlay bila belum ada
-  if (lama) return;
-  var overlay = document.createElement('div');
-  overlay.className = 'freeze-overlay';
-  overlay.style.cssText = 'position:absolute;inset:0;background:rgba(248,250,252,0.92);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;pointer-events:all;padding:24px;text-align:center';
-  overlay.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:30px">&#128274;</div>'
-    + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy)">Masa Akses Telah Berakhir</div>'
-    + '<div style="font-size:14px;color:var(--g600);line-height:1.7;max-width:340px">Masa akses kamu untuk fitur ini sudah berakhir. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.</div>';
-  tcEl.style.position = 'relative';
-  tcEl.appendChild(overlay);
+  // Freeze aktif: jika kartu sudah ada, biarkan
+  if (card) return;
+  // Sembunyikan semua konten asli tab
+  Array.prototype.forEach.call(tcEl.children, function(ch){
+    if (ch.classList && ch.classList.contains('freeze-card')) return;
+    ch.dataset.freezePrevDisplay = ch.style.display || '';
+    ch.dataset.freezeHidden = '1';
+    ch.style.display = 'none';
+  });
+  // Tampilkan kartu pesan freeze di atas
+  var c = document.createElement('div');
+  c.className = 'freeze-card';
+  c.style.cssText = 'max-width:440px;margin:24px auto;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:14px;padding:36px 32px';
+  c.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px">&#128274;</div>'
+    + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:10px">Masa Akses Telah Berakhir</div>'
+    + '<div style="font-size:14px;color:var(--g600);line-height:1.7">Masa akses kamu untuk fitur ini sudah berakhir. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.</div>';
+  tcEl.insertBefore(c, tcEl.firstChild);
 }
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
@@ -2817,6 +2833,8 @@ var _mpData=[];
 var _mpActiveSub='modul';
 
 function loadMateriPanduan(){
+  // Jika akses freeze (Rencana 2), jangan render apa pun — kartu freeze yang tampil
+  if (window._aksesFreeze) return;
   var banner=document.getElementById('mp-app-banner');
   var tag=document.getElementById('mp-app-tag');
   var app=sessionStorage.getItem('amkobar_aplikasi')||'';

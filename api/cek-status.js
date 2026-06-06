@@ -114,6 +114,8 @@ export default async function handler(req, res) {
       rekening_reward: getText(props['Rekening_Reward']),
       teori_dipilih: (props['Teori Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}',
 all_teori_tampil: getCheckbox(props['All Teori Tampil']),
+      tanggal_pendampingan: getDate(props['Tanggal Pendampingan']),
+      masa_berlaku_hari: props['Masa Berlaku Hari']?.number ?? 50,
     });
 
   } catch (err) {

@@ -817,6 +817,11 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <button onclick="saveMasaBerlaku()" style="padding:5px 14px;border-radius:8px;border:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Simpan</button>
 <span id="adm-masa-saving" style="font-size:11px;color:rgba(255,255,255,.5)"></span>
 </div>
+<div id="adm-rating-row" style="display:none;background:var(--navy-2);padding:8px 48px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)">
+<span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Aktivasi Rating (24 jam):</span>
+<button onclick="aktifkanRating()" style="padding:5px 14px;border-radius:8px;border:none;background:#f59e0b;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Aktifkan Rating</button>
+<span id="adm-rating-saving" style="font-size:11px;color:rgba(255,255,255,.5)"></span>
+</div>
 <div class="adm-undo-bar" id="adm-undo-bar">
 <span class="adm-undo-txt">Status diubah ke <span id="adm-undo-lbl">—</span></span>
 <div class="adm-undo-progress"><div class="adm-undo-bar-inner" id="adm-undo-progress" style="width:100%"></div></div>
@@ -1967,6 +1972,13 @@ function renderDash(d){
       var masaInp=document.getElementById('adm-masa-inp');
       if(masaRow)masaRow.style.display='flex';
       if(masaInp)masaInp.value=(d.masa_berlaku_hari!=null?d.masa_berlaku_hari:50);
+      // Baris aktivasi rating — hanya saat status Selesai & belum permanen & bukan client lama
+      var ratingRow=document.getElementById('adm-rating-row');
+      if(ratingRow){
+        var stSel=(d.status_project||'').toLowerCase().includes('selesai');
+        var perluRating = stSel && !d.testimoni_selesai && !d.client_lama;
+        ratingRow.style.display = perluRating ? 'flex' : 'none';
+      }
     }else{
       aksesTogWrap.style.display='none';
       var editBtnJudul = document.getElementById('edit-btn-judul');
@@ -1977,6 +1989,8 @@ function renderDash(d){
       if(statusRow)statusRow.style.display='none';
       var masaRow=document.getElementById('adm-masa-row');
       if(masaRow)masaRow.style.display='none';
+      var ratingRow=document.getElementById('adm-rating-row');
+      if(ratingRow)ratingRow.style.display='none';
     }
   }
   document.getElementById('i-judul').textContent=d.judul||'\u2014';
@@ -2010,16 +2024,48 @@ function renderDash(d){
   const rb=document.getElementById('rating-btn');const ab=document.getElementById('akses-box');
   const status=(d.status_project||'').toLowerCase();
   if(status.includes('selesai')&&d.nim){
-    if(d.testimoni_selesai){
+    window._clientNim=d.nim;
+    if(d.client_lama){
+      // Client lama (input manual) → permanen + catatan folder
+      ab.className='akses-box permanen';
+      ab.innerHTML=`<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Project Anda berstatus <strong>Selesai (Akses Permanen)</strong>. <br><br><em>Catatan:</em> File hasil project Anda tidak tersimpan di sistem folder otomatis. Untuk mengakses file hasil, silakan hubungi admin AMKOBAR via WhatsApp.</div>`;
+      ab.style.display='block';rb.style.display='none';
+    } else if(d.testimoni_selesai){
+      // Sudah isi testimoni → akses permanen
       ab.className='akses-box permanen';
       ab.innerHTML=`<div class="akses-ttl">&#9989; Status 5/5: Selesai (Akses Permanen)</div><div class="akses-desc">Terima kasih! Ulasan Anda telah kami terima. Project Anda kini berstatus <strong>Selesai (Akses Permanen)</strong>. Semua file project Anda sekarang dapat diakses selamanya tanpa batas waktu.</div>`;
       ab.style.display='block';rb.style.display='none';
-    }else{
-      ab.className='akses-box non-permanen';
-      ab.innerHTML=`<div class="akses-ttl">&#128308; Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
-      ab.style.display='block';
-      window._clientNim=d.nim;
-      rb.style.display='flex';
+    } else {
+      // Belum isi testimoni — cek waktu (3 hari sejak selesai, atau reaktivasi 24 jam)
+      var dalamPeriode3Hari = false;
+      if (d.tanggal_selesai) {
+        var mulai = new Date(d.tanggal_selesai);
+        var batas = new Date(mulai.getFullYear(), mulai.getMonth(), mulai.getDate()+3);
+        var skrg = new Date();
+        var hariIni = new Date(skrg.getFullYear(), skrg.getMonth(), skrg.getDate());
+        dalamPeriode3Hari = hariIni <= batas;
+      } else {
+        // Tidak ada tanggal selesai (belum ter-set) → anggap masih dalam periode
+        dalamPeriode3Hari = true;
+      }
+      var aktivasiAktif = false;
+      if (d.tanggal_aktivasi_rating) {
+        var selisihJam = (Date.now() - new Date(d.tanggal_aktivasi_rating)) / (1000*60*60);
+        aktivasiAktif = selisihJam <= 24;
+      }
+      var aksesAktif = dalamPeriode3Hari || aktivasiAktif;
+      if (aksesAktif) {
+        ab.className='akses-box non-permanen';
+        ab.innerHTML=`<div class="akses-ttl">&#128308; Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
+        ab.style.display='block';
+        rb.style.display='flex';
+      } else {
+        ab.className='akses-box non-permanen';
+        ab.innerHTML=`<div class="akses-ttl">&#128274; Akses File Tidak Aktif</div><div class="akses-desc">Masa akses file kamu sudah berakhir. Silakan hubungi admin AMKOBAR via WhatsApp untuk mengaktifkan kembali akses kamu.</div>`;
+        ab.style.display='block';rb.style.display='none';
+        var dbEl=document.getElementById('drive-btn');
+        if(dbEl)dbEl.style.display='none';
+      }
     }
   }else{ab.style.display='none';rb.style.display='none';}
   renderReferral(d);
@@ -2602,6 +2648,25 @@ function cancelStatusUndo(){
   _undoPrevStatus=null;
 }
 
+function aktifkanRating(){
+  var sav=document.getElementById('adm-rating-saving');
+  var pageId=window._dashPageId;
+  if(!pageId)return;
+  if(sav)sav.textContent='Mengaktifkan...';
+  fetch('/api/update-client',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'aktifkan_rating',page_id:pageId})
+  }).then(function(r){return r.json();}).then(function(res){
+    if(res.success){
+      if(sav)sav.textContent='Aktif 24 jam \u2713';
+      if(window._dashData)window._dashData.tanggal_aktivasi_rating=res.tanggal_aktivasi_rating;
+      setTimeout(function(){if(sav)sav.textContent='';},2500);
+    }else{
+      if(sav)sav.textContent='Gagal';
+    }
+  }).catch(function(){if(sav)sav.textContent='Gagal menghubungi server';});
+}
 function saveMasaBerlaku(){
   var inp=document.getElementById('adm-masa-inp');
   var sav=document.getElementById('adm-masa-saving');
@@ -2655,6 +2720,15 @@ function doSaveStatus(pageId,status){
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'set_tanggal_pendampingan', page_id: pageId, tanggal: today })
+        });
+      }
+      // Set tanggal selesai otomatis (Rencana 3) — set-once di server
+      if (status === 'Selesai') {
+        var todaySelesai = new Date().toISOString().split('T')[0];
+        fetch('/api/update-client', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'set_tanggal_selesai', page_id: pageId, tanggal: todaySelesai })
         });
       }
     }

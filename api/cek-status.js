@@ -116,6 +116,9 @@ export default async function handler(req, res) {
 all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       tanggal_pendampingan: getDate(props['Tanggal Pendampingan']),
       masa_berlaku_hari: props['Masa Berlaku Hari']?.number ?? 50,
+      tanggal_selesai: getDate(props['Tanggal Selesai']),
+      tanggal_aktivasi_rating: props['Tanggal Aktivasi Rating']?.date?.start || null,
+      client_lama: getCheckbox(props['Client Lama']),
     });
 
   } catch (err) {

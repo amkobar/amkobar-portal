@@ -270,6 +270,41 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
+    // ===== AKTIFKAN RATING (dari admin) — simpan timestamp lengkap dengan jam =====
+    if (action === 'aktifkan_rating') {
+      const nowIso = new Date().toISOString(); // timestamp lengkap untuk hitung 24 jam
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: { 'Tanggal Aktivasi Rating': { date: { start: nowIso } } } })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
+      return res.status(200).json({ success: true, tanggal_aktivasi_rating: nowIso });
+    }
+
+    // ===== SET TANGGAL SELESAI (set-once: hanya jika kosong) =====
+    if (action === 'set_tanggal_selesai') {
+      const { tanggal } = req.body;
+      const cekRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28' }
+      });
+      const cekData = await cekRes.json();
+      if (!cekRes.ok) return res.status(500).json({ error: `Notion error: ${cekRes.status}` });
+      const sudahAda = cekData.properties?.['Tanggal Selesai']?.date?.start || null;
+      if (sudahAda) {
+        return res.status(200).json({ success: true, skipped: true, tanggal_selesai: sudahAda });
+      }
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: { 'Tanggal Selesai': { date: tanggal ? { start: tanggal } : null } } })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
+      return res.status(200).json({ success: true, tanggal_selesai: tanggal });
+    }
+
     return res.status(400).json({ error: 'Action tidak dikenal.' });
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });

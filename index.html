@@ -811,6 +811,12 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 <span class="adm-status-saving" id="adm-status-saving"></span>
 </div>
+<div id="adm-masa-row" style="display:none;background:var(--navy-2);padding:8px 48px;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)">
+<span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Masa Berlaku (hari):</span>
+<input type="number" id="adm-masa-inp" min="1" style="width:90px;padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-family:'DM Sans',sans-serif" />
+<button onclick="saveMasaBerlaku()" style="padding:5px 14px;border-radius:8px;border:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Simpan</button>
+<span id="adm-masa-saving" style="font-size:11px;color:rgba(255,255,255,.5)"></span>
+</div>
 <div class="adm-undo-bar" id="adm-undo-bar">
 <span class="adm-undo-txt">Status diubah ke <span id="adm-undo-lbl">—</span></span>
 <div class="adm-undo-progress"><div class="adm-undo-bar-inner" id="adm-undo-progress" style="width:100%"></div></div>
@@ -1221,11 +1227,33 @@ function doAdminLogout(){
   _admLoaded=false;_admClients=[];
 }
 
+function applyFreezeOverlay(tab){
+  var tcEl = document.getElementById('tc-' + tab);
+  if (!tcEl) return;
+  var lama = tcEl.querySelector('.freeze-overlay');
+  // Jika freeze tidak aktif atau tab status: bersihkan overlay bila ada
+  if (!window._aksesFreeze || tab === 'status') {
+    if (lama) lama.remove();
+    return;
+  }
+  // Freeze aktif & tab non-status: pasang overlay bila belum ada
+  if (lama) return;
+  var overlay = document.createElement('div');
+  overlay.className = 'freeze-overlay';
+  overlay.style.cssText = 'position:absolute;inset:0;background:rgba(248,250,252,0.92);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;pointer-events:all;padding:24px;text-align:center';
+  overlay.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:30px">&#128274;</div>'
+    + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy)">Masa Akses Telah Berakhir</div>'
+    + '<div style="font-size:14px;color:var(--g600);line-height:1.7;max-width:340px">Masa akses kamu untuk fitur ini sudah berakhir. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.</div>';
+  tcEl.style.position = 'relative';
+  tcEl.appendChild(overlay);
+}
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
   document.getElementById('tc-'+tab).classList.add('on');
+  // Freeze check (Rencana 2) — hanya untuk tab selain status
+  applyFreezeOverlay(tab);
   if(tab==='bank-teori') loadBankTeori();
 if(tab==='cbh') loadMateriPanduan();
 if(tab==='contoh'){
@@ -1892,6 +1920,15 @@ function renderDash(d){
   window._teoriDipilih = {};
   try { window._teoriDipilih = JSON.parse(d.teori_dipilih || '{}'); } catch(e) {}
   window._allTeoriTampil = d.all_teori_tampil || false;
+  // Hitung apakah akses sudah freeze (Rencana 2)
+  window._aksesFreeze = false;
+  if (d.tanggal_pendampingan) {
+    var hariDipakai = (Date.now() - new Date(d.tanggal_pendampingan)) / (1000 * 60 * 60 * 24);
+    var masaBerlaku = d.masa_berlaku_hari || 50;
+    if (hariDipakai > masaBerlaku) {
+      window._aksesFreeze = true;
+    }
+  }
   if(aksesTogWrap){
     if(fromAdmin==='1'){
       aksesTogWrap.style.display='flex';
@@ -1904,6 +1941,10 @@ function renderDash(d){
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='flex';
       setStatusPillActive(d.status_project||'');
+      var masaRow=document.getElementById('adm-masa-row');
+      var masaInp=document.getElementById('adm-masa-inp');
+      if(masaRow)masaRow.style.display='flex';
+      if(masaInp)masaInp.value=(d.masa_berlaku_hari!=null?d.masa_berlaku_hari:50);
     }else{
       aksesTogWrap.style.display='none';
       var editBtnJudul = document.getElementById('edit-btn-judul');
@@ -1912,6 +1953,8 @@ function renderDash(d){
       if (editBtnVariabel) editBtnVariabel.style.display = 'none';
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='none';
+      var masaRow=document.getElementById('adm-masa-row');
+      if(masaRow)masaRow.style.display='none';
     }
   }
   document.getElementById('i-judul').textContent=d.judul||'\u2014';
@@ -2300,6 +2343,7 @@ function switchTabMob(tab, btn) {
   document.querySelectorAll('.tc').forEach(function(t) { t.classList.remove('on'); });
   var tcEl = document.getElementById('tc-' + tab);
   if (tcEl) tcEl.classList.add('on');
+  applyFreezeOverlay(tab);
   if (tab === 'bank-teori') loadBankTeori();
   if (tab === 'cbh') loadMateriPanduan();
   if (tab === 'contoh') {
@@ -2536,6 +2580,28 @@ function cancelStatusUndo(){
   _undoPrevStatus=null;
 }
 
+function saveMasaBerlaku(){
+  var inp=document.getElementById('adm-masa-inp');
+  var sav=document.getElementById('adm-masa-saving');
+  var pageId=window._dashPageId;
+  if(!inp||!pageId)return;
+  var val=parseInt(inp.value,10);
+  if(isNaN(val)||val<1){if(sav)sav.textContent='Angka tidak valid';return;}
+  if(sav)sav.textContent='Menyimpan...';
+  fetch('/api/update-client',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'update_masa_berlaku',page_id:pageId,masa_berlaku_hari:val})
+  }).then(function(r){return r.json();}).then(function(res){
+    if(res.success){
+      if(sav)sav.textContent='Tersimpan \u2713';
+      if(window._dashData)window._dashData.masa_berlaku_hari=val;
+      setTimeout(function(){if(sav)sav.textContent='';},2000);
+    }else{
+      if(sav)sav.textContent='Gagal menyimpan';
+    }
+  }).catch(function(){if(sav)sav.textContent='Gagal menghubungi server';});
+}
 function doSaveStatus(pageId,status){
   fetch('/api/update-client',{
     method:'POST',
@@ -2559,6 +2625,15 @@ function doSaveStatus(pageId,status){
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({action:'update_akses',page_id:pageId,akses_aktif:newAkses})
         }).then(function(){updateAksesTogUI(newAkses);});
+      }
+      // Set tanggal pendampingan otomatis (Rencana 2)
+      if (status === 'Pendampingan') {
+        var today = new Date().toISOString().split('T')[0];
+        fetch('/api/update-client', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'set_tanggal_pendampingan', page_id: pageId, tanggal: today })
+        });
       }
     }
   }).catch(function(){

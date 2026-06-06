@@ -232,63 +232,45 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
-    return res.status(400).json({ error: 'Action tidak dikenal.' });
-if (action === 'simpan_teori_dipilih') {
-  const { kategori, teori_id } = req.body;
-  if (!kategori || !teori_id) return res.status(400).json({ error: 'kategori dan teori_id wajib diisi.' });
-
-  // Ambil data teori_dipilih yang sudah ada
-  const getRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
+    // ===== SET TANGGAL PENDAMPINGAN (set-once: hanya jika kosong) =====
+    if (action === 'set_tanggal_pendampingan') {
+      const { tanggal } = req.body;
+      // Cek dulu apakah Tanggal Pendampingan sudah terisi
+      const cekRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28' }
+      });
+      const cekData = await cekRes.json();
+      if (!cekRes.ok) return res.status(500).json({ error: `Notion error: ${cekRes.status}` });
+      const sudahAda = cekData.properties?.['Tanggal Pendampingan']?.date?.start || null;
+      if (sudahAda) {
+        // Sudah terisi — jangan timpa, agar hitung mundur tidak ter-reset
+        return res.status(200).json({ success: true, skipped: true, tanggal_pendampingan: sudahAda });
+      }
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: { 'Tanggal Pendampingan': { date: tanggal ? { start: tanggal } : null } } })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
+      return res.status(200).json({ success: true, tanggal_pendampingan: tanggal });
     }
-  });
-  const getData = await getRes.json();
-  const existing = (getData.properties['Teori Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}';
-  let teoriMap = {};
-  try { teoriMap = JSON.parse(existing); } catch(e) {}
-  teoriMap[kategori] = teori_id;
 
-  const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      properties: {
-        'Teori Dipilih': { rich_text: [{ text: { content: JSON.stringify(teoriMap) } }] }
-      }
-    })
-  });
-  const data = await response.json();
-  if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
-  return res.status(200).json({ success: true, teori_dipilih: teoriMap });
-}
+    // ===== UPDATE MASA BERLAKU HARI =====
+    if (action === 'update_masa_berlaku') {
+      const { masa_berlaku_hari } = req.body;
+      if (typeof masa_berlaku_hari !== 'number') return res.status(400).json({ error: 'masa_berlaku_hari harus number.' });
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: { 'Masa Berlaku Hari': { number: masa_berlaku_hari } } })
+      });
+      const data = await response.json();
+      if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
+      return res.status(200).json({ success: true });
+    }
 
-// ===== UPDATE ALL TEORI TAMPIL (dari admin) =====
-if (action === 'update_all_teori_tampil') {
-  const { all_teori_tampil } = req.body;
-  if (typeof all_teori_tampil !== 'boolean') return res.status(400).json({ error: 'all_teori_tampil harus boolean.' });
-  const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      properties: {
-        'All Teori Tampil': { checkbox: all_teori_tampil }
-      }
-    })
-  });
-  const data = await response.json();
-  if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
-  return res.status(200).json({ success: true });
-}
+    return res.status(400).json({ error: 'Action tidak dikenal.' });
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });
   }

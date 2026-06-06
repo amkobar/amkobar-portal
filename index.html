@@ -1936,12 +1936,18 @@ function renderDash(d){
   window._teoriDipilih = {};
   try { window._teoriDipilih = JSON.parse(d.teori_dipilih || '{}'); } catch(e) {}
   window._allTeoriTampil = d.all_teori_tampil || false;
-  // Hitung apakah akses sudah freeze (Rencana 2)
+  // Hitung apakah akses sudah freeze (Rencana 2) — berbasis tanggal murni, abaikan jam
   window._aksesFreeze = false;
   if (d.tanggal_pendampingan) {
-    var hariDipakai = (Date.now() - new Date(d.tanggal_pendampingan)) / (1000 * 60 * 60 * 24);
-    var masaBerlaku = d.masa_berlaku_hari || 50;
-    if (hariDipakai > masaBerlaku) {
+    var masaBerlaku = (d.masa_berlaku_hari != null) ? d.masa_berlaku_hari : 50;
+    // Tanggal mulai (tengah malam) + masa berlaku = tanggal kedaluwarsa
+    var mulai = new Date(d.tanggal_pendampingan);
+    var kedaluwarsa = new Date(mulai.getFullYear(), mulai.getMonth(), mulai.getDate() + masaBerlaku);
+    // Tanggal hari ini (tengah malam, tanpa jam)
+    var skrg = new Date();
+    var hariIni = new Date(skrg.getFullYear(), skrg.getMonth(), skrg.getDate());
+    // Freeze jika tanggal hari ini sudah melewati tanggal kedaluwarsa
+    if (hariIni > kedaluwarsa) {
       window._aksesFreeze = true;
     }
   }

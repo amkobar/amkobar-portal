@@ -131,6 +131,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 #akses-banner .rating-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap;order:3}
 #akses-banner.banner-permanen{background:var(--ok-bg);border-color:var(--ok-border)}
 #akses-banner.banner-nonpermanen{background:#fffbeb;border-color:#fde68a}
+#rating-tenggat{align-items:center;gap:6px;background:#fef3c7;border:1px solid #fcd34d;border-radius:100px;padding:5px 13px;font-size:11px;font-weight:700;color:#92400e;white-space:nowrap;margin-top:11px}
+#akses-banner #rating-tenggat{order:4;margin-top:0;align-self:center}
 .ref-card{border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;border:1px solid var(--warn-border);background:var(--warn-bg)}
 .ref-card.ok{background:var(--ok-bg);border-color:var(--ok-border)}
 .ref-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--accent);flex-shrink:0}
@@ -634,6 +636,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
   #akses-banner{flex-direction:column;align-items:stretch;gap:11px}
   #akses-banner .akses-box{min-width:0}
   #akses-banner .drive-btn,#akses-banner .rating-btn{width:100%}
+  #akses-banner #rating-tenggat{align-self:center;width:auto;margin-top:0}
   .mob-progress-wrap{display:block;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--g100);margin-bottom:10px;box-shadow:var(--sh)}
   .mob-info-grid{display:block;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--g100);margin-bottom:10px;box-shadow:var(--sh)}
   #mob-notif{display:flex}
@@ -894,7 +897,8 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div id="akses-banner" style="display:none">
 <a class="drive-btn" href="#" id="drive-btn" style="display:none" target="_blank">📂 Kirim File &amp; Data Disini</a>
 <div id="akses-box" style="display:none"></div>
-<button class="rating-btn" id="rating-btn" onclick="openRatingModal()" style="display:none">⭐ Beri Rating &amp; Testimoni</button>
+<div id="rating-wrap" style="display:contents"><button class="rating-btn" id="rating-btn" onclick="openRatingModal()" style="display:none">⭐ Beri Rating &amp; Testimoni</button>
+<div id="rating-tenggat" style="display:none">⏳ <span id="rating-tenggat-txt"></span></div></div>
 </div>
 <div class="sg">
 <div>
@@ -2053,6 +2057,7 @@ function renderDash(d){
   else if(d.link_drive){db.href=d.link_drive;db.textContent='\ud83d\udcc2 Upload File & Data Kamu Di Sini';db.style.display='flex';}
   else{db.style.display='none';}
   const rb=document.getElementById('rating-btn');const ab=document.getElementById('akses-box');
+  var _tgReset=document.getElementById('rating-tenggat');if(_tgReset)_tgReset.style.display='none';
   const status=(d.status_project||'').toLowerCase();
   if(status.includes('selesai')&&d.nim){
     window._clientNim=d.nim;
@@ -2090,10 +2095,25 @@ function renderDash(d){
         ab.innerHTML=`<div class="akses-ttl">&#128308; Status 4/5: Selesai (Akses Non-Permanen)</div><div class="akses-desc">Project Anda telah selesai dikerjakan! Saat ini Anda memiliki <strong>Akses Non-Permanen (Sementara)</strong> ke file project. Silakan isi form ulasan/rating melalui tombol di bawah untuk mengaktifkan <strong>Akses Permanen (5/5)</strong> secara otomatis.</div>`;
         ab.style.display='block';
         rb.style.display='flex';
+        // Pill tenggat: tampilkan tanggal batas (tanggal_selesai + 3 hari) jika ada, atau teks umum jika kosong
+        var tgEl=document.getElementById('rating-tenggat');
+        var tgTxt=document.getElementById('rating-tenggat-txt');
+        if(tgEl&&tgTxt){
+          if(d.tanggal_selesai){
+            var ms=new Date(d.tanggal_selesai);
+            var bts=new Date(ms.getFullYear(), ms.getMonth(), ms.getDate()+3);
+            var bln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            tgTxt.textContent='Batas isi rating: '+bts.getDate()+' '+bln[bts.getMonth()]+' '+bts.getFullYear();
+          } else {
+            tgTxt.textContent='Segera isi dalam 3 hari';
+          }
+          tgEl.style.display='inline-flex';
+        }
       } else {
         ab.className='akses-box non-permanen';
         ab.innerHTML=`<div class="akses-ttl">&#128274; Akses File Tidak Aktif</div><div class="akses-desc">Masa akses file kamu sudah berakhir. Silakan hubungi admin AMKOBAR via WhatsApp untuk mengaktifkan kembali akses kamu.</div>`;
         ab.style.display='block';rb.style.display='none';
+        var tgEl2=document.getElementById('rating-tenggat');if(tgEl2)tgEl2.style.display='none';
         var dbEl=document.getElementById('drive-btn');
         if(dbEl)dbEl.style.display='none';
       }

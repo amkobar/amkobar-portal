@@ -97,7 +97,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .irow{display:flex;flex-direction:column;gap:3px;padding:14px 0;border-bottom:1px solid var(--g100)}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
 .info-grid .irow{border-bottom:1px solid var(--g100)}
-.info-grid .irow-variabel{grid-column:1 / -1}
 @media(max-width:768px){.info-grid{grid-template-columns:1fr}}
 .irow:first-of-type{padding-top:0}.irow:last-child{border-bottom:none;padding-bottom:0}
 .ilabel{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--g400)}
@@ -898,7 +897,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div class="info-grid">
 <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
 <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
-<div class="irow irow-variabel">
+<div class="irow">
 <div style="display:flex;align-items:center;justify-content:space-between">
 <div class="ilabel">Jumlah Variabel</div>
 <button id="edit-btn-variabel" onclick="editInfo('variabel')" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit</button>

@@ -1941,17 +1941,14 @@ function renderDash(d){
   window._teoriDipilih = {};
   try { window._teoriDipilih = JSON.parse(d.teori_dipilih || '{}'); } catch(e) {}
   window._allTeoriTampil = d.all_teori_tampil || false;
-  // Hitung apakah akses sudah freeze (Rencana 2) — berbasis tanggal murni, abaikan jam
+  // Hitung apakah akses sudah freeze (Rencana 2) — patokan Tanggal Selesai, berbasis tanggal murni
   window._aksesFreeze = false;
-  if (d.tanggal_pendampingan) {
+  if (d.tanggal_selesai) {
     var masaBerlaku = (d.masa_berlaku_hari != null) ? d.masa_berlaku_hari : 50;
-    // Tanggal mulai (tengah malam) + masa berlaku = tanggal kedaluwarsa
-    var mulai = new Date(d.tanggal_pendampingan);
+    var mulai = new Date(d.tanggal_selesai);
     var kedaluwarsa = new Date(mulai.getFullYear(), mulai.getMonth(), mulai.getDate() + masaBerlaku);
-    // Tanggal hari ini (tengah malam, tanpa jam)
     var skrg = new Date();
     var hariIni = new Date(skrg.getFullYear(), skrg.getMonth(), skrg.getDate());
-    // Freeze jika tanggal hari ini sudah melewati tanggal kedaluwarsa
     if (hariIni > kedaluwarsa) {
       window._aksesFreeze = true;
     }
@@ -2712,24 +2709,6 @@ function doSaveStatus(pageId,status){
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({action:'update_akses',page_id:pageId,akses_aktif:newAkses})
         }).then(function(){updateAksesTogUI(newAkses);});
-      }
-      // Set tanggal pendampingan otomatis (Rencana 2)
-      if (status === 'Pendampingan') {
-        var today = new Date().toISOString().split('T')[0];
-        fetch('/api/update-client', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'set_tanggal_pendampingan', page_id: pageId, tanggal: today })
-        });
-      }
-      // Set tanggal selesai otomatis (Rencana 3) — set-once di server
-      if (status === 'Selesai') {
-        var todaySelesai = new Date().toISOString().split('T')[0];
-        fetch('/api/update-client', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'set_tanggal_selesai', page_id: pageId, tanggal: todaySelesai })
-        });
       }
     }
   }).catch(function(){

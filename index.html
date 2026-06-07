@@ -622,8 +622,20 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 #mob-notif .mob-notif-txt{font-size:12px;color:#185FA5;line-height:1.5}
 #mob-notif.red .mob-notif-txt{color:#A32D2D}
 @media(max-width:768px){
+  #tc-status{display:flex;flex-direction:column}
+  #tc-status>.mob-progress-wrap{order:1}
+  #tc-status>#mob-notif{order:2}
+  #tc-status>#akses-banner{order:3}
+  #tc-status>.mob-pay-card{order:4}
+  #tc-status>.mob-info-grid{order:5}
+  #tc-status>.mob-ref-compact{order:6}
+  #tc-status>.sg{order:7}
+  /* Akses-banner menumpuk vertikal di mobile (bukan 1 baris) */
+  #akses-banner{flex-direction:column;align-items:stretch;gap:11px}
+  #akses-banner .akses-box{min-width:0}
+  #akses-banner .drive-btn,#akses-banner .rating-btn{width:100%}
   .mob-progress-wrap{display:block;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--g100);margin-bottom:10px;box-shadow:var(--sh)}
-  .mob-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+  .mob-info-grid{display:block;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--g100);margin-bottom:10px;box-shadow:var(--sh)}
   #mob-notif{display:flex}
   .mob-notif.blue{background:#E6F1FB;border-color:#85B7EB}
   .mob-notif.red{background:#FCEBEB;border-color:#F09595}
@@ -654,6 +666,11 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 .mob-info-cell{background:var(--g50);border-radius:8px;padding:8px}
 .mob-info-lbl{font-size:9px;color:var(--g400);margin-bottom:2px}
 .mob-info-val{font-size:11px;font-weight:600;color:var(--g800);line-height:1.3}
+.mob-info-title-row{margin-bottom:2px}
+.mob-info-judul{font-size:12.5px;font-style:italic;color:var(--g600);line-height:1.5;margin-top:2px}
+.mob-info-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--g100)}
+.mob-info-rlbl{font-size:11.5px;color:var(--g400);flex-shrink:0}
+.mob-info-rval{font-size:11.5px;font-weight:600;color:var(--g800);text-align:right}
 .mob-pay-ttl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
 .mob-pay-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g100)}
 .mob-pay-row:last-child{border-bottom:none}
@@ -855,10 +872,13 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div class="mob-notif-txt" id="mob-notif-txt"></div>
 </div>
 <div class="mob-info-grid" id="mob-info-grid">
-<div class="mob-info-cell"><div class="mob-info-lbl">Layanan</div><div class="mob-info-val" id="mob-i-layanan">—</div></div>
-<div class="mob-info-cell"><div class="mob-info-lbl">Aplikasi</div><div class="mob-info-val" id="mob-i-app">—</div></div>
-<div class="mob-info-cell"><div class="mob-info-lbl">Universitas</div><div class="mob-info-val" id="mob-i-univ">—</div></div>
-<div class="mob-info-cell"><div class="mob-info-lbl">Target</div><div class="mob-info-val" id="mob-i-ddl">—</div></div>
+<div class="mob-pay-ttl">Informasi Project</div>
+<div class="mob-info-title-row"><div class="mob-info-lbl">Judul Penelitian</div><div class="mob-info-judul" id="mob-i-judul">—</div></div>
+<div class="mob-info-row"><span class="mob-info-rlbl">Jenis Layanan</span><span class="mob-info-rval" id="mob-i-layanan">—</span></div>
+<div class="mob-info-row"><span class="mob-info-rlbl">Aplikasi</span><span class="mob-info-rval" id="mob-i-app">—</span></div>
+<div class="mob-info-row"><span class="mob-info-rlbl">Jumlah Variabel</span><span class="mob-info-rval" id="mob-i-variabel">—</span></div>
+<div class="mob-info-row"><span class="mob-info-rlbl">Universitas</span><span class="mob-info-rval" id="mob-i-univ">—</span></div>
+<div class="mob-info-row"><span class="mob-info-rlbl">Target Selesai</span><span class="mob-info-rval" id="mob-i-ddl">—</span></div>
 </div>
 <div class="mob-pay-card" id="mob-pay-card">
 <div class="mob-pay-ttl">Pembayaran</div>
@@ -2284,12 +2304,16 @@ function mobRenderNotif(status) {
 }
 
 function mobRenderInfo(d) {
+  var judulEl = document.getElementById('mob-i-judul');
   var layEl = document.getElementById('mob-i-layanan');
   var appEl = document.getElementById('mob-i-app');
+  var varEl = document.getElementById('mob-i-variabel');
   var univEl = document.getElementById('mob-i-univ');
   var ddlEl = document.getElementById('mob-i-ddl');
+  if (judulEl) judulEl.textContent = d.judul || '—';
   if (layEl) layEl.textContent = d.jenis_layanan || '—';
   if (appEl) appEl.textContent = d.aplikasi || '—';
+  if (varEl) varEl.textContent = d.jumlah_variabel || '—';
   if (univEl) univEl.textContent = d.universitas || '—';
   if (ddlEl) ddlEl.textContent = d.deadline ? fmtDate(d.deadline) : 'Belum ditentukan';
 }

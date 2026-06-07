@@ -95,6 +95,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .card{background:#fff;border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--g100)}
 .card-ttl{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin-bottom:18px}
 .irow{display:flex;flex-direction:column;gap:3px;padding:14px 0;border-bottom:1px solid var(--g100)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+.info-grid .irow{border-bottom:1px solid var(--g100)}
+.info-grid .irow-variabel{grid-column:1 / -1}
+@media(max-width:768px){.info-grid{grid-template-columns:1fr}}
 .irow:first-of-type{padding-top:0}.irow:last-child{border-bottom:none;padding-bottom:0}
 .ilabel{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--g400)}
 .ival{font-size:14.5px;font-weight:500;color:var(--g800);line-height:1.45}
@@ -121,10 +125,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .akses-box.permanen{background:var(--ok-bg);border-color:var(--ok-border);color:#065f46}
 .akses-box .akses-ttl{font-weight:700;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
 .akses-box .akses-desc{font-size:12.5px;line-height:1.6;opacity:.9}
-#akses-banner{background:#fff;border-radius:var(--r);padding:16px 18px;margin-bottom:18px;border:1px solid var(--g100);box-shadow:var(--sh)}
-#akses-banner .akses-box{margin-top:0}
-#akses-banner .drive-btn{margin-bottom:11px}
-#akses-banner .akses-box + .rating-btn,#akses-banner .drive-btn + .akses-box{margin-top:11px}
+#akses-banner{background:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:18px;border:1px solid var(--g100);box-shadow:var(--sh);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#akses-banner .akses-box{margin-top:0;flex:1;min-width:240px;border:none;padding:0;background:transparent!important;order:1}
+#akses-banner .akses-box.permanen,#akses-banner .akses-box.non-permanen{background:transparent!important}
+#akses-banner .drive-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap;order:2}
+#akses-banner .rating-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap;order:3}
+#akses-banner.banner-permanen{background:var(--ok-bg);border-color:var(--ok-border)}
+#akses-banner.banner-nonpermanen{background:#fffbeb;border-color:#fde68a}
 .ref-card{border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;border:1px solid var(--warn-border);background:var(--warn-bg)}
 .ref-card.ok{background:var(--ok-bg);border-color:var(--ok-border)}
 .ref-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--accent);flex-shrink:0}
@@ -888,9 +895,10 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 </div>
 </div>
+<div class="info-grid">
 <div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
 <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
-<div class="irow">
+<div class="irow irow-variabel">
 <div style="display:flex;align-items:center;justify-content:space-between">
 <div class="ilabel">Jumlah Variabel</div>
 <button id="edit-btn-variabel" onclick="editInfo('variabel')" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit</button>
@@ -911,6 +919,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
 <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
+</div>
 </div>
 <div id="ref-wrap" style="display:none"></div>
 </div>
@@ -2075,7 +2084,9 @@ function renderDash(d){
   var aksesBanner=document.getElementById('akses-banner');
   if(aksesBanner){
     var adaIsi = (ab.style.display!=='none') || (rb.style.display!=='none') || (db.style.display!=='none');
-    aksesBanner.style.display = adaIsi ? 'block' : 'none';
+    aksesBanner.style.display = adaIsi ? 'flex' : 'none';
+    // Cermin warna: ikuti kondisi akses-box (permanen=hijau, non-permanen=kuning)
+    aksesBanner.className = ab.className.indexOf('permanen')>-1 && ab.className.indexOf('non-permanen')===-1 ? 'banner-permanen' : (ab.className.indexOf('non-permanen')>-1 ? 'banner-nonpermanen' : '');
   }
   renderReferral(d);
   mobRenderDash(d);

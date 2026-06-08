@@ -118,6 +118,7 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       tanggal_selesai: getDate(props['Tanggal Selesai']),
       tanggal_aktivasi_rating: props['Tanggal Aktivasi Rating']?.date?.start || null,
       client_lama: getCheckbox(props['Client Lama']),
+      konfirmasi_data: getCheckbox(props['Konfirmasi Data']),
     });
 
   } catch (err) {

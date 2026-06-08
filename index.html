@@ -132,11 +132,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 #akses-banner .akses-box{margin-top:0;flex:1;min-width:240px;border:none;padding:0;background:transparent!important;order:1}
 #akses-banner .akses-box.permanen,#akses-banner .akses-box.non-permanen{background:transparent!important}
 #akses-banner .drive-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap;order:2}
-#akses-banner .rating-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap;order:3}
+#akses-banner .rating-btn{margin:0;width:auto;flex-shrink:0;white-space:nowrap}
 #akses-banner.banner-permanen{background:var(--ok-bg);border-color:var(--ok-border)}
 #akses-banner.banner-nonpermanen{background:#fffbeb;border-color:#fde68a}
 #rating-tenggat{align-items:center;gap:6px;background:#fef3c7;border:1px solid #fcd34d;border-radius:100px;padding:5px 13px;font-size:11px;font-weight:700;color:#92400e;white-space:nowrap;margin-top:11px}
-#akses-banner #rating-tenggat{order:4;margin-top:0;align-self:center}
+#akses-banner #rating-tenggat{margin-top:0}
 .ref-card{border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;border:1px solid var(--warn-border);background:var(--warn-bg)}
 .ref-card.ok{background:var(--ok-bg);border-color:var(--ok-border)}
 .ref-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--accent);flex-shrink:0}
@@ -903,7 +903,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div id="akses-banner" style="display:none">
 <a class="drive-btn" href="#" id="drive-btn" style="display:none" target="_blank">📂 Kirim File &amp; Data Disini</a>
 <div id="akses-box" style="display:none"></div>
-<div id="rating-wrap" style="display:contents"><button class="rating-btn" id="rating-btn" onclick="openRatingModal()" style="display:none">⭐ Beri Rating &amp; Testimoni</button>
+<div id="rating-wrap" style="display:flex;flex-direction:column;align-items:center;gap:7px;order:3;flex-shrink:0"><button class="rating-btn" id="rating-btn" onclick="openRatingModal()" style="display:none">⭐ Beri Rating &amp; Testimoni</button>
 <div id="rating-tenggat" style="display:none">⏳ <span id="rating-tenggat-txt"></span></div></div>
 </div>
 <div class="sg">

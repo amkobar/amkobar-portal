@@ -1892,7 +1892,7 @@ async function doLogin(){
     (function(){
       var aksesBanner=document.getElementById('akses-banner');
       if(aksesBanner){aksesBanner.style.display='none';aksesBanner.className='';}
-      var elIds=['akses-box','rating-btn','drive-btn','rating-tenggat'];
+      var elIds=['akses-box','rating-btn','drive-btn','rating-tenggat','mob-notif'];
       elIds.forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
     })();
     renderDash(data);

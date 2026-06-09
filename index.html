@@ -1888,6 +1888,13 @@ async function doLogin(){
     sessionStorage.setItem('amkobar_aplikasi', data.aplikasi || '');
     sessionStorage.setItem('amkobar_aplikasi', data.aplikasi || '');
     resetAutoLogout();
+    // Reset konten lama sebelum render data baru (mencegah sisa data login sebelumnya)
+    (function(){
+      var aksesBanner=document.getElementById('akses-banner');
+      if(aksesBanner){aksesBanner.style.display='none';aksesBanner.className='';}
+      var elIds=['akses-box','rating-btn','drive-btn','rating-tenggat'];
+      elIds.forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+    })();
     renderDash(data);
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.add('on');
@@ -1949,34 +1956,6 @@ function resetAutoLogoutOnActivity(){
 function doLogout(){
   if(_autoLogoutTimer)clearTimeout(_autoLogoutTimer);
   sessionStorage.removeItem('amkobar_kode');
-  // Reset semua konten dashboard ke state awal supaya tidak ada sisa data login sebelumnya
-  var resetEls={
-    'd-av':'?','d-nama':'—','d-meta':'','i-judul':'—','i-layanan':'—',
-    'i-app':'—','i-variabel':'—','i-univ':'—','i-ddl':'—',
-    'mob-i-judul':'—','mob-i-layanan':'—','mob-i-app':'—',
-    'mob-i-variabel':'—','mob-i-univ':'—','mob-i-ddl':'—',
-    'sisa-amt':'—','rating-tenggat-txt':''
-  };
-  Object.keys(resetEls).forEach(function(id){
-    var el=document.getElementById(id);if(el)el.textContent=resetEls[id];
-  });
-  // Reset banner akses, notif, konfirmasi data
-  var aksesBanner=document.getElementById('akses-banner');
-  if(aksesBanner){aksesBanner.style.display='none';aksesBanner.className='';}
-  var aksesBx=document.getElementById('akses-box');if(aksesBx){aksesBx.style.display='none';aksesBx.innerHTML='';}
-  var ratingBtn=document.getElementById('rating-btn');if(ratingBtn)ratingBtn.style.display='none';
-  var driveBtn=document.getElementById('drive-btn');if(driveBtn)driveBtn.style.display='none';
-  var ratingTenggat=document.getElementById('rating-tenggat');if(ratingTenggat)ratingTenggat.style.display='none';
-  var kRow=document.getElementById('i-konfirmasi-row');if(kRow)kRow.style.display='none';
-  var kNote=document.getElementById('i-konfirmasi-note');if(kNote){kNote.style.display='none';kNote.innerHTML='';}
-  var mkRow=document.getElementById('mob-i-konfirmasi-row');if(mkRow)mkRow.style.display='none';
-  var mkNote=document.getElementById('mob-i-konfirmasi-note');if(mkNote){mkNote.style.display='none';mkNote.innerHTML='';}
-  // Reset notif desktop & mobile
-  var notifEl=document.getElementById('notif');if(notifEl){notifEl.style.display='none';notifEl.innerHTML='';}
-  var mobNotif=document.getElementById('mob-notif');if(mobNotif)mobNotif.style.display='none';
-  // Reset badge status
-  var sbadge=document.getElementById('d-sbadge');if(sbadge){sbadge.textContent='—';sbadge.className='sbadge';}
-  // Reset freeze
   window._aksesFreeze=false;
   var fromAdmin=document.getElementById('dash').dataset.fromAdmin;
   document.getElementById('dash').classList.remove('on');

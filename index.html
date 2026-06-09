@@ -94,6 +94,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g800);mi
 .sg{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
 .card{background:#fff;border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--g100)}
 .card-ttl{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin-bottom:18px}
+.konfirmasi-belum{display:inline-flex;align-items:center;gap:5px;background:#fef9ec;border:1px solid #fde68a;border-radius:100px;padding:3px 10px;font-size:11.5px;font-weight:600;color:#92400e}
+.konfirmasi-sudah,.konfirmasi-otomatis{display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:100px;padding:3px 10px;font-size:11.5px;font-weight:600;color:#15803d}
+.konfirmasi-note-belum{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.konfirmasi-note-sudah,.konfirmasi-note-otomatis{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d}
+.konfirmasi-wa-btn{display:inline-flex;align-items:center;gap:7px;background:#25d366;color:#fff;border-radius:8px;padding:9px 16px;font-size:12.5px;font-weight:600;text-decoration:none;margin-top:10px;border:none;cursor:pointer}
 .irow{display:flex;flex-direction:column;gap:3px;padding:14px 0;border-bottom:1px solid var(--g100)}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
 .info-grid .irow{border-bottom:1px solid var(--g100);padding:18px 0;gap:5px}
@@ -882,6 +887,8 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div class="mob-info-row"><span class="mob-info-rlbl">Jumlah Variabel</span><span class="mob-info-rval" id="mob-i-variabel">—</span></div>
 <div class="mob-info-row"><span class="mob-info-rlbl">Universitas</span><span class="mob-info-rval" id="mob-i-univ">—</span></div>
 <div class="mob-info-row"><span class="mob-info-rlbl">Target Selesai</span><span class="mob-info-rval" id="mob-i-ddl">—</span></div>
+<div class="mob-info-row" id="mob-i-konfirmasi-row" style="display:none"><span class="mob-info-rlbl">Konfirmasi Data</span><span class="mob-info-rval" id="mob-i-konfirmasi-pill">—</span></div>
+<div id="mob-i-konfirmasi-note" style="display:none;margin-top:10px;border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.6"></div>
 </div>
 <div class="mob-pay-card" id="mob-pay-card">
 <div class="mob-pay-ttl">Pembayaran</div>
@@ -942,7 +949,9 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
 <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
+<div class="irow" id="i-konfirmasi-row" style="display:none"><div class="ilabel">Konfirmasi Data</div><div class="ival" id="i-konfirmasi-pill">—</div></div>
 </div>
+<div id="i-konfirmasi-note" style="display:none;margin-top:12px;border-radius:9px;padding:11px 13px;font-size:12.5px;line-height:1.6"></div>
 </div>
 <div id="ref-wrap" style="display:none"></div>
 </div>
@@ -2034,6 +2043,44 @@ function renderDash(d){
   document.getElementById('i-variabel').textContent=d.jumlah_variabel||'\u2014';
   document.getElementById('i-univ').textContent=d.universitas||'\u2014';
   document.getElementById('i-ddl').textContent=d.deadline?fmtDate(d.deadline):'Belum ditentukan';
+  // === KONFIRMASI DATA ===
+  (function(){
+    var statusKD=(d.status_project||'').toLowerCase();
+    var tampilStatus=statusKD.includes('antrian')||statusKD.includes('diproses');
+    var isFullBab=(d.jenis_layanan||'').toUpperCase().includes('FULL BAB');
+    var waMsg=encodeURIComponent('Halo, saya '+(d.nama||'')+' dengan NIM/NPM '+(d.nim||'')+' ingin melakukan konfirmasi data project saya. Apakah bisa dijadwalkan?');
+    var waUrl='https://wa.me/6281267090606?text='+waMsg;
+    var svgWa='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.528 5.855L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.359-.214-3.721.976.994-3.624-.234-.373A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>';
+    var pillHtml='', noteHtml='', noteClass='';
+    if(!tampilStatus){
+    } else if(isFullBab){
+      pillHtml='<span class="konfirmasi-otomatis">&#x2705; Otomatis Terkonfirmasi</span>';
+      noteClass='konfirmasi-note-otomatis';
+      noteHtml='Layanan Anda termasuk <b>Full BAB</b>. Data penelitian Anda akan segera diproses setelah semua data terpenuhi.';
+    } else if(d.konfirmasi_data){
+      pillHtml='<span class="konfirmasi-sudah">&#x2705; Sudah dikonfirmasi</span>';
+      noteClass='konfirmasi-note-sudah';
+      noteHtml='Data project Anda telah dikonfirmasi &#x2713; Project Anda kini masuk dalam antrian pengerjaan. Pantau terus status project Anda di portal ini.';
+    } else {
+      pillHtml='<span class="konfirmasi-belum">&#x23F3; Belum dikonfirmasi</span>';
+      noteClass='konfirmasi-note-belum';
+      noteHtml='Konfirmasi data dapat dilakukan setelah <b>BAB 1&#x2013;3 Anda di-ACC pasca Sidang Sempro</b>, atau jika <b>data penelitian Anda sudah siap dan tidak ada perubahan signifikan</b>. Silakan klik tombol di bawah untuk menghubungi admin dan menjadwalkan konfirmasi data Anda agar segera masuk antrian pengerjaan.<br><a href="'+waUrl+'" target="_blank" class="konfirmasi-wa-btn">'+svgWa+' Hubungi Admin via WhatsApp</a>';
+    }
+    var kRow=document.getElementById('i-konfirmasi-row');
+    var kPill=document.getElementById('i-konfirmasi-pill');
+    var kNote=document.getElementById('i-konfirmasi-note');
+    if(kRow&&kPill&&kNote){
+      if(tampilStatus){kRow.style.display='';kPill.innerHTML=pillHtml;kNote.style.display='block';kNote.className=noteClass;kNote.innerHTML=noteHtml;}
+      else{kRow.style.display='none';kNote.style.display='none';}
+    }
+    var mkRow=document.getElementById('mob-i-konfirmasi-row');
+    var mkPill=document.getElementById('mob-i-konfirmasi-pill');
+    var mkNote=document.getElementById('mob-i-konfirmasi-note');
+    if(mkRow&&mkPill&&mkNote){
+      if(tampilStatus){mkRow.style.display='';mkPill.innerHTML=pillHtml;mkNote.style.display='block';mkNote.className=noteClass;mkNote.innerHTML=noteHtml;}
+      else{mkRow.style.display='none';mkNote.style.display='none';}
+    }
+  })();
   renderPayment(d);
   var _sisDis=d.diskon_referral||0;var _sisJ=d.jumlah_referral||0;
   var _sisaTampil=(_sisDis>0&&_sisJ<3&&d.sisa_pembayaran>0)?Math.max(0,d.sisa_pembayaran-_sisDis):d.sisa_pembayaran;

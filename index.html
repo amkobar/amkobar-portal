@@ -621,6 +621,10 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 #mob-notif{display:none;align-items:center;gap:12px;background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:10px;padding:12px 16px;margin-bottom:14px}
 #mob-notif.blue{background:#E6F1FB;border-color:#85B7EB}
 #mob-notif.red{background:#FCEBEB;border-color:#F09595}
+#mob-notif.amber{background:#fffbeb;border-color:#fde68a}
+#mob-notif.amber .notif-icon{background:#d97706}
+#mob-notif.amber .notif-title{color:#92400e}
+#mob-notif.amber .mob-notif-txt{color:#a16207}
 #mob-notif .notif-icon{width:32px;height:32px;border-radius:8px;background:#1a6bbd;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:#fff}
 #mob-notif.red .notif-icon{background:#dc2626}
 #mob-notif .notif-body{flex:1}
@@ -2351,21 +2355,35 @@ var lineCls = s2 <= activeStep ? 'done' : 'pending';
   el.innerHTML = html;
 }
 
-function mobRenderNotif(status) {
+function mobRenderNotif(status, d) {
   var el = document.getElementById('mob-notif');
   if (!el) return;
   var notif = MOB_NOTIF[status];
   if (!notif) { el.style.display = 'none'; return; }
-  el.className = notif.cls;
   var titles = {
     'Menunggu Review':'Menunggu review','Antrian':'Dalam antrian',
     'Diproses':'Sedang dikerjakan','Menunggu Pelunasan':'Menunggu pelunasan',
     'Pendampingan':'Tahap pendampingan','Selesai':'Project selesai!',
     'Refund':'Proses refund','Dibatalkan':'Project dibatalkan'
   };
-  el.innerHTML = '<div class="notif-icon">' + (notif.cls === 'red' ? '⚠' : 'ℹ') + '</div>'
-    + '<div class="notif-body"><div class="notif-title">' + (titles[status] || status) + '</div>'
-    + '<div class="mob-notif-txt">' + notif.txt + '</div></div>';
+  var cls = notif.cls;
+  var title = titles[status] || status;
+  var txt = notif.txt;
+  // Banner sinkron dengan Konfirmasi Data: status Antrian + layanan perlu konfirmasi + belum dikonfirmasi
+  if (d) {
+    var stLow = (status || '').toLowerCase();
+    var isFullBab = (d.jenis_layanan || '').toUpperCase().includes('FULL BAB');
+    if (stLow.includes('antrian') && !isFullBab && !d.konfirmasi_data) {
+      cls = 'amber';
+      title = 'Menunggu konfirmasi data';
+      txt = 'Pembayaran Anda sudah kami terima. Sebelum masuk antrian pengerjaan, mohon lakukan konfirmasi data terlebih dahulu. Silakan cek detail di bagian Konfirmasi Data di bawah.';
+    }
+  }
+  el.className = cls;
+  var icon = cls === 'red' ? '\u26A0' : (cls === 'amber' ? '\u23F3' : '\u2139');
+  el.innerHTML = '<div class="notif-icon">' + icon + '</div>'
+    + '<div class="notif-body"><div class="notif-title">' + title + '</div>'
+    + '<div class="mob-notif-txt">' + txt + '</div></div>';
   el.style.display = 'flex';
 }
 
@@ -2455,7 +2473,7 @@ el.innerHTML = '<div style="display:flex;align-items:center;justify-content:spac
 
 function mobRenderDash(d) {
   mobRenderSteps(d.status_project);
-  mobRenderNotif(d.status_project);
+  mobRenderNotif(d.status_project, d);
   mobRenderInfo(d);
   mobRenderPayment(d);
   mobRenderReferral(d);

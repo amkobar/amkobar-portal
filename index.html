@@ -1922,14 +1922,23 @@ document.getElementById('kode-inp').addEventListener('focus', function() {
 });
 /* ===== SESSION STORAGE — persist login saat refresh ===== */
 (function(){
-  // Restore sesi admin lebih dulu
+  // Restore sesi admin lebih dulu — tunggu DOM siap karena elemen adm-dash ada di akhir body
   if(sessionStorage.getItem('amkobar_admin')==='1'){
-    document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
-    document.getElementById('dash').classList.remove('on');
-    document.getElementById('adm-dash').classList.add('on');
-    document.getElementById('nav-main').style.display='none';
-    loadAdminData();
-    resetAdminAutoLogout();
+    function _restoreAdmin(){
+      var admDash=document.getElementById('adm-dash');
+      if(!admDash)return;
+      document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+      var dEl=document.getElementById('dash');if(dEl)dEl.classList.remove('on');
+      admDash.classList.add('on');
+      var nav=document.getElementById('nav-main');if(nav)nav.style.display='none';
+      loadAdminData();
+      resetAdminAutoLogout();
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',_restoreAdmin);
+    }else{
+      _restoreAdmin();
+    }
     return;
   }
   var savedKode=sessionStorage.getItem('amkobar_kode');

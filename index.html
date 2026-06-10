@@ -1285,13 +1285,58 @@ function doAdminLogout(){
   _admLoaded=false;_admClients=[];
 }
 
+function getStatusLock(tab){
+  // Kunci tab berbasis status project. Return {title,msg,icon,bg,color} jika terkunci, atau null jika terbuka.
+  var d = window._dashData;
+  if (!d) return null;
+  var st = (d.status_project || '').toLowerCase();
+  var isFullBab = (d.jenis_layanan || '').toUpperCase().includes('FULL BAB');
+  // Tab Contoh & Bank Teori: terbuka saat Antrian (sudah konfirmasi data / Full BAB) DAN status setelahnya
+  if (tab === 'contoh' || tab === 'bank-teori') {
+    var sudahProses = st.includes('diproses') || st.includes('pelunasan') || st.includes('pendampingan') || st.includes('selesai');
+    var antrianTerbuka = st.includes('antrian') && (d.konfirmasi_data || isFullBab);
+    if (sudahProses || antrianTerbuka) return null; // terbuka
+    // Terkunci — teks pintar berdasarkan kondisi
+    var bisaKonfirmasi = st.includes('antrian') && !isFullBab && !d.konfirmasi_data;
+    return {
+      title: 'Akan terbuka saat masuk antrian',
+      msg: bisaKonfirmasi
+        ? 'Fitur ini otomatis terbuka setelah Anda melakukan konfirmasi data. Silakan lakukan konfirmasi data Anda terlebih dahulu!'
+        : 'Fitur ini otomatis terbuka setelah data project Anda dikonfirmasi dan masuk antrian pengerjaan. Mohon ditunggu ya!',
+      icon: '&#128274;', bg: '#FAEEDA', color: '#854F0B'
+    };
+  }
+  // Tab FAQ Sidang: terbuka saat Pendampingan / Selesai
+  if (tab === 'faq-in') {
+    if (st.includes('pendampingan') || st.includes('selesai')) return null; // terbuka
+    return {
+      title: 'Akan terbuka di tahap Pendampingan',
+      msg: 'Fitur FAQ Sidang otomatis terbuka saat project Anda memasuki tahap pendampingan. Mohon ditunggu ya!',
+      icon: '&#9203;', bg: '#EEEDFE', color: '#3C3489'
+    };
+  }
+  return null;
+}
 function applyFreezeOverlay(tab){
   var tcEl = document.getElementById('tc-' + tab);
   if (!tcEl) return;
   var card = tcEl.querySelector('.freeze-card');
-  var freezeAktif = window._aksesFreeze && tab !== 'status';
-  if (!freezeAktif) {
-    // Unfreeze: hapus kartu freeze & tampilkan kembali konten asli
+  // Saat admin melihat dashboard client, jangan kunci (admin perlu lihat semua)
+  var fromAdmin = document.getElementById('dash') && document.getElementById('dash').dataset.fromAdmin === '1';
+  // Cek kunci berbasis status (selain tab status, dan bukan mode admin)
+  var statusLock = (tab !== 'status' && !fromAdmin) ? getStatusLock(tab) : null;
+  // Cek freeze berbasis waktu
+  var freezeWaktu = window._aksesFreeze && tab !== 'status' && !fromAdmin;
+  var lockInfo = null;
+  if (statusLock) {
+    lockInfo = statusLock;
+  } else if (freezeWaktu) {
+    lockInfo = { title: 'Masa Akses Telah Berakhir',
+      msg: 'Masa akses kamu untuk fitur ini sudah berakhir. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.',
+      icon: '&#128274;', bg: '#fef3c7', color: '#854F0B' };
+  }
+  if (!lockInfo) {
+    // Tidak terkunci: hapus kartu & tampilkan kembali konten asli
     if (card) card.remove();
     Array.prototype.forEach.call(tcEl.children, function(ch){
       if (ch.classList && ch.classList.contains('freeze-card')) return;
@@ -1303,23 +1348,32 @@ function applyFreezeOverlay(tab){
     });
     return;
   }
-  // Freeze aktif: jika kartu sudah ada, biarkan
-  if (card) return;
+  // Terkunci: hapus kartu lama dulu (supaya pesan selalu update sesuai kondisi terbaru)
+  if (card) card.remove();
   // Sembunyikan semua konten asli tab
   Array.prototype.forEach.call(tcEl.children, function(ch){
     if (ch.classList && ch.classList.contains('freeze-card')) return;
+    if (ch.dataset && ch.dataset.freezeHidden === '1') return;
     ch.dataset.freezePrevDisplay = ch.style.display || '';
     ch.dataset.freezeHidden = '1';
     ch.style.display = 'none';
   });
-  // Tampilkan kartu pesan freeze di atas
+  // Tampilkan kartu pesan kunci
   var c = document.createElement('div');
   c.className = 'freeze-card';
-  c.style.cssText = 'max-width:440px;margin:24px auto;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:14px;padding:36px 32px';
-  c.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px">&#128274;</div>'
-    + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:10px">Masa Akses Telah Berakhir</div>'
-    + '<div style="font-size:14px;color:var(--g600);line-height:1.7">Masa akses kamu untuk fitur ini sudah berakhir. Silakan hubungi admin AMKOBAR untuk informasi lebih lanjut.</div>';
+  c.style.cssText = 'max-width:460px;margin:24px auto;text-align:center;background:#fff;border:1px solid var(--g200);border-radius:14px;padding:36px 32px';
+  c.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;background:'+lockInfo.bg+';display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px;color:'+lockInfo.color+'">'+lockInfo.icon+'</div>'
+    + '<div style="font-family:\'Sora\',sans-serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:10px">'+lockInfo.title+'</div>'
+    + '<div style="font-size:14px;color:var(--g600);line-height:1.7">'+lockInfo.msg+'</div>';
   tcEl.insertBefore(c, tcEl.firstChild);
+}
+function isTabLocked(tab){
+  if (tab === 'status') return false;
+  var fromAdmin = document.getElementById('dash') && document.getElementById('dash').dataset.fromAdmin === '1';
+  if (fromAdmin) return false;
+  if (getStatusLock(tab)) return true;
+  if (window._aksesFreeze) return true;
+  return false;
 }
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
@@ -1328,6 +1382,7 @@ function switchTab(tab,btn){
   document.getElementById('tc-'+tab).classList.add('on');
   // Freeze check (Rencana 2) — hanya untuk tab selain status
   applyFreezeOverlay(tab);
+  if(isTabLocked(tab)) return; // tab terkunci: jangan muat konten
   if(tab==='bank-teori') loadBankTeori();
 if(tab==='cbh') loadMateriPanduan();
 if(tab==='contoh'){
@@ -2596,6 +2651,7 @@ function switchTabMob(tab, btn) {
   var tcEl = document.getElementById('tc-' + tab);
   if (tcEl) tcEl.classList.add('on');
   applyFreezeOverlay(tab);
+  if (isTabLocked(tab)) return; // tab terkunci: jangan muat konten
   if (tab === 'bank-teori') loadBankTeori();
   if (tab === 'cbh') loadMateriPanduan();
   if (tab === 'contoh') {

@@ -1857,7 +1857,21 @@ function renderAdmPlGrid(){
   el.innerHTML=html;
 }
 
-function goHome(){showPg('home');}
+function goHome(){
+  // Kalau sesi client masih aktif, langsung ke dashboard (bukan form login)
+  if(sessionStorage.getItem('amkobar_kode')){
+    document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+    document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('on');});
+    var nlHome=document.getElementById('nl-home');if(nlHome)nlHome.classList.add('on');
+    document.getElementById('dash').classList.add('on');
+    setBottomTab('home');
+    return;
+  }
+  // Belum login: ke home, kosongkan input kode
+  var inp=document.getElementById('kode-inp');if(inp)inp.value='';
+  var al=document.getElementById('login-al');if(al){al.className='al';al.textContent='';}
+  showPg('home');
+}
 function showPg(pg){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.getElementById('dash').classList.remove('on');

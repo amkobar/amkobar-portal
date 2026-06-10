@@ -1274,6 +1274,8 @@ var _admFilter='Semua';
 var _admLoaded=false;
 
 function doAdminLogout(){
+  sessionStorage.removeItem('amkobar_admin');
+  if(_adminAutoLogoutTimer)clearTimeout(_adminAutoLogoutTimer);
   document.getElementById('adm-dash').classList.remove('on');
   document.getElementById('nav-main').style.display='';
   document.getElementById('pg-home').classList.add('on');
@@ -1872,12 +1874,14 @@ async function doLogin(){
   if(!kode){al.className='al err';al.textContent='Kode akses tidak boleh kosong.';return;}
   /* Cek admin password */
   if(kode===ADMIN_PW){
+    sessionStorage.setItem('amkobar_admin','1');
     document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
     document.getElementById('dash').classList.remove('on');
     document.getElementById('adm-dash').classList.add('on');
     document.getElementById('nav-main').style.display='none';
     setBottomTab('home');
     loadAdminData();
+    resetAdminAutoLogout();
     return;
   }
   btn.disabled=true;btn.textContent='Memuat...';
@@ -1918,6 +1922,16 @@ document.getElementById('kode-inp').addEventListener('focus', function() {
 });
 /* ===== SESSION STORAGE — persist login saat refresh ===== */
 (function(){
+  // Restore sesi admin lebih dulu
+  if(sessionStorage.getItem('amkobar_admin')==='1'){
+    document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+    document.getElementById('dash').classList.remove('on');
+    document.getElementById('adm-dash').classList.add('on');
+    document.getElementById('nav-main').style.display='none';
+    loadAdminData();
+    resetAdminAutoLogout();
+    return;
+  }
   var savedKode=sessionStorage.getItem('amkobar_kode');
   if(!savedKode)return;
   fetch('/api/cek-status?kode='+encodeURIComponent(savedKode))
@@ -1957,6 +1971,26 @@ function resetAutoLogoutOnActivity(){
 }
 ['click','scroll','keypress','touchstart'].forEach(function(ev){
   document.addEventListener(ev,resetAutoLogoutOnActivity,{passive:true});
+});
+
+/* ===== AUTO LOGOUT ADMIN 2 JAM ===== */
+var _adminAutoLogoutTimer=null;
+var _ADMIN_AUTO_LOGOUT_MS=2*60*60*1000;
+function resetAdminAutoLogout(){
+  if(_adminAutoLogoutTimer)clearTimeout(_adminAutoLogoutTimer);
+  _adminAutoLogoutTimer=setTimeout(function(){
+    var admVisible=document.getElementById('adm-dash').classList.contains('on');
+    if(!admVisible)return;
+    doAdminLogout();
+    var al=document.getElementById('login-al');
+    if(al){al.className='al err';al.textContent='Sesi admin telah berakhir karena tidak aktif selama 2 jam. Silakan login kembali.';}
+  },_ADMIN_AUTO_LOGOUT_MS);
+}
+function resetAdminAutoLogoutOnActivity(){
+  if(document.getElementById('adm-dash').classList.contains('on'))resetAdminAutoLogout();
+}
+['click','scroll','keypress','touchstart'].forEach(function(ev){
+  document.addEventListener(ev,resetAdminAutoLogoutOnActivity,{passive:true});
 });
 
 function doLogout(){

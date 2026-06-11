@@ -4141,6 +4141,19 @@ function acrClientRenderGrid() {
       var sectionIcon = SECTION_ICONS[folder.nama] || '📁';
       var itemsHtml = '';
 
+      // Folder pilihan tunggal: render khusus (tombol pilih / item terpilih)
+      if (folder.pilihan_tunggal) {
+        var allFiles = acrClientBuildTree(folder.id).filter(function(i){ return i.tipe==='File'; });
+        return '<div class="acr-section">'
+          +'<div class="acr-section-hdr">'
+          +'<div class="acr-section-ic" style="background:'+sectionColor+'">'+sectionIcon+'</div>'
+          +'<div class="acr-section-ttl">'+folder.nama+'</div>'
+          +'<div class="acr-section-cnt">'+allFiles.length+' file</div>'
+          +'</div>'
+          + acrRenderPilihanTunggal(folder, allFiles, isMobile)
+          +'</div>';
+      }
+
       if (isMobile) {
         itemsHtml = files.map(function(item) {
           var icon = item.tipe==='Folder' ? '📂' : (ACR_ICON[item.tipe_file]||'📄');

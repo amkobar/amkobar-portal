@@ -4309,11 +4309,28 @@ function acrRenderPilihanTunggal(folder, files, isMobile) {
   return note + '<div class="acr-section-grid">'+cards+'</div>';
 }
 
+var _tplConfirmData = null;
 function acrPilihTemplate(folderId, itemId, namaItem) {
-  var pesan = 'Pilih "' + namaItem + '"?\n\nPastikan template ini sesuai kebutuhan Anda. Setelah dipilih, hanya template ini yang akan tampil — template lainnya akan disembunyikan — dan pilihan tidak dapat diubah.';
-  if (!confirm(pesan)) return;
+  _tplConfirmData = { folderId: folderId, itemId: itemId };
+  var titleEl = document.getElementById('tpl-confirm-title');
+  if (titleEl) titleEl.textContent = 'Pilih "' + namaItem + '"?';
+  var okBtn = document.getElementById('tpl-confirm-ok');
+  if (okBtn) okBtn.onclick = tplConfirmExecute;
+  var ov = document.getElementById('tpl-confirm-overlay');
+  if (ov) ov.classList.add('on');
+}
+function tplConfirmClose() {
+  var ov = document.getElementById('tpl-confirm-overlay');
+  if (ov) ov.classList.remove('on');
+  _tplConfirmData = null;
+}
+function tplConfirmExecute() {
+  if (!_tplConfirmData) return;
+  var folderId = _tplConfirmData.folderId, itemId = _tplConfirmData.itemId;
   var pageId = window._dashPageId;
   if (!pageId) { alert('Sesi tidak ditemukan. Silakan refresh.'); return; }
+  var okBtn = document.getElementById('tpl-confirm-ok');
+  if (okBtn) { okBtn.textContent = 'Menyimpan...'; okBtn.disabled = true; }
   fetch('/api/update-client', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -4322,11 +4339,16 @@ function acrPilihTemplate(folderId, itemId, namaItem) {
     .then(function(res){
       if (res.success) {
         window._templateDipilih = res.template_dipilih || window._templateDipilih;
+        tplConfirmClose();
+        acrClientClosePreview();
         acrClientRender();
       } else {
         alert('Gagal menyimpan pilihan: ' + (res.error || 'coba lagi.'));
       }
-    }).catch(function(){ alert('Gagal menghubungi server.'); });
+    }).catch(function(){ alert('Gagal menghubungi server.'); })
+    .finally(function(){
+      if (okBtn) { okBtn.textContent = 'Ya, Pilih Ini'; okBtn.disabled = false; }
+    });
 }
 function acrClientClick(id) {
   var item = _acrClientData.find(function(x) { return x.id === id; });
@@ -5191,6 +5213,17 @@ function admTestiSaveEdit(id){
 </div>
 </div>
 <!-- Modal Tambah FAQ -->
+<div class="faq-modal-overlay" id="tpl-confirm-overlay">
+<div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)">
+<div style="width:54px;height:54px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;color:#854F0B;font-size:26px">&#9888;</div>
+<div id="tpl-confirm-title" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:9px"></div>
+<div style="font-size:13px;color:var(--g600);line-height:1.65;margin-bottom:20px">Pastikan template ini sesuai kebutuhan Anda. Setelah dipilih, hanya template ini yang akan tampil &mdash; <b style="color:var(--navy)">template lainnya akan disembunyikan</b> &mdash; dan pilihan tidak dapat diubah.</div>
+<div style="display:flex;gap:10px">
+<button onclick="tplConfirmClose()" style="flex:1;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g600);font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Batal</button>
+<button id="tpl-confirm-ok" style="flex:1;border-radius:8px;border:none;background:#1a6bbd;color:#fff;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Ya, Pilih Ini</button>
+</div>
+</div>
+</div>
 <div class="faq-modal-overlay" id="faq-modal-overlay">
 <div class="faq-modal">
 <div class="faq-modal-hdr">

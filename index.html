@@ -2103,6 +2103,8 @@ function renderDash(d){
   window._dashData=d;
   window._teoriDipilih = {};
   try { window._teoriDipilih = JSON.parse(d.teori_dipilih || '{}'); } catch(e) {}
+  window._templateDipilih = {};
+  try { window._templateDipilih = JSON.parse(d.template_dipilih || '{}'); } catch(e) {}
   window._allTeoriTampil = d.all_teori_tampil || false;
   // Hitung apakah akses sudah freeze (Rencana 2) — patokan Tanggal Selesai, berbasis tanggal murni
   window._aksesFreeze = false;

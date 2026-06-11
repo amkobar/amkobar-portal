@@ -4324,6 +4324,20 @@ function tplConfirmClose() {
   if (ov) ov.classList.remove('on');
   _tplConfirmData = null;
 }
+// Pindahkan modal konfirmasi template ke body langsung (agar position:fixed tidak terjebak container)
+(function(){
+  function moveModal(){
+    var ov = document.getElementById('tpl-confirm-overlay');
+    if (ov && ov.parentElement !== document.body) {
+      document.body.appendChild(ov);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', moveModal);
+  } else {
+    moveModal();
+  }
+})();
 function tplConfirmExecute() {
   if (!_tplConfirmData) return;
   var folderId = _tplConfirmData.folderId, itemId = _tplConfirmData.itemId;
@@ -5213,17 +5227,6 @@ function admTestiSaveEdit(id){
 </div>
 </div>
 <!-- Modal Tambah FAQ -->
-<div class="faq-modal-overlay" id="tpl-confirm-overlay">
-<div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)">
-<div style="width:54px;height:54px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;color:#854F0B;font-size:26px">&#9888;</div>
-<div id="tpl-confirm-title" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:9px"></div>
-<div style="font-size:13px;color:var(--g600);line-height:1.65;margin-bottom:20px">Pastikan template ini sesuai kebutuhan Anda. Setelah dipilih, hanya template ini yang akan tampil &mdash; <b style="color:var(--navy)">template lainnya akan disembunyikan</b> &mdash; dan pilihan tidak dapat diubah.</div>
-<div style="display:flex;gap:10px">
-<button onclick="tplConfirmClose()" style="flex:1;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g600);font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Batal</button>
-<button id="tpl-confirm-ok" style="flex:1;border-radius:8px;border:none;background:#1a6bbd;color:#fff;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Ya, Pilih Ini</button>
-</div>
-</div>
-</div>
 <div class="faq-modal-overlay" id="faq-modal-overlay">
 <div class="faq-modal">
 <div class="faq-modal-hdr">
@@ -5578,6 +5581,17 @@ function admTestiSaveEdit(id){
 <span class="bottom-tab-ic">📄</span>
 <span class="bottom-tab-lbl">Pricelist</span>
 </button>
+</div>
+<div class="faq-modal-overlay" id="tpl-confirm-overlay">
+<div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)">
+<div style="width:54px;height:54px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;color:#854F0B;font-size:26px">&#9888;</div>
+<div id="tpl-confirm-title" style="font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:9px"></div>
+<div style="font-size:13px;color:var(--g600);line-height:1.65;margin-bottom:20px">Pastikan template ini sesuai kebutuhan Anda. Setelah dipilih, hanya template ini yang akan tampil &mdash; <b style="color:var(--navy)">template lainnya akan disembunyikan</b> &mdash; dan pilihan tidak dapat diubah.</div>
+<div style="display:flex;gap:10px">
+<button onclick="tplConfirmClose()" style="flex:1;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g600);font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Batal</button>
+<button id="tpl-confirm-ok" style="flex:1;border-radius:8px;border:none;background:#1a6bbd;color:#fff;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Ya, Pilih Ini</button>
+</div>
+</div>
 </div>
 </div></body>
 </html>

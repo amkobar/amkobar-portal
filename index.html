@@ -4126,6 +4126,12 @@ function acrClientRenderGrid() {
   var subFolders = children.filter(function(i){ return i.tipe==='Folder'; });
   var directFiles = children.filter(function(i){ return i.tipe==='File'; });
 
+  // ===== FOLDER PILIHAN TUNGGAL =====
+  if (currentFolder && currentFolder.pilihan_tunggal) {
+    grid.innerHTML = noteHtml + youtubeHtml + acrRenderPilihanTunggal(currentFolder, directFiles, isMobile);
+    return;
+  }
+
   // Ada subfolder = tampilkan grouped
   if (subFolders.length) {
     var html = subFolders.map(function(folder) {
@@ -4240,6 +4246,72 @@ function acrClientRenderGrid() {
       }).join('');
 
   grid.innerHTML = noteHtml + youtubeHtml + '<div class="acr-section-grid">'+flatHtml+'</div>';
+}
+
+function acrRenderPilihanTunggal(folder, files, isMobile) {
+  var ACR_ICON = { PPT:'📊', DOCX:'📝', PDF:'📕', Excel:'📗', Image:'🖼️', Lainnya:'📄' };
+  var ACR_BG_FLAT = { PPT:'#FEF3C7', DOCX:'#E6F1FB', PDF:'#FCEBEB', Excel:'#EAF3DE', Image:'#EEEDFE', Lainnya:'#f1f5f9' };
+  var dipilihId = (window._templateDipilih || {})[folder.id] || null;
+
+  if (dipilihId) {
+    // Sudah memilih: tampilkan hanya item terpilih
+    var item = files.find(function(f){ return f.id === dipilihId; });
+    var note = '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:11px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px">'
+      + '<span style="font-size:15px;flex-shrink:0">&#9989;</span>'
+      + '<div style="font-size:12.5px;color:#15803d;line-height:1.6">Anda telah memilih template ini. Silakan gunakan untuk penelitian Anda.</div></div>';
+    if (!item) {
+      return note + '<div style="text-align:center;padding:30px;color:var(--g400);font-size:13px">Template pilihan tidak ditemukan. Hubungi admin.</div>';
+    }
+    var icon = ACR_ICON[item.tipe_file]||'📄';
+    var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
+    var card = '<div class="cbh-card" style="border:2px solid #1a6bbd;max-width:260px">'
+      + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+bg+';border-bottom:1px solid var(--g100);position:relative">'+icon
+      + '<span style="position:absolute;top:6px;right:6px;background:#15803d;color:#fff;font-size:10px;padding:2px 8px;border-radius:100px">Terpilih</span></div>'
+      + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px;margin-bottom:8px">'+item.nama+'</div>'
+      + '<button onclick="acrClientClick(\''+item.id+'\')" style="width:100%;padding:7px;border-radius:7px;background:#1a6bbd;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:\'DM Sans\',sans-serif">&#128194; Buka / Download</button>'
+      + '</div></div>';
+    return note + '<div class="acr-section-grid">'+card+'</div>';
+  }
+
+  // Belum memilih: tampilkan semua + tombol pilih
+  var note = '<div style="background:#E6F1FB;border:1px solid #85B7EB;border-radius:9px;padding:11px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px">'
+    + '<span style="font-size:15px;flex-shrink:0">&#8505;</span>'
+    + '<div style="font-size:12.5px;color:#0C447C;line-height:1.6">Pilih satu template yang paling sesuai. Anda bisa membuka/mengunduh untuk melihat dulu. Setelah memilih, hanya template tersebut yang akan tampil dan pilihan bersifat permanen.</div></div>';
+  if (!files.length) {
+    return note + '<div style="text-align:center;padding:30px;color:var(--g400);font-size:13px">Belum ada template tersedia.</div>';
+  }
+  var cards = files.map(function(item){
+    var icon = ACR_ICON[item.tipe_file]||'📄';
+    var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
+    return '<div class="cbh-card">'
+      + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+bg+';border-bottom:1px solid var(--g100)">'+icon+'</div>'
+      + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px;margin-bottom:8px">'+item.nama+'</div>'
+      + (item.deskripsi?'<div style="font-size:11px;color:var(--g600);line-height:1.4;margin-bottom:8px">'+item.deskripsi+'</div>':'')
+      + '<button onclick="acrClientClick(\''+item.id+'\')" style="width:100%;padding:6px;border-radius:7px;background:#fff;color:#1a6bbd;border:1px solid #1a6bbd;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:6px;font-family:\'DM Sans\',sans-serif">&#128065; Buka / Download</button>'
+      + '<button onclick="acrPilihTemplate(\''+folder.id+'\',\''+item.id+'\',\''+(item.nama||'').replace(/'/g,"\\\\'")+'\')" style="width:100%;padding:6px;border-radius:7px;background:#1a6bbd;color:#fff;border:none;font-size:11.5px;font-weight:600;cursor:pointer;font-family:\'DM Sans\',sans-serif">&#10003; Pilih Template Ini</button>'
+      + '</div></div>';
+  }).join('');
+  return note + '<div class="acr-section-grid">'+cards+'</div>';
+}
+
+function acrPilihTemplate(folderId, itemId, namaItem) {
+  var pesan = 'Pilih "' + namaItem + '"?\n\nPastikan template ini sesuai kebutuhan Anda. Setelah dipilih, hanya template ini yang akan tampil — template lainnya akan disembunyikan — dan pilihan tidak dapat diubah.';
+  if (!confirm(pesan)) return;
+  var pageId = window._dashPageId;
+  if (!pageId) { alert('Sesi tidak ditemukan. Silakan refresh.'); return; }
+  fetch('/api/update-client', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'simpan_template_dipilih', page_id: pageId, folder_id: folderId, item_id: itemId })
+  }).then(function(r){ return r.json(); })
+    .then(function(res){
+      if (res.success) {
+        window._templateDipilih = res.template_dipilih || window._templateDipilih;
+        acrClientRender();
+      } else {
+        alert('Gagal menyimpan pilihan: ' + (res.error || 'coba lagi.'));
+      }
+    }).catch(function(){ alert('Gagal menghubungi server.'); });
 }
 function acrClientClick(id) {
   var item = _acrClientData.find(function(x) { return x.id === id; });

@@ -988,10 +988,14 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <button onclick="acrClientClosePreview()" style="font-size:12px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">✕ Tutup</button>
 </div>
 <iframe allowfullscreen="" id="acr-preview-frame" style="width:100%;height:480px;border:none;"></iframe>
-<div style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
+<div id="acr-preview-footer-normal" style="padding:10px 14px;border-top:1px solid var(--g200);display:flex;gap:8px">
 <a class="drive-btn" href="#" id="acr-preview-link" style="flex:1;margin-top:0;flex-direction:column;gap:2px" target="_blank">🔗 Buka di Google Drive<span style="font-size:10px;opacity:.7">buka di browser</span></a>
 <a class="drive-btn" href="#" id="acr-download-link" style="flex:1;margin-top:0;background:#e8f2fc;color:#1a6bbd;border-color:#bfdbfe;flex-direction:column;gap:2px" target="_blank">⬇ Download<span style="font-size:10px;opacity:.7">file yang ditampilkan</span></a>
 <a class="drive-btn" href="#" id="acr-download-template" style="flex:1;margin-top:0;background:#EAF3DE;color:#3B6D11;border-color:#C0DD97;flex-direction:column;gap:2px;display:none" target="_blank">⬇ Download Template<span style="font-size:10px;opacity:.7">file kosong tanpa isi</span></a>
+</div>
+<div id="acr-preview-footer-pilih" style="display:none;padding:10px 14px;border-top:1px solid var(--g200);gap:8px">
+<button onclick="acrClientClosePreview()" style="flex:1;border-radius:8px;border:1px solid #1a6bbd;background:#fff;color:#1a6bbd;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">← Lihat Template Lain</button>
+<button id="acr-preview-pilih-btn" onclick="" style="flex:1;border-radius:8px;border:none;background:#1a6bbd;color:#fff;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Pilih Template Ini</button>
 </div>
 </div>
 </div>
@@ -4286,22 +4290,20 @@ function acrRenderPilihanTunggal(folder, files, isMobile) {
     return note + '<div class="acr-section-grid">'+card+'</div>';
   }
 
-  // Belum memilih: tampilkan semua + tombol pilih
+  // Belum memilih: tampilkan semua, klik kartu = buka preview (lihat) dengan tombol Lihat Lain & Pilih
   var note = '<div style="background:#E6F1FB;border:1px solid #85B7EB;border-radius:9px;padding:11px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px">'
     + '<span style="font-size:15px;flex-shrink:0">&#8505;</span>'
-    + '<div style="font-size:12.5px;color:#0C447C;line-height:1.6">Pilih satu template yang paling sesuai. Anda bisa membuka/mengunduh untuk melihat dulu. Setelah memilih, hanya template tersebut yang akan tampil dan pilihan bersifat permanen.</div></div>';
+    + '<div style="font-size:12.5px;color:#0C447C;line-height:1.6">Klik template untuk melihat isinya. Setelah menemukan yang sesuai, klik <b>Pilih Template Ini</b>. Pilihan bersifat permanen dan hanya template terpilih yang akan tampil.</div></div>';
   if (!files.length) {
     return note + '<div style="text-align:center;padding:30px;color:var(--g400);font-size:13px">Belum ada template tersedia.</div>';
   }
   var cards = files.map(function(item){
     var icon = ACR_ICON[item.tipe_file]||'📄';
     var bg = ACR_BG_FLAT[item.tipe_file]||'#f1f5f9';
-    return '<div class="cbh-card">'
+    return '<div class="cbh-card" style="cursor:pointer" onclick="acrOpenPreviewPilih(\''+item.id+'\',\''+folder.id+'\')">'
       + '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:'+bg+';border-bottom:1px solid var(--g100)">'+icon+'</div>'
-      + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px;margin-bottom:8px">'+item.nama+'</div>'
-      + (item.deskripsi?'<div style="font-size:11px;color:var(--g600);line-height:1.4;margin-bottom:8px">'+item.deskripsi+'</div>':'')
-      + '<button onclick="acrClientClick(\''+item.id+'\')" style="width:100%;padding:6px;border-radius:7px;background:#fff;color:#1a6bbd;border:1px solid #1a6bbd;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:6px;font-family:\'DM Sans\',sans-serif">&#128065; Buka / Download</button>'
-      + '<button onclick="acrPilihTemplate(\''+folder.id+'\',\''+item.id+'\',\''+(item.nama||'').replace(/'/g,"\\\\'")+'\')" style="width:100%;padding:6px;border-radius:7px;background:#1a6bbd;color:#fff;border:none;font-size:11.5px;font-weight:600;cursor:pointer;font-family:\'DM Sans\',sans-serif">&#10003; Pilih Template Ini</button>'
+      + '<div class="cbh-body"><div class="cbh-ttl" style="font-size:13px">'+item.nama+'</div>'
+      + (item.deskripsi?'<div style="font-size:11px;color:var(--g600);line-height:1.4;margin-top:3px">'+item.deskripsi+'</div>':'<div style="font-size:11px;color:var(--g400);margin-top:3px">'+(item.tipe_file||'')+'</div>')
       + '</div></div>';
   }).join('');
   return note + '<div class="acr-section-grid">'+cards+'</div>';
@@ -4383,6 +4385,34 @@ function acrClientClosePreview() {
   var frame = document.getElementById('acr-preview-frame');
   if (preview) preview.style.display = 'none';
   if (frame) frame.src = '';
+  // Reset footer ke normal
+  var fn = document.getElementById('acr-preview-footer-normal');
+  var fp = document.getElementById('acr-preview-footer-pilih');
+  if (fn) fn.style.display = 'flex';
+  if (fp) fp.style.display = 'none';
+}
+function acrOpenPreviewPilih(itemId, folderId) {
+  var item = _acrClientData.find(function(x){ return x.id === itemId; });
+  if (!item) return;
+  var nameEl = document.getElementById('acr-preview-name');
+  var frame = document.getElementById('acr-preview-frame');
+  var preview = document.getElementById('acr-client-preview');
+  if (!nameEl || !frame || !preview) return;
+  nameEl.textContent = item.nama;
+  if (item.link_drive) {
+    frame.src = item.link_drive.replace('/view', '/preview').replace('/edit', '/preview');
+  } else { frame.src = ''; }
+  // Sembunyikan footer download, tampilkan footer pilih
+  var fn = document.getElementById('acr-preview-footer-normal');
+  var fp = document.getElementById('acr-preview-footer-pilih');
+  if (fn) fn.style.display = 'none';
+  if (fp) fp.style.display = 'flex';
+  var pilihBtn = document.getElementById('acr-preview-pilih-btn');
+  if (pilihBtn) {
+    pilihBtn.onclick = function(){ acrPilihTemplate(folderId, itemId, item.nama || ''); };
+  }
+  preview.style.display = 'block';
+  preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
   function acrShowYoutube(ytId) {
   var el = document.getElementById('acr-yt-wrap-' + ytId);

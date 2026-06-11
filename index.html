@@ -994,7 +994,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <a class="drive-btn" href="#" id="acr-download-template" style="flex:1;margin-top:0;background:#EAF3DE;color:#3B6D11;border-color:#C0DD97;flex-direction:column;gap:2px;display:none" target="_blank">⬇ Download Template<span style="font-size:10px;opacity:.7">file kosong tanpa isi</span></a>
 </div>
 <div id="acr-preview-footer-pilih" style="display:none;padding:10px 14px;border-top:1px solid var(--g200);gap:8px">
-<button onclick="acrClientClosePreview()" style="flex:1;border-radius:8px;border:1px solid #1a6bbd;background:#fff;color:#1a6bbd;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">← Lihat Template Lain</button>
+<button onclick="acrTutupPreviewPilih()" style="flex:1;border-radius:8px;border:1px solid #1a6bbd;background:#fff;color:#1a6bbd;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">← Lihat Template Lain</button>
 <button id="acr-preview-pilih-btn" onclick="" style="flex:1;border-radius:8px;border:none;background:#1a6bbd;color:#fff;font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Pilih Template Ini</button>
 </div>
 </div>
@@ -4390,6 +4390,11 @@ function acrClientClosePreview() {
   var fp = document.getElementById('acr-preview-footer-pilih');
   if (fn) fn.style.display = 'flex';
   if (fp) fp.style.display = 'none';
+}
+function acrTutupPreviewPilih() {
+  acrClientClosePreview();
+  var grid = document.getElementById('acr-client-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function acrOpenPreviewPilih(itemId, folderId) {
   var item = _acrClientData.find(function(x){ return x.id === itemId; });

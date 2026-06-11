@@ -3859,6 +3859,7 @@ function acrBuildFormFields(type, item, locLabel) {
 + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
      + '<div class="abt-form-full"><div class="abt-form-lbl">Note Folder (opsional)</div><textarea class="abt-form-ta" id="acr-f-note" placeholder="Contoh: Pilih jurnal yang sesuai dengan topik penelitian kamu...">' + (item ? (item.note_folder || '') : '') + '</textarea></div>'
+      + '<div class="abt-form-full"><label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px"><input type="checkbox" id="acr-f-pilihan-tunggal" ' + (item && item.pilihan_tunggal ? 'checked' : '') + ' style="margin-top:2px;width:16px;height:16px;cursor:pointer"/><span style="font-size:12.5px;color:#475569;line-height:1.5"><b style="color:#1e293b">Folder Pilihan Tunggal</b><br>Jika dicentang: client hanya boleh memilih SATU item di folder ini. Setelah memilih, item lain disembunyikan & pilihan permanen. Cocok untuk folder template (mis. Template PPT).</span></label></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Judul Video Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-judul-youtube" value="' + (item ? (item.judul_youtube || '') : '') + '" placeholder="Contoh: Tutorial Cara Edit PPT Sempro"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Tutorial (opsional)</div><input class="abt-form-inp" id="acr-f-youtube" value="' + (item ? (item.link_youtube || '') : '') + '" placeholder="https://www.youtube.com/watch?v=..."/></div>'
       + hint;
@@ -3904,6 +3905,7 @@ var aplikasi = (document.getElementById('acr-f-aplikasi') || {}).value || 'Semua
   var link_youtube = _acrFormType === 'folder' ? ((document.getElementById('acr-f-youtube') || {}).value || '') : '';
   var judul_youtube = _acrFormType === 'folder' ? ((document.getElementById('acr-f-judul-youtube') || {}).value || '') : '';
   var note_folder = _acrFormType === 'folder' ? ((document.getElementById('acr-f-note') || {}).value || '') : '';
+  var pilihan_tunggal = _acrFormType === 'folder' ? !!((document.getElementById('acr-f-pilihan-tunggal') || {}).checked) : false;
   var link_drive = link_raw ? acrConvertToPreview(link_raw, tipe_file) : '';
   var parentSel = document.getElementById('acr-f-parent');
 var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length === 0 ? '' : _acrPath[_acrPath.length - 1]);
@@ -3928,6 +3930,7 @@ var parentId = parentSel && parentSel.value ? parentSel.value : (_acrPath.length
   payload.link_youtube = link_youtube || null;
   payload.judul_youtube = judul_youtube || null;
   payload.note_folder = note_folder || null;
+  if (_acrFormType === 'folder') payload.pilihan_tunggal = pilihan_tunggal;
   if (_acrFormType === 'file') {
     payload.tipe_file = tipe_file;
     payload.link_drive = link_drive || null;

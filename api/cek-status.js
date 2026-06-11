@@ -113,6 +113,7 @@ export default async function handler(req, res) {
       reward_ditransfer: getCheckbox(props['Reward_Ditransfer']), // BARU
       rekening_reward: getText(props['Rekening_Reward']),
       teori_dipilih: (props['Teori Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}',
+      template_dipilih: (props['Template Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}',
 all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       masa_berlaku_hari: props['Masa Berlaku Hari']?.number ?? 50,
       tanggal_selesai: getDate(props['Tanggal Selesai']),

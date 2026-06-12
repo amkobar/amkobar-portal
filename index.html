@@ -4384,6 +4384,20 @@ function acrClientGoLevel(level) {
   acrClientRender();
 }
 
+function acrToEmbedUrl(link_drive, tipe_file) {
+  // Selalu konversi ke URL embed yang benar berdasarkan tipe file
+  // Mengatasi link lama (/preview) maupun baru (/embed) yang tersimpan di Notion
+  if (!link_drive) return '';
+  var m = link_drive.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  var id = m ? m[1] : '';
+  if (!id) return link_drive;
+  var tipe = (tipe_file || '').toUpperCase();
+  if (tipe === 'PPT') return 'https://docs.google.com/presentation/d/' + id + '/embed?start=false&loop=false&delayms=3000';
+  if (tipe === 'DOCX') return 'https://docs.google.com/document/d/' + id + '/preview';
+  if (tipe === 'EXCEL') return 'https://docs.google.com/spreadsheets/d/' + id + '/preview';
+  // PDF & lainnya: pakai Drive viewer
+  return 'https://drive.google.com/file/d/' + id + '/preview';
+}
 function acrClientOpenPreview(item) {
   var nameEl = document.getElementById('acr-preview-name');
   var frame = document.getElementById('acr-preview-frame');
@@ -4392,11 +4406,7 @@ function acrClientOpenPreview(item) {
   if (!nameEl || !frame || !preview) return;
   nameEl.textContent = item.nama;
   if (item.link_drive) {
-    // link_drive sudah dikonversi ke preview/embed saat disimpan — pakai langsung
-    // hanya replace /view atau /edit kalau ada (link lama yang belum dikonversi)
-    var embedUrl = item.link_drive
-      .replace(/\/edit(\?.*)?$/, '/preview')
-      .replace(/\/view(\?.*)?$/, '/preview');
+    var embedUrl = acrToEmbedUrl(item.link_drive, item.tipe_file || '');
     frame.src = embedUrl;
     if (linkEl) linkEl.href = item.link_drive;
 var dlEl = document.getElementById('acr-download-link');
@@ -4448,9 +4458,7 @@ function acrOpenPreviewPilih(itemId, folderId) {
   if (!nameEl || !frame || !preview) return;
   nameEl.textContent = item.nama;
   if (item.link_drive) {
-    frame.src = item.link_drive
-      .replace(/\/edit(\?.*)?$/, '/preview')
-      .replace(/\/view(\?.*)?$/, '/preview');
+    frame.src = acrToEmbedUrl(item.link_drive, item.tipe_file || '');
   } else { frame.src = ''; }
   // Sembunyikan footer download, tampilkan footer pilih
   var fn = document.getElementById('acr-preview-footer-normal');

@@ -3884,7 +3884,7 @@ function acrBuildFormFields(type, item, locLabel) {
 + '</select></div>'
       + '<div><div class="abt-form-lbl">Urutan</div><input class="abt-form-inp" id="acr-f-urutan" type="number" value="' + (item ? item.urutan : 0) + '"/></div>'
       + '<div class="abt-form-full"><div class="abt-form-lbl">Deskripsi (opsional)</div><input class="abt-form-inp" id="acr-f-deskripsi" value="' + (item ? item.deskripsi : '') + '" placeholder="Keterangan singkat..."/></div>'
-      + (tipe_file === 'PPT' || !_acrEditId ? '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Video PPT (opsional)</div><input class="abt-form-inp" id="acr-f-link-yt-ppt" value="' + (item ? (item.link_yt_ppt || '') : '') + '" placeholder="https://youtu.be/... (video presentasi dengan animasi)"/><div style="font-size:11px;color:var(--g400);margin-top:4px">&#9432; Kalau diisi: client klik kartu PPT → video tampil (bukan preview Drive)</div></div>' : '')
+      + ((item ? item.tipe_file : 'PPT') === 'PPT' ? '<div class="abt-form-full"><div class="abt-form-lbl">Link YouTube Video PPT (opsional)</div><input class="abt-form-inp" id="acr-f-link-yt-ppt" value="' + (item ? (item.link_yt_ppt || '') : '') + '" placeholder="https://youtu.be/... (video presentasi dengan animasi)"/><div style="font-size:11px;color:var(--g400);margin-top:4px">&#9432; Kalau diisi: client klik kartu PPT → video tampil (bukan preview Drive)</div></div>' : '')
       
       + hint;
   }

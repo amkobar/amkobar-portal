@@ -72,6 +72,7 @@ export default async function handler(req, res) {
   link_template: props['Link Template']?.url || '',
   link_youtube: props['Link YouTube']?.url || '',
   judul_youtube: (props['Judul Video Tutorial']?.rich_text || []).map(t => t.plain_text).join('') || '',
+  link_yt_ppt: (props['Link YT PPT']?.rich_text || []).map(t => t.plain_text).join('') || props['Link YT PPT']?.url || '',
   note_folder: (props['Note Folder']?.rich_text || []).map(t => t.plain_text).join('') || '',
   deskripsi: getText('Deskripsi'),
   urutan: props['Urutan']?.number || 0,
@@ -111,6 +112,7 @@ if (aplikasi) properties['Aplikasi'] = { select: { name: aplikasi } };
         if (req.body.link_template) properties['Link Template'] = { url: req.body.link_template };
         if (req.body.link_youtube) properties['Link YouTube'] = { url: req.body.link_youtube };
         if (req.body.judul_youtube) properties['Judul Video Tutorial'] = { rich_text: [{ text: { content: req.body.judul_youtube } }] };
+        if (req.body.link_yt_ppt !== undefined) properties['Link YT PPT'] = { rich_text: [{ text: { content: req.body.link_yt_ppt || '' } }] };
         if (req.body.note_folder) properties['Note Folder'] = { rich_text: [{ text: { content: req.body.note_folder } }] };
         if (parent_id) properties['Parent_ID'] = { rich_text: [{ text: { content: parent_id } }] };
         if (typeof req.body.pilihan_tunggal === 'boolean') properties['Pilihan Tunggal'] = { checkbox: req.body.pilihan_tunggal };
@@ -148,6 +150,7 @@ if (aplikasi !== undefined) properties['Aplikasi'] = aplikasi ? { select: { name
         if (req.body.link_template !== undefined) properties['Link Template'] = { url: req.body.link_template || null };
         if (req.body.link_youtube !== undefined) properties['Link YouTube'] = { url: req.body.link_youtube || null };
         if (req.body.judul_youtube !== undefined) properties['Judul Video Tutorial'] = { rich_text: [{ text: { content: req.body.judul_youtube || '' } }] };
+        if (req.body.link_yt_ppt !== undefined) properties['Link YT PPT'] = { rich_text: [{ text: { content: req.body.link_yt_ppt || '' } }] };
         if (req.body.note_folder !== undefined) properties['Note Folder'] = { rich_text: [{ text: { content: req.body.note_folder || '' } }] };
         if (deskripsi !== undefined) properties['Deskripsi'] = { rich_text: [{ text: { content: deskripsi } }] };
         if (urutan !== undefined) properties['Urutan'] = { number: urutan };

@@ -264,7 +264,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'jenis_layanan, aplikasi, dan jumlah_variabel wajib diisi.' });
       }
 
-      const MASTER_PAKET_DB_ID = '310efe1d1acf803493db000bb3abeb96';
+      const MASTER_PAKET_DB_ID = '310efe1d1acf8031b2c7f0e23435e7bb';
 
       // --- 1. Ambil data client saat ini (untuk hitung "sudah dibayar" & harga lama) ---
       const getRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
@@ -310,7 +310,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({ filter: { and: filterConditions }, page_size: 2 })
       });
       const queryData = await queryRes.json();
-      if (!queryRes.ok) return res.status(500).json({ error: `Notion error (query master paket): ${queryRes.status}` });
+      if (!queryRes.ok) return res.status(500).json({ error: `Notion error (query master paket): ${queryRes.status} - ${JSON.stringify(queryData)}` });
       if (!queryData.results || queryData.results.length === 0) {
         return res.status(404).json({ error: 'Paket tidak ditemukan untuk kombinasi ini. Cek kembali pilihan layanan/aplikasi/jumlah variabel.' });
       }

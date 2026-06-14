@@ -322,15 +322,34 @@ export default async function handler(req, res) {
       const hargaBaruRaw = kategoriHarga === 'khk'
         ? (pProps['Harga Kerjasama']?.number || 0)
         : (pProps['Harga Umum']?.number || 0);
+      const dpBaru = kategoriHarga === 'khk'
+        ? (pProps['DP Kerjasama']?.number || 0)
+        : (pProps['DP Umum']?.number || 0);
+      const skemaBaru = pProps['Skema Pembayaran']?.select?.name || '2 Tahap';
 
       // Total Add-On & Diskon Referral (untuk hitung Harga Netto baru secara akurat di response)
       const totalAddOn = props['Total Add-On']?.rollup?.number || 0;
       const diskonReferral = props['Diskon Referral']?.number || 0;
-
-      // --- 3. Hitung penyesuaian saldo (negatif = mengurangi sisa pembayaran paket baru) ---
-      const penyesuaianSaldo = -totalDibayarLama;
       const hargaNettoBaruEstimasi = hargaBaruRaw + totalAddOn - diskonReferral;
-      const sisaBaruEstimasi = Math.max(0, hargaNettoBaruEstimasi + penyesuaianSaldo);
+
+      // --- 3. Tentukan apakah "sudah dibayar" lama cukup untuk DP paket baru ---
+      // Jika cukup: DP Masuk=true (paket baru), sisa kelebihan disimpan di Penyesuaian Saldo.
+      // Jika tidak cukup: DP Masuk=false, seluruh "sudah dibayar" lama disimpan di Penyesuaian Saldo.
+      let dpMasukBaru = false;
+      let penyesuaianSaldo;
+      let totalDibayarBaruSetelahCheckbox = 0;
+
+      if (totalDibayarLama >= dpBaru && dpBaru > 0) {
+        dpMasukBaru = true;
+        totalDibayarBaruSetelahCheckbox = dpBaru; // DP Masuk=true -> Total Dibayar (formula lama) = dpBaru utk skema 2 Tahap
+        penyesuaianSaldo = -(totalDibayarLama - dpBaru);
+      } else {
+        dpMasukBaru = false;
+        totalDibayarBaruSetelahCheckbox = 0;
+        penyesuaianSaldo = -totalDibayarLama;
+      }
+
+      const sisaBaruEstimasi = Math.max(0, hargaNettoBaruEstimasi - totalDibayarBaruSetelahCheckbox + penyesuaianSaldo);
       const namaPaketBaru = pProps['Nama Paket']?.title?.map(t => t.plain_text).join('') || '';
 
       const ringkasan = {
@@ -340,6 +359,7 @@ export default async function handler(req, res) {
         harga_netto_baru: hargaNettoBaruEstimasi,
         sisa_baru: sisaBaruEstimasi,
         penyesuaian_saldo: penyesuaianSaldo,
+        dp_masuk_baru: dpMasukBaru,
         paket_baru: namaPaketBaru,
       };
 
@@ -348,12 +368,12 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, preview: true, ringkasan });
       }
 
-      // --- 4. PATCH client: ganti paket, reset checkbox, set penyesuaian saldo, update jenis layanan & jumlah variabel ---
+      // --- 4. PATCH client: ganti paket, reset checkbox tahap lanjutan, set DP & penyesuaian saldo, update jenis layanan & jumlah variabel ---
       const patchProperties = {
         'Paket': { relation: [{ id: paketBaruId }] },
         'Jenis Layanan': { select: { name: jenis_layanan } },
         'Jumlah Variabel': { select: { name: jumlah_variabel } },
-        'DP Masuk': { checkbox: false },
+        'DP Masuk': { checkbox: dpMasukBaru },
         'Tahap 2 Masuk': { checkbox: false },
         'Pelunasan Masuk': { checkbox: false },
         'Penyesuaian Saldo': { number: penyesuaianSaldo },

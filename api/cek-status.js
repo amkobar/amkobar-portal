@@ -122,6 +122,7 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       konfirmasi_data: getCheckbox(props['Konfirmasi Data']),
       penyesuaian_saldo: props['Penyesuaian Saldo']?.number || 0,
       harga_netto: getFormula(props['Harga Netto']),
+      total_dibayar: getFormula(props['Total Dibayar']),
     });
 
   } catch (err) {

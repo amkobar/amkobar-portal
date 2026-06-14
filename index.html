@@ -2860,14 +2860,11 @@ function updateDim4Visibility() {
   document.getElementById('el-hitung-btn').style.display = '';
   document.getElementById('el-simpan-btn').style.display = 'none';
 }
-(function(){
-  var elJenis = document.getElementById('el-jenis-layanan');
-  var elAplikasi = document.getElementById('el-aplikasi');
-  var elVariabel = document.getElementById('el-jumlah-variabel');
-  if (elJenis) elJenis.addEventListener('change', updateDim4Visibility);
-  if (elAplikasi) elAplikasi.addEventListener('change', updateDim4Visibility);
-  if (elVariabel) elVariabel.addEventListener('change', updateDim4Visibility);
-})();
+document.addEventListener('change', function(e){
+  if (e.target && (e.target.id === 'el-jenis-layanan' || e.target.id === 'el-aplikasi' || e.target.id === 'el-jumlah-variabel')) {
+    updateDim4Visibility();
+  }
+});
 
 function _buildEditLayananPayload(preview) {
   var payload = {

@@ -2239,16 +2239,22 @@ function renderDash(d){
     var pNoteMob = document.getElementById('mob-penyesuaian-note');
     var pny = d.penyesuaian_saldo || 0;
     var hargaNetto = d.harga_netto || 0;
+    var totalDibayar = d.total_dibayar || 0;
     var sisa = d.sisa_pembayaran || 0;
     var html = '';
     var bg = '', color = '';
     if (pny < 0) {
-      var sudahDibayarLama = Math.abs(pny);
-      var kelebihan = sudahDibayarLama - hargaNetto;
-      if (kelebihan > 0) {
-        html = 'Anda memiliki kelebihan bayar ' + fmtRp(kelebihan) + ' dari project sebelumnya.';
+      var nilaiAbs = Math.abs(pny);
+      if (sisa === 0) {
+        // Sisa sudah 0 — hitung kelebihan murni: TotalDibayar + PenyesuaianSaldo - HargaNetto
+        var kelebihan = totalDibayar - hargaNetto - pny;
+        if (kelebihan > 0) {
+          html = 'Anda memiliki kelebihan bayar ' + fmtRp(kelebihan) + ' dari project sebelumnya.';
+        } else {
+          html = 'Pembayaran dari project sebelumnya sudah mencukupi seluruh biaya project ini.';
+        }
       } else {
-        html = 'Anda sudah membayar ' + fmtRp(sudahDibayarLama) + ' dari project sebelumnya. Sudah otomatis mengurangi sisa pembayaran Anda.';
+        html = 'Anda sudah membayar ' + fmtRp(nilaiAbs) + ' dari project sebelumnya. Sudah otomatis mengurangi sisa pembayaran Anda.';
       }
       bg = '#ecfdf5'; color = '#065f46';
     } else if (pny > 0) {

@@ -257,6 +257,119 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
+    // ===== RESET & UPGRADE LAYANAN (ganti paket, client diperlakukan seperti baru + penyesuaian saldo) =====
+    if (action === 'reset_upgrade') {
+      const { jenis_layanan, aplikasi, jumlah_variabel, status_judul, sumber_data, preview } = req.body || {};
+      if (!jenis_layanan || !aplikasi || !jumlah_variabel) {
+        return res.status(400).json({ error: 'jenis_layanan, aplikasi, dan jumlah_variabel wajib diisi.' });
+      }
+
+      const MASTER_PAKET_DB_ID = '310efe1d1acf803493db000bb3abeb96';
+
+      // --- 1. Ambil data client saat ini (untuk hitung "sudah dibayar" & harga lama) ---
+      const getRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28' }
+      });
+      const getData = await getRes.json();
+      if (!getRes.ok) return res.status(500).json({ error: `Notion error (get client): ${getRes.status}` });
+
+      const props = getData.properties;
+      const getFormulaNum = p => {
+        if (!p || p.type !== 'formula') return 0;
+        const f = p.formula;
+        if (f?.type === 'number') return f.number || 0;
+        return 0;
+      };
+
+      const totalDibayarLama = getFormulaNum(props['Total Dibayar']);
+      const hargaNettoLama = getFormulaNum(props['Harga Netto']);
+      const sisaLama = getFormulaNum(props['Sisa Pembayaran']);
+
+      // --- 2. Query Master Paket sesuai dimensi baru ---
+      const filterConditions = [
+        { property: 'Sub Layanan', select: { equals: jenis_layanan } },
+        { property: 'Aplikasi', select: { equals: aplikasi } },
+        { property: 'Jumlah Variabel', select: { equals: jumlah_variabel } },
+      ];
+
+      if (jenis_layanan === 'FULL BAB (I–V)') {
+        if (!status_judul) return res.status(400).json({ error: 'status_judul wajib diisi untuk FULL BAB (I–V).' });
+        filterConditions.push({ property: 'Status Judul', select: { equals: status_judul } });
+      } else if (jenis_layanan === 'Olahdata Only') {
+        if (!sumber_data) return res.status(400).json({ error: 'sumber_data wajib diisi untuk Olahdata Only.' });
+        filterConditions.push({ property: 'Sumber Data', select: { equals: sumber_data } });
+      } else {
+        // BAB IV / BAB IV–V: dimensi ke-4 harus "Tidak Berlaku"
+        filterConditions.push({ property: 'Status Judul', select: { equals: 'Tidak Berlaku' } });
+        filterConditions.push({ property: 'Sumber Data', select: { equals: 'Tidak Berlaku' } });
+      }
+
+      const queryRes = await fetch(`https://api.notion.com/v1/databases/${MASTER_PAKET_DB_ID}/query`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filter: { and: filterConditions }, page_size: 2 })
+      });
+      const queryData = await queryRes.json();
+      if (!queryRes.ok) return res.status(500).json({ error: `Notion error (query master paket): ${queryRes.status}` });
+      if (!queryData.results || queryData.results.length === 0) {
+        return res.status(404).json({ error: 'Paket tidak ditemukan untuk kombinasi ini. Cek kembali pilihan layanan/aplikasi/jumlah variabel.' });
+      }
+
+      const paketBaru = queryData.results[0];
+      const paketBaruId = paketBaru.id;
+      const pProps = paketBaru.properties;
+      const kategoriHarga = props['Kategori Harga']?.select?.name || 'khu';
+      const hargaBaruRaw = kategoriHarga === 'khk'
+        ? (pProps['Harga Kerjasama']?.number || 0)
+        : (pProps['Harga Umum']?.number || 0);
+
+      // Total Add-On & Diskon Referral (untuk hitung Harga Netto baru secara akurat di response)
+      const totalAddOn = props['Total Add-On']?.rollup?.number || 0;
+      const diskonReferral = props['Diskon Referral']?.number || 0;
+
+      // --- 3. Hitung penyesuaian saldo (negatif = mengurangi sisa pembayaran paket baru) ---
+      const penyesuaianSaldo = -totalDibayarLama;
+      const hargaNettoBaruEstimasi = hargaBaruRaw + totalAddOn - diskonReferral;
+      const sisaBaruEstimasi = Math.max(0, hargaNettoBaruEstimasi + penyesuaianSaldo);
+      const namaPaketBaru = pProps['Nama Paket']?.title?.map(t => t.plain_text).join('') || '';
+
+      const ringkasan = {
+        harga_netto_lama: hargaNettoLama,
+        sisa_lama: sisaLama,
+        sudah_dibayar: totalDibayarLama,
+        harga_netto_baru: hargaNettoBaruEstimasi,
+        sisa_baru: sisaBaruEstimasi,
+        penyesuaian_saldo: penyesuaianSaldo,
+        paket_baru: namaPaketBaru,
+      };
+
+      // --- MODE PREVIEW: hanya hitung, tidak ubah data ---
+      if (preview) {
+        return res.status(200).json({ success: true, preview: true, ringkasan });
+      }
+
+      // --- 4. PATCH client: ganti paket, reset checkbox, set penyesuaian saldo, update jenis layanan & jumlah variabel ---
+      const patchProperties = {
+        'Paket': { relation: [{ id: paketBaruId }] },
+        'Jenis Layanan': { select: { name: jenis_layanan } },
+        'Jumlah Variabel': { select: { name: jumlah_variabel } },
+        'DP Masuk': { checkbox: false },
+        'Tahap 2 Masuk': { checkbox: false },
+        'Pelunasan Masuk': { checkbox: false },
+        'Penyesuaian Saldo': { number: penyesuaianSaldo },
+      };
+
+      const patchRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: patchProperties })
+      });
+      const patchData = await patchRes.json();
+      if (!patchRes.ok) return res.status(500).json({ error: `Notion error (update client): ${patchRes.status} - ${JSON.stringify(patchData)}` });
+
+      return res.status(200).json({ success: true, ringkasan });
+    }
+
     return res.status(400).json({ error: 'Action tidak dikenal.' });
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });

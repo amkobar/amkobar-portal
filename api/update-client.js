@@ -258,62 +258,6 @@ export default async function handler(req, res) {
     }
 
     return res.status(400).json({ error: 'Action tidak dikenal.' });
-if (action === 'simpan_teori_dipilih') {
-  const { kategori, teori_id } = req.body;
-  if (!kategori || !teori_id) return res.status(400).json({ error: 'kategori dan teori_id wajib diisi.' });
-
-  // Ambil data teori_dipilih yang sudah ada
-  const getRes = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
-    }
-  });
-  const getData = await getRes.json();
-  const existing = (getData.properties['Teori Dipilih']?.rich_text || []).map(t => t.plain_text).join('') || '{}';
-  let teoriMap = {};
-  try { teoriMap = JSON.parse(existing); } catch(e) {}
-  teoriMap[kategori] = teori_id;
-
-  const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      properties: {
-        'Teori Dipilih': { rich_text: [{ text: { content: JSON.stringify(teoriMap) } }] }
-      }
-    })
-  });
-  const data = await response.json();
-  if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
-  return res.status(200).json({ success: true, teori_dipilih: teoriMap });
-}
-
-// ===== UPDATE ALL TEORI TAMPIL (dari admin) =====
-if (action === 'update_all_teori_tampil') {
-  const { all_teori_tampil } = req.body;
-  if (typeof all_teori_tampil !== 'boolean') return res.status(400).json({ error: 'all_teori_tampil harus boolean.' });
-  const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      properties: {
-        'All Teori Tampil': { checkbox: all_teori_tampil }
-      }
-    })
-  });
-  const data = await response.json();
-  if (!response.ok) return res.status(500).json({ error: `Notion error: ${response.status}` });
-  return res.status(200).json({ success: true });
-}
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Terjadi kesalahan server.' });
   }

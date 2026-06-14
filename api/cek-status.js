@@ -120,6 +120,8 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       tanggal_aktivasi_rating: props['Tanggal Aktivasi Rating']?.date?.start || null,
       client_lama: getCheckbox(props['Client Lama']),
       konfirmasi_data: getCheckbox(props['Konfirmasi Data']),
+      penyesuaian_saldo: props['Penyesuaian Saldo']?.number || 0,
+      harga_netto: getFormula(props['Harga Netto']),
     });
 
   } catch (err) {

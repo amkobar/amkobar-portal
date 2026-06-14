@@ -902,6 +902,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <span style="font-size:18px">💰</span>
 <div id="mob-lunas-badge" style="display:none;align-items:center;gap:4px;background:#14532d;border-radius:100px;padding:4px 10px"><svg fill="none" height="11" viewbox="0 0 11 11" width="11"><circle cx="5.5" cy="5.5" fill="#22c55e" r="5"></circle><polyline points="2.5,5.5 4.5,7.5 8.5,3.5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></polyline></svg><span style="font-size:10px;font-weight:600;color:#4ade80">Lunas</span></div>
 </div>
+<div id="mob-penyesuaian-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12px;line-height:1.6"></div>
 </div>
 <div class="mob-ref-compact" id="mob-ref-compact"></div>
 <!-- END MOBILE ONLY -->
@@ -930,7 +931,13 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 </div>
 <div class="info-grid">
-<div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
+<div class="irow">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div class="ilabel">Jenis Layanan</div>
+<button id="edit-btn-layanan" onclick="openEditLayananModal()" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit Layanan</button>
+</div>
+<div class="ival" id="i-layanan">—</div>
+</div>
 <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
 <div class="irow">
 <div style="display:flex;align-items:center;justify-content:space-between">
@@ -971,6 +978,7 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div><div class="sisa-lbl">Sisa Pembayaran</div><div class="sisa-amt" id="sisa-amt">—</div></div>
 <div class="sisa-ic" id="sisa-ic">💰</div>
 </div>
+<div id="penyesuaian-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12.5px;line-height:1.6"></div>
 </div>
 <div id="ref-card-right" style="display:none;margin-top:20px"></div>
 </div>
@@ -2132,8 +2140,10 @@ function renderDash(d){
       aksesTogWrap.style.display='flex';
       var editBtnJudul = document.getElementById('edit-btn-judul');
       var editBtnVariabel = document.getElementById('edit-btn-variabel');
+      var editBtnLayanan = document.getElementById('edit-btn-layanan');
       if (editBtnJudul) editBtnJudul.style.display = 'block';
       if (editBtnVariabel) editBtnVariabel.style.display = 'block';
+      if (editBtnLayanan) editBtnLayanan.style.display = 'block';
       updateAksesTogUI(d.akses_aktif!==false);
       updateAllTeoriTampilUI(d.all_teori_tampil||false);
       var statusRow=document.getElementById('adm-status-row');
@@ -2154,8 +2164,10 @@ function renderDash(d){
       aksesTogWrap.style.display='none';
       var editBtnJudul = document.getElementById('edit-btn-judul');
       var editBtnVariabel = document.getElementById('edit-btn-variabel');
+      var editBtnLayanan = document.getElementById('edit-btn-layanan');
       if (editBtnJudul) editBtnJudul.style.display = 'none';
       if (editBtnVariabel) editBtnVariabel.style.display = 'none';
+      if (editBtnLayanan) editBtnLayanan.style.display = 'none';
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='none';
       var masaRow=document.getElementById('adm-masa-row');
@@ -2222,6 +2234,31 @@ function renderDash(d){
       ? '<div style="display:flex;align-items:center;gap:5px;background:#14532d;border-radius:100px;padding:5px 12px"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" fill="#22c55e"/><polyline points="3,6 5,8 9,4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:11px;font-weight:600;color:#4ade80">Lunas</span></div>'
       : '&#128176;';
   }
+  (function(){
+    var pNote = document.getElementById('penyesuaian-note');
+    var pNoteMob = document.getElementById('mob-penyesuaian-note');
+    var pny = d.penyesuaian_saldo || 0;
+    var html = '';
+    var bg = '', color = '';
+    if (pny < 0) {
+      html = 'Anda sudah membayar lebih ' + fmtRp(Math.abs(pny)) + '. Kelebihan ini sudah dikurangkan dari sisa pembayaran Anda.';
+      bg = '#ecfdf5'; color = '#065f46';
+    } else if (pny > 0) {
+      html = 'Ada tambahan biaya ' + fmtRp(pny) + ' akibat perubahan layanan. Sudah ditambahkan ke sisa pembayaran Anda.';
+      bg = '#fff7ed'; color = '#92400e';
+    }
+    [pNote, pNoteMob].forEach(function(el){
+      if (!el) return;
+      if (pny !== 0) {
+        el.style.display = 'block';
+        el.style.background = bg;
+        el.style.color = color;
+        el.textContent = html;
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  })();
   if(d.total_addon&&d.total_addon>0){document.getElementById('addon-row').style.display='flex';document.getElementById('addon-amt').textContent=fmtRp(d.total_addon);}
   else document.getElementById('addon-row').style.display='none';
   const db=document.getElementById('drive-btn');
@@ -2765,7 +2802,151 @@ function saveInfo(field) {
   });
 }
 
-/* ===== TOGGLE AKSES CLIENT ===== */
+/* ===== EDIT LAYANAN (Reset & Upgrade Paket) ===== */
+function openEditLayananModal() {
+  var pageId = window._dashPageId || null;
+  if (!pageId) return;
+  var d = window._dashData || {};
+  document.getElementById('el-client-name').textContent = (d.nama || '—') + (d.kode_akses ? ' · ' + d.kode_akses : '');
+  var layananLama = d.jenis_layanan || '—';
+  var aplikasiLama = d.aplikasi || '—';
+  var variabelLama = d.jumlah_variabel || '—';
+  document.getElementById('el-current').textContent = layananLama + ' · ' + aplikasiLama + ' · ' + variabelLama;
+
+  // Set default dropdown values ke kondisi sekarang
+  var selLayanan = document.getElementById('el-jenis-layanan');
+  var selAplikasi = document.getElementById('el-aplikasi');
+  var selVariabel = document.getElementById('el-jumlah-variabel');
+  if (layananLama && Array.from(selLayanan.options).some(o => o.value === layananLama)) selLayanan.value = layananLama;
+  var aplikasiUpper = (aplikasiLama || '').toUpperCase();
+  if (aplikasiUpper && Array.from(selAplikasi.options).some(o => o.value === aplikasiUpper)) selAplikasi.value = aplikasiUpper;
+  if (variabelLama && Array.from(selVariabel.options).some(o => o.value === variabelLama)) selVariabel.value = variabelLama;
+
+  updateDim4Visibility();
+  document.getElementById('el-ringkasan-wrap').style.display = 'none';
+  document.getElementById('el-error').style.display = 'none';
+  document.getElementById('el-hitung-btn').style.display = '';
+  document.getElementById('el-simpan-btn').style.display = 'none';
+
+  var ov = document.getElementById('edit-layanan-overlay');
+  if (ov) ov.classList.add('on');
+}
+
+function closeEditLayananModal() {
+  var ov = document.getElementById('edit-layanan-overlay');
+  if (ov) ov.classList.remove('on');
+}
+
+function updateDim4Visibility() {
+  var jenis = document.getElementById('el-jenis-layanan').value;
+  var wrap = document.getElementById('el-dim4-wrap');
+  var label = document.getElementById('el-dim4-label');
+  var sel = document.getElementById('el-dim4');
+  if (jenis === 'FULL BAB (I–V)') {
+    wrap.style.display = '';
+    label.textContent = 'Status Judul';
+    sel.innerHTML = '<option value="Sudah Ada Judul">Sudah Ada Judul</option><option value="Belum Ada Judul">Belum Ada Judul</option>';
+  } else if (jenis === 'Olahdata Only') {
+    wrap.style.display = '';
+    label.textContent = 'Sumber Data';
+    sel.innerHTML = '<option value="Data Sendiri">Data Sendiri</option><option value="Data Pengelola">Data Pengelola</option>';
+  } else {
+    wrap.style.display = 'none';
+    sel.innerHTML = '';
+  }
+  // Reset ringkasan setiap kali pilihan berubah
+  document.getElementById('el-ringkasan-wrap').style.display = 'none';
+  document.getElementById('el-error').style.display = 'none';
+  document.getElementById('el-hitung-btn').style.display = '';
+  document.getElementById('el-simpan-btn').style.display = 'none';
+}
+(function(){
+  var elJenis = document.getElementById('el-jenis-layanan');
+  var elAplikasi = document.getElementById('el-aplikasi');
+  var elVariabel = document.getElementById('el-jumlah-variabel');
+  if (elJenis) elJenis.addEventListener('change', updateDim4Visibility);
+  if (elAplikasi) elAplikasi.addEventListener('change', updateDim4Visibility);
+  if (elVariabel) elVariabel.addEventListener('change', updateDim4Visibility);
+})();
+
+function _buildEditLayananPayload(preview) {
+  var payload = {
+    action: 'reset_upgrade',
+    page_id: window._dashPageId,
+    jenis_layanan: document.getElementById('el-jenis-layanan').value,
+    aplikasi: document.getElementById('el-aplikasi').value,
+    jumlah_variabel: document.getElementById('el-jumlah-variabel').value,
+    preview: !!preview,
+  };
+  var jenis = payload.jenis_layanan;
+  if (jenis === 'FULL BAB (I–V)') payload.status_judul = document.getElementById('el-dim4').value;
+  if (jenis === 'Olahdata Only') payload.sumber_data = document.getElementById('el-dim4').value;
+  return payload;
+}
+
+function hitungPreviewLayanan() {
+  var btn = document.getElementById('el-hitung-btn');
+  var errEl = document.getElementById('el-error');
+  errEl.style.display = 'none';
+  btn.textContent = 'Menghitung...'; btn.disabled = true;
+  fetch('/api/update-client', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(_buildEditLayananPayload(true))
+  }).then(function(r) { return r.json(); }).then(function(res) {
+    if (res.success && res.ringkasan) {
+      var r = res.ringkasan;
+      document.getElementById('el-harga-ringkasan').innerHTML =
+        '<span style="color:var(--g400);text-decoration:line-through">' + fmtRp(r.harga_netto_lama) + '</span> &rarr; <strong>' + fmtRp(r.harga_netto_baru) + '</strong>';
+      document.getElementById('el-dibayar-ringkasan').textContent = fmtRp(r.sudah_dibayar) + ' (tetap diakui)';
+      document.getElementById('el-sisa-ringkasan').textContent = fmtRp(r.sisa_baru);
+      document.getElementById('el-sisa-sebelum').textContent = 'sebelumnya ' + fmtRp(r.sisa_lama);
+      document.getElementById('el-ringkasan-wrap').style.display = 'block';
+      document.getElementById('el-hitung-btn').style.display = 'none';
+      document.getElementById('el-simpan-btn').style.display = '';
+    } else {
+      errEl.textContent = res.error || 'Gagal menghitung perubahan.';
+      errEl.style.display = 'block';
+    }
+  }).catch(function() {
+    errEl.textContent = 'Gagal menghubungi server.';
+    errEl.style.display = 'block';
+  }).finally(function() {
+    btn.textContent = 'Hitung Perubahan'; btn.disabled = false;
+  });
+}
+
+function simpanEditLayanan() {
+  var btn = document.getElementById('el-simpan-btn');
+  var errEl = document.getElementById('el-error');
+  errEl.style.display = 'none';
+  btn.textContent = 'Menyimpan...'; btn.disabled = true;
+  fetch('/api/update-client', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(_buildEditLayananPayload(false))
+  }).then(function(r) { return r.json(); }).then(function(res) {
+    if (res.success) {
+      closeEditLayananModal();
+      // Muat ulang data dashboard agar semua field (Harga Netto, Sisa Pembayaran, dll) sinkron
+      if (window._lastKode && typeof admViewClient === 'function') {
+        admViewClient(window._lastKode);
+      } else {
+        location.reload();
+      }
+    } else {
+      errEl.textContent = res.error || 'Gagal menyimpan perubahan.';
+      errEl.style.display = 'block';
+    }
+  }).catch(function() {
+    errEl.textContent = 'Gagal menghubungi server.';
+    errEl.style.display = 'block';
+  }).finally(function() {
+    btn.textContent = 'Simpan Perubahan'; btn.disabled = false;
+  });
+}
+
+
 function updateAksesTogUI(aktif){
   var wrap=document.getElementById('d-akses-tog-wrap');
   var dot=document.getElementById('d-akses-dot');
@@ -4342,6 +4523,10 @@ function tplConfirmClose() {
     if (ov && ov.parentElement !== document.body) {
       document.body.appendChild(ov);
     }
+    var ov2 = document.getElementById('edit-layanan-overlay');
+    if (ov2 && ov2.parentElement !== document.body) {
+      document.body.appendChild(ov2);
+    }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', moveModal);
@@ -5646,6 +5831,78 @@ function admTestiSaveEdit(id){
 <span class="bottom-tab-ic">📄</span>
 <span class="bottom-tab-lbl">Pricelist</span>
 </button>
+</div>
+<div class="faq-modal-overlay" id="edit-layanan-overlay">
+<div style="background:#fff;border-radius:14px;padding:22px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.18)">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+<div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--navy)">Edit Layanan Client</div>
+<div onclick="closeEditLayananModal()" style="cursor:pointer;font-size:18px;color:var(--g400)">&times;</div>
+</div>
+<div id="el-client-name" style="font-size:12.5px;color:var(--g600);margin-bottom:14px">&mdash;</div>
+
+<div style="border-top:1px solid var(--g200);padding-top:12px;margin-bottom:12px">
+<div style="font-size:12.5px;font-weight:600;color:var(--g600);margin-bottom:6px">Layanan sekarang</div>
+<div id="el-current" style="background:var(--g50);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--g800)">&mdash;</div>
+</div>
+
+<div style="border-top:1px solid var(--g200);padding-top:12px;margin-bottom:12px">
+<div style="font-size:12.5px;font-weight:600;color:var(--g600);margin-bottom:8px">Ganti ke layanan baru</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+<div>
+<label style="font-size:11.5px;color:var(--g500);display:block;margin-bottom:4px">Jenis Layanan</label>
+<select id="el-jenis-layanan" style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none">
+<option value="BAB IV">BAB IV</option>
+<option value="BAB IV–V">BAB IV&ndash;V</option>
+<option value="FULL BAB (I–V)">FULL BAB (I&ndash;V)</option>
+<option value="Olahdata Only">Olahdata Only</option>
+</select>
+</div>
+<div>
+<label style="font-size:11.5px;color:var(--g500);display:block;margin-bottom:4px">Aplikasi</label>
+<select id="el-aplikasi" style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none">
+<option value="SPSS">SPSS</option>
+<option value="SMARTPLS">SmartPLS</option>
+<option value="LISREL">Lisrel</option>
+</select>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div>
+<label style="font-size:11.5px;color:var(--g500);display:block;margin-bottom:4px">Jumlah Variabel</label>
+<select id="el-jumlah-variabel" style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none">
+<option value="2 Variabel">2 Variabel</option>
+<option value="3 Variabel">3 Variabel</option>
+<option value="4 Variabel">4 Variabel</option>
+</select>
+</div>
+<div id="el-dim4-wrap" style="display:none">
+<label id="el-dim4-label" style="font-size:11.5px;color:var(--g500);display:block;margin-bottom:4px">&mdash;</label>
+<select id="el-dim4" style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none"></select>
+</div>
+</div>
+</div>
+
+<div id="el-ringkasan-wrap" style="display:none;border-top:1px solid var(--g200);padding-top:12px;margin-bottom:14px">
+<div style="font-size:12.5px;font-weight:600;color:var(--g600);margin-bottom:8px">Ringkasan perubahan</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:13px;margin-bottom:10px">
+<div style="display:flex;justify-content:space-between"><span style="color:var(--g600)">Harga project</span><span id="el-harga-ringkasan">&mdash;</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:var(--g600)">Sudah dibayar client</span><span id="el-dibayar-ringkasan" style="color:#0f6e56">&mdash;</span></div>
+</div>
+<div style="background:var(--navy);border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:12.5px;color:#cdd9ef">Sisa pembayaran client</span>
+<span id="el-sisa-ringkasan" style="font-size:18px;font-weight:600;color:#fff">&mdash;</span>
+</div>
+<div id="el-sisa-sebelum" style="font-size:11.5px;color:var(--g400);text-align:right;margin-top:6px">&mdash;</div>
+</div>
+
+<div id="el-error" style="display:none;background:#fef2f2;color:#b91c1c;border-radius:8px;padding:10px 12px;font-size:12.5px;margin-bottom:12px"></div>
+
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button onclick="closeEditLayananModal()" style="padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
+<button id="el-hitung-btn" onclick="hitungPreviewLayanan()" style="padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;background:var(--blue);color:#fff;cursor:pointer">Hitung Perubahan</button>
+<button id="el-simpan-btn" onclick="simpanEditLayanan()" style="display:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan Perubahan</button>
+</div>
+</div>
 </div>
 <div class="faq-modal-overlay" id="tpl-confirm-overlay">
 <div style="background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)">

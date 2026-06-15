@@ -2891,6 +2891,19 @@ function openEditLayananModal() {
   if (variabelLama && Array.from(selVariabel.options).some(o => o.value === variabelLama)) selVariabel.value = variabelLama;
 
   updateDim4Visibility();
+
+  // Pre-fill dropdown ke-4 (Status Judul / Sumber Data) sesuai paket yang sedang terelasi.
+  // Tanpa ini, dropdown selalu reset ke opsi pertama saat updateDim4Visibility() membangun
+  // ulang innerHTML — sehingga "Hitung Perubahan" tanpa interaksi manual bisa salah
+  // mengambil dimensi ke-4 (mis. Data Pengelola jadi Data Sendiri).
+  var selDim4 = document.getElementById('el-dim4');
+  var dim4Value = (layananLama === 'FULL BAB (I–V)') ? d.status_judul_paket
+                 : (layananLama === 'Olahdata Only') ? d.sumber_data_paket
+                 : null;
+  if (dim4Value && Array.from(selDim4.options).some(o => o.value === dim4Value)) {
+    selDim4.value = dim4Value;
+  }
+
   document.getElementById('el-ringkasan-wrap').style.display = 'none';
   document.getElementById('el-error').style.display = 'none';
   document.getElementById('el-hitung-btn').style.display = '';

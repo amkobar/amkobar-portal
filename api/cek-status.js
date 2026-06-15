@@ -72,6 +72,25 @@ export default async function handler(req, res) {
       return res.status(200).json({ found: false, nonaktif: true });
     }
 
+    // Ambil Status Judul & Sumber Data dari paket yang terelasi (untuk pre-fill dropdown ke-4 di Edit Layanan)
+    let statusJudulPaket = null;
+    let sumberDataPaket = null;
+    const paketRelation = props['Paket']?.relation;
+    if (paketRelation && paketRelation.length > 0) {
+      try {
+        const paketRes = await fetch(`https://api.notion.com/v1/pages/${paketRelation[0].id}`, {
+          headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28' }
+        });
+        if (paketRes.ok) {
+          const paketData = await paketRes.json();
+          statusJudulPaket = paketData.properties?.['Status Judul']?.select?.name || null;
+          sumberDataPaket = paketData.properties?.['Sumber Data']?.select?.name || null;
+        }
+      } catch (e) {
+        // Jika gagal, biarkan null — dropdown ke-4 akan fallback ke opsi pertama (tidak fatal)
+      }
+    }
+
     return res.status(200).json({
       found: true,
       page_id: page.id,
@@ -123,6 +142,8 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       penyesuaian_saldo: props['Penyesuaian Saldo']?.number || 0,
       harga_netto: getFormula(props['Harga Netto']),
       total_dibayar: getFormula(props['Total Dibayar']),
+      status_judul_paket: statusJudulPaket,
+      sumber_data_paket: sumberDataPaket,
     });
 
   } catch (err) {

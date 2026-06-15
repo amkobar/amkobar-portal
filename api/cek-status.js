@@ -75,19 +75,28 @@ export default async function handler(req, res) {
     // Ambil Status Judul & Sumber Data dari paket yang terelasi (untuk pre-fill dropdown ke-4 di Edit Layanan)
     let statusJudulPaket = null;
     let sumberDataPaket = null;
+    let _debugDim4 = { paketRelationFound: false, fetchOk: null, fetchStatus: null, error: null };
     const paketRelation = props['Paket']?.relation;
+    _debugDim4.paketRelationFound = !!(paketRelation && paketRelation.length > 0);
+    _debugDim4.paketRelationId = paketRelation?.[0]?.id || null;
     if (paketRelation && paketRelation.length > 0) {
       try {
         const paketRes = await fetch(`https://api.notion.com/v1/pages/${paketRelation[0].id}`, {
           headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28' }
         });
+        _debugDim4.fetchOk = paketRes.ok;
+        _debugDim4.fetchStatus = paketRes.status;
         if (paketRes.ok) {
           const paketData = await paketRes.json();
           statusJudulPaket = paketData.properties?.['Status Judul']?.select?.name || null;
           sumberDataPaket = paketData.properties?.['Sumber Data']?.select?.name || null;
+          _debugDim4.rawStatusJudul = paketData.properties?.['Status Judul'] || null;
+          _debugDim4.rawSumberData = paketData.properties?.['Sumber Data'] || null;
+        } else {
+          _debugDim4.errorBody = await paketRes.text();
         }
       } catch (e) {
-        // Jika gagal, biarkan null — dropdown ke-4 akan fallback ke opsi pertama (tidak fatal)
+        _debugDim4.error = e.message;
       }
     }
 
@@ -144,6 +153,7 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       total_dibayar: getFormula(props['Total Dibayar']),
       status_judul_paket: statusJudulPaket,
       sumber_data_paket: sumberDataPaket,
+      _debug_dim4: _debugDim4,
     });
 
   } catch (err) {

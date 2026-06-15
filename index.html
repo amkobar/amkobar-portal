@@ -2362,13 +2362,43 @@ function renderPayment(d){
   const isKerjasama=kat==='kerjasama'||kat==='khk';
   const harga=isKerjasama?(d.harga_kerjasama||0):(d.harga_umum||0);
   const dp=isKerjasama?(d.dp_kerjasama||0):(d.dp_umum||0);
-  let steps=[{lbl:'DP',sub:dp?fmtRp(dp):'',done:d.dp_masuk,ic:'\ud83d\udcb3'}];
-  if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',sub:t2?fmtRp(t2):'',done:d.tahap2_masuk,ic:'\ud83d\udcb3'});steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'\u2705'});}
-  else{const lun=harga-dp;steps.push({lbl:'Pelunasan',sub:lun?fmtRp(lun):'',done:d.pelunasan_masuk,ic:'\u2705'});}
+  let steps=[{lbl:'DP',nominal:dp,done:d.dp_masuk,ic:'\ud83d\udcb3'}];
+  if(is3){const t2=Math.round(harga*0.3);const lun=harga-dp-t2;steps.push({lbl:'Tahap 2',nominal:t2,done:d.tahap2_masuk,ic:'\ud83d\udcb3'});steps.push({lbl:'Pelunasan',nominal:lun,done:d.pelunasan_masuk,ic:'\u2705'});}
+  else{const lun=harga-dp;steps.push({lbl:'Pelunasan',nominal:lun,done:d.pelunasan_masuk,ic:'\u2705'});}
+
+  // --- Alokasi kredit dari Penyesuaian Saldo (FIFO: DP -> Tahap 2 -> Pelunasan) ---
+  // Hanya berlaku untuk tahap yang BELUM dicentang (done=false); tahap yang sudah
+  // tercentang (done=true) sudah dihitung penuh oleh formula Total Dibayar, tidak diutak-atik.
+  var pny = d.penyesuaian_saldo || 0;
+  var sisaKredit = (pny < 0) ? Math.abs(pny) : 0;
+  steps.forEach(function(s){
+    if (!s.done && sisaKredit > 0) {
+      var potongan = Math.min(sisaKredit, s.nominal);
+      s.nominalBaru = s.nominal - potongan;
+      s.dipotong = potongan > 0;
+      sisaKredit -= potongan;
+    } else {
+      s.nominalBaru = s.nominal;
+      s.dipotong = false;
+    }
+  });
+  // sisaKredit setelah loop (jika >0) berarti kredit melebihi total semua tahap;
+  // kasus ini sudah ditangani oleh note "kelebihan bayar" terpisah (penyesuaian-note)
+  // saat Sisa Pembayaran = 0, sehingga tidak perlu ditampilkan lagi di breakdown ini.
+
+  steps.forEach(function(s){
+    if (s.dipotong) {
+      s.sub = s.nominal ? `<span style="text-decoration:line-through;opacity:.55">${fmtRp(s.nominal)}</span> <strong>${fmtRp(s.nominalBaru)}</strong>` : '';
+    } else {
+      s.sub = s.nominal ? fmtRp(s.nominal) : '';
+    }
+  });
+
   const dis=d.diskon_referral||0;
   const j=d.jumlah_referral||0;
   const disRow=(dis>0&&j>=3)?`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:var(--rs);border:1px solid var(--ok-border);background:var(--ok-bg);margin-top:-4px"><div style="font-size:13.5px;font-weight:500;color:var(--ok);display:flex;align-items:center;gap:8px"><span>\ud83c\udf81</span><span>Diskon Referral</span></div><div style="font-size:13.5px;font-weight:600;color:var(--ok)">-${fmtRp(dis)}</div></div>`:'';
-  document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'\u2713':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('')+disRow;
+  var kelebihanRow = '';
+  document.getElementById('psteps').innerHTML=`<div style="font-size:11px;color:var(--g400);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Skema ${is3?'3':'2'} Tahap</div>`+steps.map(s=>`<div class="pstep${s.done?' done':''}"><div class="pstep-lbl"><div class="step-ic">${s.done?'\u2713':s.ic}</div><div><div>${s.lbl}</div>${s.sub?`<div style="font-size:11px;opacity:.7">${s.sub}</div>`:''}</div></div><div class="pstep-st">${s.done?'Sudah diterima':'Belum'}</div></div>`).join('')+disRow+kelebihanRow;
 }
 function renderReferral(d){
   const el=document.getElementById('ref-card-right');
@@ -2596,10 +2626,34 @@ function mobRenderPayment(d) {
     var lun2 = harga - dp;
     rows.push({ lbl: 'Pelunasan', amt: lun2, done: d.pelunasan_masuk });
   }
+
+  // --- Alokasi kredit dari Penyesuaian Saldo (FIFO: DP -> Tahap 2 -> Pelunasan) ---
+  var pny = d.penyesuaian_saldo || 0;
+  var sisaKredit = (pny < 0) ? Math.abs(pny) : 0;
+  rows.forEach(function(r){
+    if (!r.done && sisaKredit > 0) {
+      var potongan = Math.min(sisaKredit, r.amt);
+      r.amtBaru = r.amt - potongan;
+      r.dipotong = potongan > 0;
+      sisaKredit -= potongan;
+    } else {
+      r.amtBaru = r.amt;
+      r.dipotong = false;
+    }
+  });
+  // sisaKredit setelah loop (jika >0) sudah ditangani oleh note "kelebihan bayar"
+  // terpisah (mob-penyesuaian-note) saat Sisa Pembayaran = 0.
+
   rowsEl.innerHTML = rows.map(function(r) {
+    var amtHtml = '';
+    if (r.dipotong) {
+      amtHtml = ' · <span style="text-decoration:line-through;opacity:.55">' + fmtRp(r.amt) + '</span> <strong>' + fmtRp(r.amtBaru) + '</strong>';
+    } else if (r.amt) {
+      amtHtml = ' · ' + fmtRp(r.amt);
+    }
     return '<div class="mob-pay-row">'
       + '<div class="mob-pay-chk' + (r.done ? '' : ' pending') + '">' + (r.done ? '✓' : '') + '</div>'
-      + '<div class="mob-pay-name">' + r.lbl + (r.amt ? ' · ' + fmtRp(r.amt) : '') + '</div>'
+      + '<div class="mob-pay-name">' + r.lbl + amtHtml + '</div>'
       + (r.done ? '<div class="mob-pay-status-ok">Diterima</div>' : '<div class="mob-pay-status-no">Belum</div>')
       + '</div>';
   }).join('');

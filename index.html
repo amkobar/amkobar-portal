@@ -890,6 +890,11 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 <div class="mob-info-row"><span class="mob-info-rlbl">Aplikasi</span><span class="mob-info-rval" id="mob-i-app">—</span></div>
 <div class="mob-info-row"><span class="mob-info-rlbl">Jumlah Variabel</span><span class="mob-info-rval" id="mob-i-variabel">—</span></div>
 <div class="mob-info-row"><span class="mob-info-rlbl">Universitas</span><span class="mob-info-rval" id="mob-i-univ">—</span></div>
+<div id="mob-ganti-paket-wrap" style="display:none;border-top:1px solid var(--g200);margin-top:6px;padding-top:10px">
+<button onclick="openEditLayananModal()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g700);cursor:pointer">
+<span style="font-size:15px">⇄</span> Ganti Paket
+</button>
+</div>
 <div class="mob-info-row"><span class="mob-info-rlbl">Target Selesai</span><span class="mob-info-rval" id="mob-i-ddl">—</span></div>
 <div class="mob-info-row" id="mob-i-konfirmasi-row" style="display:none"><span class="mob-info-rlbl">Konfirmasi Data</span><span class="mob-info-rval" id="mob-i-konfirmasi-pill">—</span></div>
 <div id="mob-i-konfirmasi-note" style="display:none;margin-top:10px;border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.6"></div>
@@ -931,34 +936,17 @@ em.bt-hl{background:#fef3c7;color:#b45309;border-radius:3px;padding:0 2px;font-s
 </div>
 </div>
 <div class="info-grid">
-<div class="irow">
-<div style="display:flex;align-items:center;justify-content:space-between">
-<div class="ilabel">Jenis Layanan</div>
-<button id="edit-btn-layanan" onclick="openEditLayananModal()" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit Layanan</button>
-</div>
-<div class="ival" id="i-layanan">—</div>
-</div>
+<div class="irow"><div class="ilabel">Jenis Layanan</div><div class="ival" id="i-layanan">—</div></div>
 <div class="irow"><div class="ilabel">Aplikasi</div><div class="ival" id="i-app">—</div></div>
-<div class="irow">
-<div style="display:flex;align-items:center;justify-content:space-between">
-<div class="ilabel">Jumlah Variabel</div>
-<button id="edit-btn-variabel" onclick="editInfo('variabel')" style="display:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Edit</button>
-</div>
-<div class="ival" id="i-variabel">—</div>
-<div id="edit-wrap-variabel" style="display:none;margin-top:8px;background:var(--g50);border-radius:8px;padding:10px;border:1px solid var(--g200)">
-<select id="edit-variabel-sel" style="width:100%;padding:8px 10px;border:1.5px solid var(--blue);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--g800);background:#fff;outline:none;margin-bottom:8px">
-<option value="">-- Pilih --</option>
-<option value="2 Variabel">2 Variabel</option>
-<option value="3 Variabel">3 Variabel</option>
-<option value="4 Variabel">4 Variabel</option>
-</select>
-<div style="display:flex;gap:7px">
-<button onclick="editInfo('variabel')" style="padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g600);cursor:pointer">Batal</button>
-<button id="edit-save-variabel" onclick="saveInfo('variabel')" style="padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;border:none;background:var(--navy);color:#fff;cursor:pointer">Simpan</button>
-</div>
-</div>
-</div>
+<div class="irow"><div class="ilabel">Jumlah Variabel</div><div class="ival" id="i-variabel">—</div></div>
 <div class="irow"><div class="ilabel">Universitas</div><div class="ival" id="i-univ">—</div></div>
+</div>
+<div id="ganti-paket-wrap" style="display:none;border-top:1px solid var(--g200);margin-top:4px;padding-top:12px">
+<button id="edit-btn-layanan" onclick="openEditLayananModal()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:600;border:1.5px solid var(--g200);background:#fff;color:var(--g700);cursor:pointer">
+<span style="font-size:15px">⇄</span> Ganti Paket
+</button>
+</div>
+<div class="info-grid">
 <div class="irow"><div class="ilabel">Target Selesai</div><div class="ival" id="i-ddl">—</div></div>
 <div class="irow" id="i-konfirmasi-row" style="display:none"><div class="ilabel">Konfirmasi Data</div><div class="ival" id="i-konfirmasi-pill">—</div></div>
 </div>
@@ -2139,11 +2127,11 @@ function renderDash(d){
     if(fromAdmin==='1'){
       aksesTogWrap.style.display='flex';
       var editBtnJudul = document.getElementById('edit-btn-judul');
-      var editBtnVariabel = document.getElementById('edit-btn-variabel');
-      var editBtnLayanan = document.getElementById('edit-btn-layanan');
+      var gantiPaketWrap = document.getElementById('ganti-paket-wrap');
       if (editBtnJudul) editBtnJudul.style.display = 'block';
-      if (editBtnVariabel) editBtnVariabel.style.display = 'block';
-      if (editBtnLayanan) editBtnLayanan.style.display = 'block';
+      if (gantiPaketWrap) gantiPaketWrap.style.display = 'block';
+      var mobGantiPaketWrap = document.getElementById('mob-ganti-paket-wrap');
+      if (mobGantiPaketWrap) mobGantiPaketWrap.style.display = 'block';
       updateAksesTogUI(d.akses_aktif!==false);
       updateAllTeoriTampilUI(d.all_teori_tampil||false);
       var statusRow=document.getElementById('adm-status-row');
@@ -2163,11 +2151,11 @@ function renderDash(d){
     }else{
       aksesTogWrap.style.display='none';
       var editBtnJudul = document.getElementById('edit-btn-judul');
-      var editBtnVariabel = document.getElementById('edit-btn-variabel');
-      var editBtnLayanan = document.getElementById('edit-btn-layanan');
+      var gantiPaketWrap = document.getElementById('ganti-paket-wrap');
       if (editBtnJudul) editBtnJudul.style.display = 'none';
-      if (editBtnVariabel) editBtnVariabel.style.display = 'none';
-      if (editBtnLayanan) editBtnLayanan.style.display = 'none';
+      if (gantiPaketWrap) gantiPaketWrap.style.display = 'none';
+      var mobGantiPaketWrap = document.getElementById('mob-ganti-paket-wrap');
+      if (mobGantiPaketWrap) mobGantiPaketWrap.style.display = 'none';
       var statusRow=document.getElementById('adm-status-row');
       if(statusRow)statusRow.style.display='none';
       var masaRow=document.getElementById('adm-masa-row');
@@ -2821,35 +2809,24 @@ function editInfo(field) {
   if (document.getElementById('dash').dataset.fromAdmin !== '1') return;
   var pageId = window._dashPageId || null;
   if (!pageId) return;
-  var wrapId = field === 'judul' ? 'edit-wrap-judul' : 'edit-wrap-variabel';
-  var wrap = document.getElementById(wrapId);
+  var wrap = document.getElementById('edit-wrap-judul');
   if (!wrap) return;
   if (wrap.style.display === 'none') {
-  wrap.style.display = 'block';
-  if (field === 'judul') {
+    wrap.style.display = 'block';
     var current = document.getElementById('i-judul').textContent;
     document.getElementById('edit-judul-inp').value = current === '—' ? '' : current;
   } else {
-    var current = document.getElementById('i-variabel').textContent;
-    document.getElementById('edit-variabel-sel').value = current === '—' ? '' : current;
+    wrap.style.display = 'none';
   }
-} else {
-  wrap.style.display = 'none';
-}
 }
 
 function saveInfo(field) {
   var pageId = window._dashPageId || null;
   if (!pageId) return;
   var payload = { action: 'update_info', page_id: pageId };
-  if (field === 'judul') {
-    var val = document.getElementById('edit-judul-inp').value.trim();
-    payload.judul = val;
-  } else {
-    var val = document.getElementById('edit-variabel-sel').value;
-    payload.jumlah_variabel = val;
-  }
-  var btn = document.getElementById('edit-save-' + field);
+  var val = document.getElementById('edit-judul-inp').value.trim();
+  payload.judul = val;
+  var btn = document.getElementById('edit-save-judul');
   if (btn) { btn.textContent = 'Menyimpan...'; btn.disabled = true; }
   fetch('/api/update-client', {
     method: 'POST',
@@ -2857,12 +2834,8 @@ function saveInfo(field) {
     body: JSON.stringify(payload)
   }).then(function(r) { return r.json(); }).then(function(res) {
     if (res.success) {
-      if (field === 'judul') {
-        document.getElementById('i-judul').textContent = payload.judul || '—';
-      } else {
-        document.getElementById('i-variabel').textContent = payload.jumlah_variabel || '—';
-      }
-      document.getElementById('edit-wrap-' + (field === 'judul' ? 'judul' : 'variabel')).style.display = 'none';
+      document.getElementById('i-judul').textContent = payload.judul || '—';
+      document.getElementById('edit-wrap-judul').style.display = 'none';
     } else { alert('Gagal menyimpan.'); }
   }).catch(function() { alert('Gagal menghubungi server.'); })
   .finally(function() {

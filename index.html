@@ -2232,17 +2232,23 @@ function renderDash(d){
     if (pny < 0) {
       var nilaiAbs = Math.abs(pny);
       if (sisa === 0) {
-        // Sisa sudah 0 — hitung kelebihan murni: TotalDibayar + PenyesuaianSaldo - HargaNetto
         var kelebihan = totalDibayar - hargaNetto - pny;
         if (kelebihan > 0) {
-          html = 'Anda memiliki kelebihan bayar ' + fmtRp(kelebihan) + ' dari project sebelumnya.';
+          if (d.kelebihan_dikembalikan) {
+            html = 'Kelebihan bayar ' + fmtRp(kelebihan) + ' dari project sebelumnya sudah dikembalikan oleh admin. \u2705';
+            bg = '#f0fdf4'; color = '#166534';
+          } else {
+            html = 'Anda memiliki kelebihan bayar ' + fmtRp(kelebihan) + ' dari project sebelumnya. Admin akan menghubungi Anda untuk pengembalian dana.';
+            bg = '#ecfdf5'; color = '#065f46';
+          }
         } else {
           html = 'Pembayaran dari project sebelumnya sudah mencukupi seluruh biaya project ini.';
+          bg = '#ecfdf5'; color = '#065f46';
         }
       } else {
         html = 'Anda sudah membayar ' + fmtRp(nilaiAbs) + ' dari project sebelumnya. Sudah otomatis mengurangi sisa pembayaran Anda.';
+        bg = '#ecfdf5'; color = '#065f46';
       }
-      bg = '#ecfdf5'; color = '#065f46';
     } else if (pny > 0) {
       html = 'Ada tambahan biaya ' + fmtRp(pny) + ' akibat perubahan layanan. Sudah ditambahkan ke sisa pembayaran Anda.';
       bg = '#fff7ed'; color = '#92400e';
@@ -5250,6 +5256,7 @@ var filter = filterRaw ? filterRaw.split(',').map(function(f) { return f.trim();
 /* ===== SEGERA TF ===== */
 var _stfLoaded=false;
 var _stfData=[];
+var _stfKelebihan=[];
 var _stfUndoTimer=null;
 var _stfUndoInterval=null;
 var _stfPrevPageId=null;
@@ -5263,6 +5270,16 @@ function loadSegaraTF(){
       if(Array.isArray(data)){
         _stfLoaded=true;
         _stfData=data.filter(function(c){return c.reward_dicairkan===true;});
+        // kelebihan bayar: penyesuaian_saldo < 0 DAN sisa_pembayaran = 0 DAN belum dikembalikan/sudah dikembalikan
+        _stfKelebihan=data.filter(function(c){
+          var pny = c.penyesuaian_saldo || 0;
+          var sisa = c.sisa_pembayaran || 0;
+          var hargaNetto = c.harga_netto || 0;
+          var totalDibayar = c.total_dibayar || 0;
+          if (pny >= 0 || sisa !== 0) return false;
+          var kelebihan = totalDibayar - hargaNetto - pny;
+          return kelebihan > 0;
+        });
         renderSegaraTF();
       }
     }).catch(function(){
@@ -5276,44 +5293,83 @@ function renderSegaraTF(){
   var sumBar=document.getElementById('stf-summary-bar');
   var sumTxt=document.getElementById('stf-summary-txt');
   var sumSub=document.getElementById('stf-summary-sub');
+  var kelebihanPending=_stfKelebihan.filter(function(c){return !c.kelebihan_dikembalikan;});
+  var kelebihanSelesai=_stfKelebihan.filter(function(c){return c.kelebihan_dikembalikan;});
+  var totalPending = pending.length + kelebihanPending.length;
   if(sumBar&&sumTxt&&sumSub){
     sumBar.style.display='flex';
-    if(pending.length===0){
-      sumTxt.textContent='Semua reward sudah ditransfer';
+    if(totalPending===0){
+      sumTxt.textContent='Semua transfer sudah selesai';
       sumSub.textContent='Tidak ada yang perlu diproses saat ini.';
       sumBar.style.borderLeftColor='#16a34a';
     } else {
-      var totalNominal=pending.reduce(function(acc,c){return acc+(c.diskon_referral||0);},0);
-      sumTxt.textContent=pending.length+' reward menunggu transfer';
-      sumSub.textContent='Total nominal: Rp '+totalNominal.toLocaleString('id-ID');
+      sumTxt.textContent=totalPending+' item menunggu transfer';
+      sumSub.textContent=(pending.length ? pending.length+' reward referral' : '') + (pending.length && kelebihanPending.length ? ' · ' : '') + (kelebihanPending.length ? kelebihanPending.length+' kelebihan bayar' : '');
       sumBar.style.borderLeftColor='#dc2626';
     }
   }
   var rows=[].concat(pending,selesai);
   if(!rows.length){
     document.getElementById('stf-tbody').innerHTML='<tr><td colspan="6" class="adm-empty">Belum ada client yang mengajukan pencairan reward.</td></tr>';
+  } else {
+    document.getElementById('stf-tbody').innerHTML=rows.map(function(c){
+      var rek=c.rekening_reward||'';
+      var parts=rek.split('|');
+      var metode=parts[0]||'—';
+      var nomor=parts[1]||'—';
+      var namaPemilik=parts[2]||'—';
+      var nominal=c.diskon_referral||0;
+      var isDone=c.reward_ditransfer===true;
+      var statusHtml=isDone
+        ?'<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#dcfce7;color:#15803d;cursor:default"><span style="width:6px;height:6px;border-radius:50%;background:#15803d;display:inline-block"></span>Sudah TF</span>'
+        :'<span onclick="toggleRewardTF(\''+c.page_id+'\',\''+c.nama+'\',\''+c.kode_akses+'\')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#fef3c7;color:#b45309;cursor:pointer" title="Klik untuk tandai sudah ditransfer"><span style="width:6px;height:6px;border-radius:50%;background:#b45309;display:inline-block"></span>Pending</span>';
+      return '<tr>'
+        +'<td><p class="adm-client-name">'+( c.nama||'—')+'</p><p class="adm-client-kode">'+(c.kode_akses||'')+'</p></td>'
+        +'<td style="font-weight:600;color:#0d2144">Rp '+nominal.toLocaleString('id-ID')+'</td>'
+        +'<td>'+metode+'</td>'
+        +'<td><div style="display:inline-flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:#1e293b">'+nomor+'</span><div onclick="stfCopyNorek(\''+nomor+'\',this)" title="Salin nomor" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;border:0.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;flex-shrink:0"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></div><span class="stf-copy-tt" style="font-size:10px;color:#15803d;font-weight:500;opacity:0;transition:opacity .2s"></span></div></td>'
+        +'<td style="font-size:12px">'+namaPemilik+'</td>'
+        +'<td>'+statusHtml+'</td>'
+        +'</tr>';
+    }).join('');
+  }
+
+  // Render seksi kelebihan bayar
+  var kelebWrap = document.getElementById('stf-kelebihan-wrap');
+  if (!kelebWrap) return;
+  var kelebRows = [].concat(kelebihanPending, kelebihanSelesai);
+  if (!kelebRows.length) {
+    kelebWrap.innerHTML = '<p style="font-size:13px;color:var(--g400);text-align:center;padding:20px 0;">Tidak ada kelebihan bayar yang perlu diproses.</p>';
     return;
   }
-  document.getElementById('stf-tbody').innerHTML=rows.map(function(c){
-    var rek=c.rekening_reward||'';
-    var parts=rek.split('|');
-    var metode=parts[0]||'—';
-    var nomor=parts[1]||'—';
-    var namaPemilik=parts[2]||'—';
-    var nominal=c.diskon_referral||0;
-    var isDone=c.reward_ditransfer===true;
-    var statusHtml=isDone
-      ?'<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#dcfce7;color:#15803d;cursor:default"><span style="width:6px;height:6px;border-radius:50%;background:#15803d;display:inline-block"></span>Sudah TF</span>'
-      :'<span onclick="toggleRewardTF(\''+c.page_id+'\',\''+c.nama+'\',\''+c.kode_akses+'\')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#fef3c7;color:#b45309;cursor:pointer" title="Klik untuk tandai sudah ditransfer"><span style="width:6px;height:6px;border-radius:50%;background:#b45309;display:inline-block"></span>Pending</span>';
-    return '<tr>'
-      +'<td><p class="adm-client-name">'+( c.nama||'—')+'</p><p class="adm-client-kode">'+(c.kode_akses||'')+'</p></td>'
-      +'<td style="font-weight:600;color:#0d2144">Rp '+nominal.toLocaleString('id-ID')+'</td>'
-      +'<td>'+metode+'</td>'
-      +'<td><div style="display:inline-flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:#1e293b">'+nomor+'</span><div onclick="stfCopyNorek(\''+nomor+'\',this)" title="Salin nomor" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;border:0.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;flex-shrink:0"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></div><span class="stf-copy-tt" style="font-size:10px;color:#15803d;font-weight:500;opacity:0;transition:opacity .2s"></span></div></td>'
-      +'<td style="font-size:12px">'+namaPemilik+'</td>'
-      +'<td>'+statusHtml+'</td>'
-      +'</tr>';
-  }).join('');
+  kelebWrap.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:13px;">'
+    + '<thead><tr style="background:var(--g50)">'
+    + '<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;width:18%">Client</th>'
+    + '<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;width:14%">Kelebihan</th>'
+    + '<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;width:32%">Perubahan paket</th>'
+    + '<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;width:16%">Metode DP awal</th>'
+    + '<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;width:20%">Status</th>'
+    + '</tr></thead><tbody>'
+    + kelebRows.map(function(c){
+        var pny = c.penyesuaian_saldo || 0;
+        var hargaNetto = c.harga_netto || 0;
+        var totalDibayar = c.total_dibayar || 0;
+        var kelebihan = totalDibayar - hargaNetto - pny;
+        var isDone = c.kelebihan_dikembalikan === true;
+        var statusHtml = isDone
+          ? '<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#dcfce7;color:#15803d">✓ Sudah dikembalikan</span>'
+          : '<span onclick="toggleKelebihanTF(\''+c.page_id+'\',\''+c.nama+'\',\''+c.kode_akses+'\')" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:#fef3c7;color:#b45309;cursor:pointer">● Pending</span>'
+            + '<p style="font-size:11px;color:var(--g400);margin:5px 0 0;">Hubungi via WA dulu</p>';
+        var paketBaru = (c.jenis_layanan||'—') + ' · ' + (c.aplikasi||'—') + ' · ' + (c.jumlah_variabel||'—');
+        return '<tr style="border-top:1px solid var(--g100)">'
+          + '<td style="padding:12px 14px"><p style="font-weight:600;font-size:13px;margin:0;color:var(--g800)">'+(c.nama||'—')+'</p><p style="font-size:11px;color:var(--g400);margin:2px 0 0">'+(c.kode_akses||'')+'</p></td>'
+          + '<td style="padding:12px 14px;font-weight:600;color:#0d2144">Rp '+Math.round(kelebihan).toLocaleString('id-ID')+'</td>'
+          + '<td style="padding:12px 14px"><p style="font-size:11px;color:var(--g400);margin:0 0 2px">Paket baru</p><p style="font-size:12px;font-weight:500;color:var(--g800);margin:0">'+paketBaru+'</p></td>'
+          + '<td style="padding:12px 14px;font-size:12px;color:var(--g600)">'+(c.metode_pembayaran||'—')+'</td>'
+          + '<td style="padding:12px 14px">'+statusHtml+'</td>'
+          + '</tr>';
+      }).join('')
+    + '</tbody></table>';
 }
  
 function toggleRewardTF(pageId,nama,kode){
@@ -5369,6 +5425,22 @@ function cancelStfUndo(){
     renderSegaraTF();
   }
   _stfPrevPageId=null;
+}
+
+function toggleKelebihanTF(pageId, nama, kode) {
+  if (!confirm('Tandai kelebihan bayar ' + (nama||kode) + ' sudah dikembalikan?')) return;
+  var item = _stfKelebihan.find(function(c){ return c.page_id === pageId; });
+  if (item) item.kelebihan_dikembalikan = true;
+  renderSegaraTF();
+  fetch('/api/update-client', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'transfer_kelebihan', page_id: pageId })
+  }).catch(function() {
+    if (item) item.kelebihan_dikembalikan = false;
+    renderSegaraTF();
+    alert('Gagal update. Coba lagi.');
+  });
 }
   function stfCopyNorek(val, btn) {
   navigator.clipboard.writeText(val).then(function() {
@@ -5766,7 +5838,7 @@ function admTestiSaveEdit(id){
 <div style="background:#fffbeb;border:0.5px solid #fde68a;border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
 <span style="font-size:15px;flex-shrink:0;margin-top:1px">💡</span>
 <div style="font-size:12px;color:#92400e;line-height:1.7">
-<strong style="color:#78350f">Cara pakai tab ini:</strong> Daftar ini menampilkan client yang sudah mengajukan pencairan reward referral. Setelah kamu transfer manual ke rekening client, <span style="display:inline-block;background:#fff;border:0.5px solid #fde68a;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500;color:#92400e">klik badge "Pending"</span> pada baris client tersebut untuk mengubah statusnya menjadi <span style="color:#15803d;font-weight:500">✓ Sudah TF</span> — client otomatis mendapat notifikasi di portalnya. Ada jeda <strong style="color:#78350f">5 detik</strong> untuk membatalkan jika klik tidak sengaja.
+<strong style="color:#78350f">Cara pakai tab ini:</strong> Daftar ini menampilkan (1) client yang mengajukan pencairan reward referral, dan (2) client yang memiliki kelebihan bayar akibat ganti paket. Setelah transfer selesai, <span style="display:inline-block;background:#fff;border:0.5px solid #fde68a;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500;color:#92400e">klik badge "Pending"</span> untuk mengubah statusnya. Untuk kelebihan bayar, hubungi client via WA dulu untuk konfirmasi nomor rekening.
   </div>
 </div>
 <div id="stf-undo-bar" style="display:none;align-items:center;gap:10px;background:#1a3560;padding:8px 16px;border-radius:8px;margin-bottom:12px">
@@ -5781,6 +5853,7 @@ function admTestiSaveEdit(id){
 <div id="stf-summary-sub" style="font-size:11px;color:#64748b;margin-top:1px">—</div>
 </div>
 </div>
+<div style="font-size:12px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">🎁 Reward Referral</div>
 <div class="adm-table-wrap">
 <table class="adm-table">
 <thead>
@@ -5797,6 +5870,10 @@ function admTestiSaveEdit(id){
 <tr><td class="adm-empty" colspan="6">Memuat data...</td></tr>
 </tbody>
 </table>
+</div>
+<div style="margin-top:20px;font-size:12px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">↩ Kelebihan Bayar — Ganti Paket</div>
+<div id="stf-kelebihan-wrap" style="background:#fff;border:0.5px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+<p style="font-size:13px;color:var(--g400);text-align:center;padding:20px 0;">Memuat data...</p>
 </div>
 </div>
 <!-- Tab Pricelist -->

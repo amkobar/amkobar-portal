@@ -79,6 +79,13 @@ export default async function handler(req, res) {
           reward_dicairkan: getCheckbox(props['Reward_Dicairkan']),
           reward_ditransfer: getCheckbox(props['Reward_Ditransfer']),
           rekening_reward: getText(props['Rekening_Reward']),
+          kelebihan_dikembalikan: getCheckbox(props['Kelebihan_Dikembalikan']),
+          penyesuaian_saldo: props['Penyesuaian Saldo']?.number || 0,
+          harga_netto: getFormula(props['Harga Netto']),
+          total_dibayar: getFormula(props['Total Dibayar']),
+          sisa_pembayaran: getFormula(props['Sisa Pembayaran']),
+          metode_pembayaran: getSelect(props['Metode Pembayaran']),
+          jumlah_variabel: getSelect(props['Jumlah Variabel']),
         };
       });
       allClients = allClients.concat(clients);

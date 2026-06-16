@@ -142,6 +142,8 @@ all_teori_tampil: getCheckbox(props['All Teori Tampil']),
       penyesuaian_saldo: props['Penyesuaian Saldo']?.number || 0,
       harga_netto: getFormula(props['Harga Netto']),
       total_dibayar: getFormula(props['Total Dibayar']),
+      kelebihan_dikembalikan: getCheckbox(props['Kelebihan_Dikembalikan']),
+      metode_pembayaran: getSelect(props['Metode Pembayaran']),
       status_judul_paket: statusJudulPaket,
       sumber_data_paket: sumberDataPaket,
     });

@@ -196,6 +196,30 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ success: true });
     }
+
+    // ===== KONFIRMASI KELEBIHAN BAYAR SUDAH DIKEMBALIKAN (dari admin) =====
+    if (action === 'transfer_kelebihan') {
+      const response = await fetch(`https://api.notion.com/v1/pages/${page_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${NOTION_TOKEN}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          properties: {
+            'Kelebihan_Dikembalikan': { checkbox: true }
+          }
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        return res.status(500).json({ error: `Notion error: ${response.status} - ${JSON.stringify(data)}` });
+      }
+
+      return res.status(200).json({ success: true });
+    }
 // ===== SIMPAN TEORI DIPILIH (dari client) =====
     if (action === 'simpan_teori_dipilih') {
       const { kategori, teori_id } = req.body;

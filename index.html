@@ -2208,7 +2208,7 @@ function renderDash(d){
   })();
   renderPayment(d);
   var _sisDis=d.diskon_referral||0;var _sisJ=d.jumlah_referral||0;
-  var _sisaTampil=(_sisDis>0&&_sisJ<3&&d.sisa_pembayaran>0)?Math.max(0,d.sisa_pembayaran-_sisDis):d.sisa_pembayaran;
+  var _sisaTampil=d.sisa_pembayaran;
   document.getElementById('sisa-amt').textContent=_sisaTampil!=null?fmtRp(_sisaTampil):'\u2014';
   var sisaIcDesktop = document.getElementById('sisa-ic');
   if (sisaIcDesktop) {
